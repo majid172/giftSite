@@ -1,57 +1,95 @@
 @extends('layouts.fullscreen')
 @section('content')
-<div class="p-6 md:p-10 max-w-7xl mx-auto w-full flex-grow">
+<div class="py-8">
     <!-- Header -->
-    <div class="mb-12 text-center md:text-left">
+    <div class="mb-8">
         <h1 class="text-4xl font-serif font-bold text-emerald-950">Our Collection</h1>
         <p class="text-stone-500 mt-2 text-lg">Curated gifts for every memorable moment.</p>
     </div>
 
-    <!-- Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        @php
-            // Simulated Data for "Database-less" environment
-            $products = [
-                ['id' => 1, 'name' => 'Grand Heritage Box', 'price' => 45.00, 'category' => 'Gift Box', 'image' => 'https://images.unsplash.com/photo-1589902860314-e910697dea18?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 2, 'name' => 'Matte Gift Tube', 'price' => 12.00, 'category' => 'Packaging', 'image' => 'https://images.unsplash.com/photo-1544787210-22bb1c0fd310?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 3, 'name' => 'Monsoon Tea Tins', 'price' => 38.00, 'category' => 'Tea Set', 'image' => 'https://images.unsplash.com/photo-1563915027878-3bb14194b859?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 4, 'name' => 'Ceramic Tea Pot', 'price' => 28.00, 'category' => 'Homeware', 'image' => 'https://images.unsplash.com/photo-1595995574040-058df5d064dd?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 5, 'name' => 'Organic Honey Jar', 'price' => 18.50, 'category' => 'Pantry', 'image' => 'https://images.unsplash.com/photo-1598462740942-87002573228a?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 6, 'name' => 'Silk Scarves Set', 'price' => 55.00, 'category' => 'Accessories', 'image' => 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 7, 'name' => 'Scented Candle', 'price' => 24.00, 'category' => 'Relaxation', 'image' => 'https://images.unsplash.com/photo-1602825266940-7060bc061eb9?auto=format&fit=crop&w=800&q=80'],
-                ['id' => 8, 'name' => 'Chocolate Truffles', 'price' => 32.00, 'category' => 'Sweets', 'image' => 'https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=800&q=80'],
-            ];
-        @endphp
+    <!-- Products Grid -->
+    <div class="border border-stone-200 rounded-lg overflow-hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 bg-white">
+            @php
+                // Simulated Data for "Database-less" environment
+                $products = [
+                    ['id' => 1, 'name' => 'Grand Heritage Box', 'price' => 45.00, 'category' => 'Gift Box', 'rating' => 5, 'reviews' => 12, 'badge' => 'BEST SELLER', 'badge_color' => 'bg-amber-500', 'image' => 'https://images.unsplash.com/photo-1589902860314-e910697dea18?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 2, 'name' => 'Matte Gift Tube', 'price' => 12.00, 'category' => 'Packaging', 'rating' => 4, 'reviews' => 8, 'image' => 'https://images.unsplash.com/photo-1544787210-22bb1c0fd310?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 3, 'name' => 'Monsoon Tea Tins', 'price' => 38.00, 'old_price' => 45.00, 'category' => 'Tea Set', 'rating' => 5, 'reviews' => 15, 'badge' => '-15%', 'badge_color' => 'bg-rose-500', 'image' => 'https://images.unsplash.com/photo-1563915027878-3bb14194b859?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 4, 'name' => 'Ceramic Tea Pot', 'price' => 28.00, 'category' => 'Homeware', 'rating' => 4, 'reviews' => 6, 'badge' => 'NEW', 'badge_color' => 'bg-emerald-500', 'image' => 'https://images.unsplash.com/photo-1595995574040-058df5d064dd?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 5, 'name' => 'Organic Honey Jar', 'price' => 18.50, 'category' => 'Pantry', 'rating' => 5, 'reviews' => 20, 'image' => 'https://images.unsplash.com/photo-1598462740942-87002573228a?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 6, 'name' => 'Silk Scarves Set', 'price' => 55.00, 'category' => 'Accessories', 'rating' => 4, 'reviews' => 9, 'image' => 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 7, 'name' => 'Scented Candle', 'price' => 24.00, 'old_price' => 30.00, 'category' => 'Relaxation', 'rating' => 5, 'reviews' => 18, 'badge' => '-20%', 'badge_color' => 'bg-rose-500', 'image' => 'https://images.unsplash.com/photo-1602825266940-7060bc061eb9?auto=format&fit=crop&w=400&q=80'],
+                    ['id' => 8, 'name' => 'Chocolate Truffles', 'price' => 32.00, 'category' => 'Sweets', 'rating' => 5, 'reviews' => 25, 'image' => 'https://images.unsplash.com/photo-1548907040-4baa42d10919?auto=format&fit=crop&w=400&q=80'],
+                ];
+            @endphp
 
-        @foreach($products as $product)
-        <div class="group">
-            <div class="relative bg-white rounded-[2rem] p-4 shadow-sm group-hover:shadow-xl transition-all duration-500 ease-out border border-stone-100 h-full flex flex-col">
-                <div class="rounded-[1.5rem] overflow-hidden bg-stone-50 h-64 relative mb-4">
-                    <img src="{{ $product['image'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="{{ $product['name'] }}">
-                </div>
+            @foreach($products as $product)
+            <div class="group relative p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
                 
-                <div class="flex-grow">
-                        <h3 class="font-serif font-bold text-xl text-emerald-950 group-hover:text-emerald-700 transition-colors">{{ $product['name'] }}</h3>
-                        <p class="text-stone-500 text-sm mt-1 mb-3">{{ $product['category'] }}</p>
-                        <div class="flex items-center justify-between">
-                        <span class="text-lg font-bold text-emerald-700">${{ number_format($product['price'], 2) }}</span>
-                        
-                        <form action="{{ route('cart.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $product['id'] }}">
-                            <input type="hidden" name="name" value="{{ $product['name'] }}">
-                            <input type="hidden" name="price" value="{{ $product['price'] }}">
-                            <input type="hidden" name="image" value="{{ $product['image'] }}">
-                            
-                            <button type="submit" class="bg-amber-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-amber-600 transition-colors" title="Add to Cart">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                            </button>
-                        </form>
-                        </div>
+                <!-- Badges -->
+                <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                    @if(isset($product['badge']))
+                        <span class="{{ $product['badge_color'] }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">{{ $product['badge'] }}</span>
+                    @endif
                 </div>
+
+                <!-- Hover Actions -->
+                <div class="absolute top-4 right-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:bg-amber-500 hover:text-white hover:border-amber-500 flex items-center justify-center transition shadow-sm" title="Wishlist">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:bg-amber-500 hover:text-white hover:border-amber-500 flex items-center justify-center transition shadow-sm" title="Compare">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:bg-amber-500 hover:text-white hover:border-amber-500 flex items-center justify-center transition shadow-sm" title="Quick View">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Image -->
+                <div class="h-48 mb-4 overflow-hidden relative flex items-center justify-center">
+                    <img src="{{ $product['image'] }}" class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500" alt="{{ $product['name'] }}">
+                </div>
+
+                <!-- Content -->
+                <div class="text-left">
+                    <h3 class="font-bold text-emerald-950 text-sm mb-2 h-10 overflow-hidden line-clamp-2 leading-tight">
+                        <a href="{{ route('product.show', $product['id']) }}" class="hover:text-amber-500 transition">{{ $product['name'] }}</a>
+                    </h3>
+                    
+                    <!-- Ratings -->
+                    <div class="flex items-center gap-0.5 mb-2">
+                        @for($i=0; $i<5; $i++)
+                            <svg class="w-3.5 h-3.5 {{ $i < $product['rating'] ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        @endfor
+                        <span class="text-xs text-stone-400 ml-1">({{ $product['reviews'] }})</span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-5 flex items-baseline gap-2">
+                        <span class="text-lg font-bold text-emerald-950">${{ number_format($product['price'], 2) }}</span>
+                        @if(isset($product['old_price']))
+                            <span class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">${{ number_format($product['old_price'], 2) }}</span>
+                        @endif
+                    </div>
+
+                    <!-- Add to Cart Button -->
+                    <form action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $product['id'] }}">
+                        <input type="hidden" name="name" value="{{ $product['name'] }}">
+                        <input type="hidden" name="price" value="{{ $product['price'] }}">
+                        <input type="hidden" name="image" value="{{ $product['image'] }}">
+                        <button type="submit" class="w-full bg-stone-100 hover:bg-amber-400 text-stone-800 hover:text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
+                            Add To Cart
+                        </button>
+                    </form>
+                </div>
+
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
 </div>
 @endsection

@@ -56,7 +56,7 @@ Route::get('/products', function () {
 
 Route::get('/product/{id}', function ($id) {
     return view('product', compact('id'));
-})->name('products.show');
+})->name('product.show');
 
 Route::get('/occasions', function () {
     return view('occasions');

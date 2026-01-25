@@ -53,15 +53,27 @@
     @stack('styles')
     @stack('scripts')
 </head>
-<body class="font-sans text-gray-900 antialiased h-full bg-gray-50">
-  <div class="flex min-h-screen bg-[#F5F5F4] overflow-hidden">
-    @include('partials.aside')
-    <main class="flex-1 lg:ml-80 relative flex flex-col min-h-screen">
-        @include('partials.header')
-        @yield('content')
-        @include('partials.footer')    
-    </main>
+<body class="font-sans text-gray-900 antialiased h-full bg-stone-50">
+  <div class="flex flex-col min-h-screen">
     
+    <!-- 1. Topbar -->
+    @include('partials.topbar')
+
+    <!-- 2. Header / Navbar -->
+    @include('partials.header')
+
+    <!-- 3. Banner / Hero (Optional per page) -->
+    @yield('hero')
+
+    <!-- 4. Content Area -->
+    <div class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Main Content -->
+        <main class="w-full">
+            @yield('content')
+        </main>
+    </div>
+
+    @include('partials.footer')
   </div>
   
   @include('partials.cart-drawer')
