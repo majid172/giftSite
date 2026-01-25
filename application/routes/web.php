@@ -63,13 +63,15 @@ Route::get('/occasions', function () {
 })->name('occasions.index');
 
 // Cart & Checkout
-Route::get('/cart', function () {
-    return view('cart');
-})->name('cart');
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
-Route::get('/checkout', function () {
-    return view('checkout');
-})->name('checkout');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 // Static Pages
 Route::get('/about', function () {
