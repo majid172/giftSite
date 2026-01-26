@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,40 +14,25 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Http\Controllers\AuthController;
 
 // Home
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Authentication Routes (Stubs)
+
+// Authentication Routes
 Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return view('auth.login');
-    })->name('login');
-
-    Route::post('/login', function () {
-        // Placeholder for login logic
-        return redirect()->route('home');
-    });
-
-    Route::get('/register', function () {
-        return view('auth.register');
-    })->name('register');
-
-    Route::post('/register', function () {
-        // Placeholder for register logic
-        return redirect()->route('home');
-    });
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
 });
 
-Route::post('/logout', function (Request $request) {
-    // Placeholder for logout logic
-    // Auth::logout();
-    // $request->session()->invalidate();
-    // $request->session()->regenerateToken();
-    return redirect()->route('home');
-})->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
 
 
 // Shop & Products
@@ -63,8 +49,7 @@ Route::get('/occasions', function () {
 })->name('occasions.index');
 
 // Cart & Checkout
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
+
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');

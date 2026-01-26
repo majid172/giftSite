@@ -89,7 +89,7 @@
 
     <!-- ROW 2: Navigation Bar -->
     <div class="border-t border-stone-200 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-10">
             
             <!-- Shop By Categories Dropdown -->
             <div class="relative group py-4">
@@ -111,11 +111,11 @@
             </div>
 
             <!-- Main Nav Links -->
-            <nav class="hidden lg:flex items-center gap-8 text-sm font-bold uppercase tracking-wider text-stone-600">
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-bold uppercase tracking-wider text-stone-600 ml-auto">
                 <a href="{{ route('home') }}" class="hover:text-amber-500 transition {{ request()->routeIs('home') ? 'text-amber-500' : '' }}">Home</a>
-                <a href="{{ route('products.index') }}" class="hover:text-amber-500 transition {{ request()->routeIs('products.*') ? 'text-amber-500' : '' }}">Shop</a>
+              
                 <a href="{{ route('products.index') }}" class="hover:text-amber-500 transition">Products <span class="bg-rose-500 text-white text-[9px] px-1.5 py-0.5 rounded ml-1">HOT</span></a>
-                <a href="{{ route('occasions.index') }}" class="hover:text-amber-500 transition {{ request()->routeIs('occasions.*') ? 'text-amber-500' : '' }}">Occasions</a>
+                <!-- <a href="{{ route('occasions.index') }}" class="hover:text-amber-500 transition {{ request()->routeIs('occasions.*') ? 'text-amber-500' : '' }}">Occasions</a> -->
                 <a href="{{ route('about') }}" class="hover:text-amber-500 transition {{ request()->routeIs('about') ? 'text-amber-500' : '' }}">About</a>
             </nav>
 

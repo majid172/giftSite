@@ -17,6 +17,14 @@
             </ol>
         </nav>
 
+        <!-- Success Message -->
+        @if(session('success'))
+            <div class="mb-8 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded-xl relative flex items-center gap-3" role="alert">
+                <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                <span class="block sm:inline font-medium">{{ session('success') }}</span>
+            </div>
+        @endif
+
         <!-- Main Product Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             
@@ -91,44 +99,55 @@
                     </p>
                 </div>
 
-                <!-- Options -->
-                <div class="space-y-4">
-                    <!-- Size Selection -->
-                    <div>
-                        <label class="block text-sm font-bold text-stone-700 mb-3">Size</label>
-                        <div class="flex gap-3">
-                            @foreach(['Small', 'Medium', 'Large'] as $index => $size)
-                            <button class="px-6 py-3 rounded-xl border-2 {{ $index === 1 ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-stone-200 bg-white text-stone-700' }} font-semibold hover:border-amber-500 hover:bg-amber-50 transition-all">
-                                {{ $size }}
-                            </button>
-                            @endforeach
-                        </div>
-                    </div>
+                <!-- Add to Cart Form -->
+                <form action="{{ route('cart.store') }}" method="POST" id="addToCartForm">
+                    @csrf
+                    <input type="hidden" name="id" value="1">
+                    <input type="hidden" name="name" value="Grand Heritage Premium Gift Box">
+                    <input type="hidden" name="price" value="45.00">
+                    <input type="hidden" name="image" value="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80">
+                    <input type="hidden" name="size" id="selectedSize" value="Medium">
+                    <input type="hidden" name="quantity" id="selectedQuantity" value="1">
 
-                    <!-- Quantity -->
-                    <div>
-                        <label class="block text-sm font-bold text-stone-700 mb-3">Quantity</label>
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center border-2 border-stone-200 rounded-xl overflow-hidden bg-white">
-                                <button class="px-4 py-3 hover:bg-stone-100 transition-colors text-stone-600 font-bold">-</button>
-                                <input type="number" value="1" min="1" class="w-16 text-center border-none focus:outline-none font-semibold">
-                                <button class="px-4 py-3 hover:bg-stone-100 transition-colors text-stone-600 font-bold">+</button>
+                    <!-- Options -->
+                    <div class="space-y-4">
+                        <!-- Size Selection -->
+                        <div>
+                            <label class="block text-sm font-bold text-stone-700 mb-3">Size</label>
+                            <div class="flex gap-3">
+                                @foreach(['Small', 'Medium', 'Large'] as $index => $size)
+                                <button type="button" class="size-btn px-6 py-3 rounded-xl border-2 {{ $index === 1 ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-stone-200 bg-white text-stone-700' }} font-semibold hover:border-amber-500 hover:bg-amber-50 transition-all" data-size="{{ $size }}">
+                                    {{ $size }}
+                                </button>
+                                @endforeach
                             </div>
-                            <span class="text-sm text-stone-500">Only <span class="font-bold text-emerald-600">12 items</span> left!</span>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div>
+                            <label class="block text-sm font-bold text-stone-700 mb-3">Quantity</label>
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center border-2 border-stone-200 rounded-xl overflow-hidden bg-white">
+                                    <button type="button" id="decreaseQty" class="px-4 py-3 hover:bg-stone-100 transition-colors text-stone-600 font-bold">-</button>
+                                    <input type="number" id="quantityInput" value="1" min="1" max="12" class="w-16 text-center border-none focus:outline-none font-semibold" readonly>
+                                    <button type="button" id="increaseQty" class="px-4 py-3 hover:bg-stone-100 transition-colors text-stone-600 font-bold">+</button>
+                                </div>
+                                <span class="text-sm text-stone-500">Only <span class="font-bold text-emerald-600">12 items</span> left!</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Action Buttons -->
-                <div class="flex gap-4">
-                    <button class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-amber-500/50 hover:shadow-xl hover:shadow-amber-600/50 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        Add to Cart
-                    </button>
-                    <button class="px-6 py-4 border-2 border-emerald-700 text-emerald-700 font-bold rounded-xl hover:bg-emerald-700 hover:text-white transition-all">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </button>
-                </div>
+                    <!-- Action Buttons -->
+                    <div class="flex gap-4">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-amber-500/50 hover:shadow-xl hover:shadow-amber-600/50 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            Add to Cart
+                        </button>
+                        <button type="button" class="px-6 py-4 border-2 border-emerald-700 text-emerald-700 font-bold rounded-xl hover:bg-emerald-700 hover:text-white transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </button>
+                    </div>
+                </form>
 
                 <!-- Features -->
                 <div class="grid grid-cols-2 gap-4 pt-6 border-t border-stone-200">
@@ -243,4 +262,54 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Size selection
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active state from all buttons
+            document.querySelectorAll('.size-btn').forEach(b => {
+                b.classList.remove('border-amber-500', 'bg-amber-50', 'text-amber-700');
+                b.classList.add('border-stone-200', 'bg-white', 'text-stone-700');
+            });
+            
+            // Add active state to clicked button
+            this.classList.remove('border-stone-200', 'bg-white', 'text-stone-700');
+            this.classList.add('border-amber-500', 'bg-amber-50', 'text-amber-700');
+            
+            // Update hidden field
+            document.getElementById('selectedSize').value = this.dataset.size;
+        });
+    });
+
+    // Quantity controls
+    const quantityInput = document.getElementById('quantityInput');
+    const selectedQuantity = document.getElementById('selectedQuantity');
+    const decreaseBtn = document.getElementById('decreaseQty');
+    const increaseBtn = document.getElementById('increaseQty');
+
+    decreaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            currentValue--;
+            quantityInput.value = currentValue;
+            selectedQuantity.value = currentValue;
+        }
+    });
+
+    increaseBtn.addEventListener('click', function() {
+        let currentValue = parseInt(quantityInput.value);
+        const maxValue = parseInt(quantityInput.max);
+        if (currentValue < maxValue) {
+            currentValue++;
+            quantityInput.value = currentValue;
+            selectedQuantity.value = currentValue;
+        }
+    });
+
+    // Also update hidden field when input changes directly
+    quantityInput.addEventListener('change', function() {
+        selectedQuantity.value = this.value;
+    });
+</script>
 @endsection

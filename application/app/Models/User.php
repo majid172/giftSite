@@ -21,7 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
+
+    public function details()
+    {
+        return $this->hasOne(UserDetail::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
