@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserProfileController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -73,5 +77,25 @@ Route::get('/privacy', function () {
     // return view('privacy'); // Create view if needed
     return redirect()->route('home');
 })->name('privacy');
+
+// Admin Routes
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::resource('categories', \App\Http\Controllers\Admin\Category\CategoryController::class, ['as' => 'admin']);
+    Route::resource('products', \App\Http\Controllers\Admin\Product\ProductController::class, ['as' => 'admin']);
+    
+    // Settings Routes
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::post('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+});
+
+
+
+    Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
+    Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
+    
+
+
+
 
 
