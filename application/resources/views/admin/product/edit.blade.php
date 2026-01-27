@@ -51,9 +51,26 @@
                             </div>
 
                             <div class="form-control">
+                                <label class="label"><span class="label-text font-bold text-gray-700">Old Price ($) <span class="text-gray-400 font-normal">(Optional)</span></span></label>
+                                <input type="number" step="0.01" name="old_price" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('old_price') input-error @enderror" value="{{ old('old_price', $product->old_price) }}">
+                            </div>
+
+                            <div class="form-control">
                                 <label class="label"><span class="label-text font-bold text-gray-700">Stock Quantity <span class="text-error">*</span></span></label>
                                 <input type="number" name="stock" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('stock') input-error @enderror" value="{{ old('stock', $product->stock) }}" required>
                                 @error('stock') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div class="form-control">
+                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Text <span class="text-gray-400 font-normal">(Optional)</span></span></label>
+                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge" placeholder="e.g. BEST SELLER" value="{{ old('badge', $product->badge) }}">
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Color Class <span class="text-gray-400 font-normal">(Optional)</span></span></label>
+                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge_color" placeholder="e.g. bg-amber-500" value="{{ old('badge_color', $product->badge_color) }}">
                             </div>
                         </div>
 

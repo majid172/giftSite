@@ -101,11 +101,12 @@
                 <!-- Hover Menu -->
                 <div class="absolute top-full left-0 w-64 bg-white shadow-2xl rounded-b-xl border border-stone-100 hidden group-hover:block z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                     <ul class="py-2">
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">Luxury Gift Boxes</a></li>
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">Artisan Tea Sets</a></li>
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">Handcrafted Packaging</a></li>
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">Seasonal Specials</a></li>
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition">Accessories</a></li>
+                        @php
+                            $categories = \App\Models\Category::all();
+                        @endphp
+                        @foreach($categories as $category)
+                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">{{ $category->name }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
             </div>

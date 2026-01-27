@@ -33,9 +33,19 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:categories',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Category::create($request->all());
+        $data = $request->all();
+        $data['slug'] = \Illuminate\Support\Str::slug($request->name);
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('categories'), $imageName);
+            $data['image'] = 'categories/' . $imageName;
+        }
+
+        Category::create($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
@@ -65,9 +75,24 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $category->update($request->all());
+        $data = $request->all();
+        $data['slug'] = \Illuminate\Support\Str::slug($request->name);
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($category->image && file_exists(public_path($category->image))) {
+                unlink(public_path($category->image));
+            }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('categories'), $imageName);
+            $data['image'] = 'categories/' . $imageName;
+        }
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
@@ -78,6 +103,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if ($category->image && file_exists(public_path($category->image))) {
+            unlink(public_path($category->image));
+        }
+        
         $category->delete();
 
         return redirect()->route('admin.categories.index')

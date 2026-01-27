@@ -33,70 +33,79 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|exists:categories,id',
-        'price' => 'required|numeric|min:0',
-        'stock' => 'required|integer|min:0',
-        'description' => 'nullable|string',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'others' => 'nullable|array',
-        'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    ]);
-
-    // Slug
-    $slug = Str::slug($request->name);
-    $count = Product::where('slug', 'LIKE', "{$slug}%")->count();
-    if ($count > 0) {
-        $slug .= '-' . ($count + 1);
-    }
-
-    // Create product first
-    $data = $request->except(['image', 'others']);
-    $data['slug'] = $slug;
-    $data['description'] = $request->description;
-
-    $product = Product::create($data);
-
-    // Base upload path
-    $basePath = dirname(base_path()).'/assets/images/product/'.$product->id.'/uploads';
-
-    // Ensure directory exists
-    if (!file_exists($basePath)) {
-        mkdir($basePath, 0755, true);
-    }
-
-    // Store main image
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->move($basePath, $fileName);
-
-        $product->update([
-            'image' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'price' => 'required|numeric|min:0',
+            'old_price' => 'nullable|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'description' => 'nullable|string',
+            'badge' => 'nullable|string|max:50',
+            'badge_color' => 'nullable|string|max:50',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'others' => 'nullable|array',
+            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    }
 
-    // Store gallery images
-    if ($request->hasFile('others')) {
-        foreach ($request->file('others') as $file) {
-            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($basePath, $fileName);
+        // Slug
+        $slug = Str::slug($request->name);
+        $count = Product::where('slug', 'LIKE', "{$slug}%")->count();
+        if ($count > 0) {
+            $slug .= '-' . ($count + 1);
+        }
 
-            $product->images()->create([
-                'image_path' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
-                'is_primary' => 0,
+        // Create product first
+        $data = $request->except(['image', 'others']);
+        $data['slug'] = $slug;
+        $data['description'] = $request->description;
+
+        $product = Product::create($data);
+
+        // Base upload path
+        $basePath = public_path('assets/images/product/' . $product->id . '/uploads');
+
+        // Ensure directory exists
+        if (!file_exists($basePath)) {
+            mkdir($basePath, 0755, true);
+        }
+
+        // Store main image with resizing
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            
+            // Resize and save
+            $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+
+            $product->update([
+                'image' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
             ]);
         }
+
+        // Store gallery images with resizing
+        if ($request->hasFile('others')) {
+            foreach ($request->file('others') as $file) {
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                
+                // Resize and save
+                $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+
+                $product->images()->create([
+                    'image_path' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
+                    'is_primary' => 0,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Product created successfully.');
     }
-
-    return redirect()
-        ->route('admin.products.index')
-        ->with('success', 'Product created successfully.');
-}
-
 
     /**
      * Display the specified resource.
@@ -124,8 +133,11 @@ public function store(Request $request)
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
+            'old_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'badge' => 'nullable|string|max:50',
+            'badge_color' => 'nullable|string|max:50',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'others' => 'nullable|array',
             'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -143,7 +155,7 @@ public function store(Request $request)
              $data['slug'] = $slug;
         }
 
-        $basePath = dirname(base_path()).'/assets/images/product/'.$product->id.'/uploads';
+        $basePath = public_path('assets/images/product/' . $product->id . '/uploads');
 
         // Ensure directory exists
         if (!file_exists($basePath)) {
@@ -152,13 +164,16 @@ public function store(Request $request)
 
         if ($request->hasFile('image')) {
             // Delete old primary image if it exists
-            if ($product->image && file_exists(dirname(base_path()).'/'.$product->image)) {
-                @unlink(dirname(base_path()).'/'.$product->image);
+            if ($product->image && file_exists(public_path($product->image))) {
+                @unlink(public_path($product->image));
             }
             
             $file = $request->file('image');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move($basePath, $fileName);
+            
+            // Resize and save
+            $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+            
             $data['image'] = 'assets/images/product/' . $product->id . '/uploads/' . $fileName;
         }
 
@@ -168,7 +183,9 @@ public function store(Request $request)
         if ($request->hasFile('others')) {
             foreach ($request->file('others') as $file) {
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move($basePath, $fileName);
+                
+                // Resize and save
+                $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
 
                 $product->images()->create([
                     'image_path' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
@@ -178,6 +195,66 @@ public function store(Request $request)
         }
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
+    }
+
+    /**
+     * Native PHP Image Resizer
+     */
+    private function resizeImage($file, $destination, $maxWidth, $maxHeight)
+    {
+        list($width, $height, $type) = getimagesize($file->getPathname());
+        
+        $ratio = $width / $height;
+        if ($maxWidth / $maxHeight > $ratio) {
+            $maxWidth = $maxHeight * $ratio;
+        } else {
+            $maxHeight = $maxWidth / $ratio;
+        }
+
+        $newWidth = (int)$maxWidth;
+        $newHeight = (int)$maxHeight;
+
+        $thumb = imagecreatetruecolor($newWidth, $newHeight);
+        
+        // Handle transparency for PNG and GIF
+        if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_GIF) {
+            imagecolortransparent($thumb, imagecolorallocatealpha($thumb, 0, 0, 0, 127));
+            imagealphablending($thumb, false);
+            imagesavealpha($thumb, true);
+        }
+
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $source = imagecreatefromjpeg($file->getPathname());
+                break;
+            case IMAGETYPE_PNG:
+                $source = imagecreatefrompng($file->getPathname());
+                break;
+            case IMAGETYPE_GIF:
+                $source = imagecreatefromgif($file->getPathname());
+                break;
+            default:
+                // Fallback for others or if not supported, just move file
+                 move_uploaded_file($file->getPathname(), $destination);
+                return;
+        }
+
+        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($thumb, $destination, 90);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($thumb, $destination, 9);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($thumb, $destination);
+                break;
+        }
+
+        imagedestroy($thumb);
+        imagedestroy($source);
     }
 
     /**

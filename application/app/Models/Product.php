@@ -12,8 +12,11 @@ class Product extends Model
         'slug',
         'description',
         'price',
+        'old_price',
         'stock',
         'image',
+        'badge',
+        'badge_color',
         'status',
     ];
 

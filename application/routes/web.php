@@ -39,14 +39,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 
-// Shop & Products
-Route::get('/products', function () {
-    return view('products');
-})->name('products.index');
+use App\Http\Controllers\ProductController;
 
-Route::get('/product/{id}', function ($id) {
-    return view('product', compact('id'));
-})->name('product.show');
+// Shop & Products
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
 Route::get('/occasions', function () {
     return view('occasions');
@@ -92,8 +89,20 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
 
 
+    // Order Routes
+    Route::get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/my-orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/my-orders/{id}/invoice', [\App\Http\Controllers\OrderController::class, 'invoice'])->name('orders.invoice');
+
     Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
     Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
+    
+    // Admin Routes extended
+    Route::middleware(['auth'])->prefix('admin')->group(function () {
+        // ... existing routes ...
+        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'edit', 'update']);
+        Route::get('orders/{id}/invoice', [\App\Http\Controllers\Admin\OrderController::class, 'invoice'])->name('admin.orders.invoice');
+    });
     
 
 

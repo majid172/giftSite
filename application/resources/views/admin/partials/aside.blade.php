@@ -57,7 +57,7 @@
                               Sales
                           </li>
                           
-                          <!-- Orders (Available to all, Logic handled by Controller) -->
+                          <!-- Orders Section -->
                           <li class="accordion-item" id="order">
                               <button class="accordion-toggle accordion-item-active:bg-neutral/10 inline-flex w-full items-center p-2 text-start text-sm font-normal"
                                   aria-controls="order-collapse-order" aria-expanded="false">
@@ -71,13 +71,19 @@
                               <div id="order-collapse-order" class="accordion-content mt-1 hidden w-full overflow-hidden transition-[height] duration-300"
                                   aria-labelledby="order" role="region">
                                   <ul class="space-y-1">
+                                      @if(auth()->user() && auth()->user()->role === 'admin')
                                       <li>
-                                          <a href="" class="inline-flex w-full items-center justify-between px-2">
-                                              <span>Order List</span>
-                                              <span class="badge badge-sm badge-neutral">{{ $orderCounts['all'] ?? 0 }}</span>
+                                          <a href="{{ route('admin.orders.index') }}" class="inline-flex w-full items-center justify-between px-2">
+                                              <span>All Orders</span>
                                           </a>
                                       </li>
-                                      <!-- Retain other order links if needed, simplified for list view -->
+                                      @else
+                                      <li>
+                                          <a href="{{ route('orders.index') }}" class="inline-flex w-full items-center justify-between px-2">
+                                              <span>My Orders</span>
+                                          </a>
+                                      </li>
+                                      @endif
                                   </ul>
                               </div>
                           </li>
