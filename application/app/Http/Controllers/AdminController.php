@@ -11,7 +11,7 @@ class AdminController extends Controller
         $today_orders = \App\Models\Order::whereDate('created_at', \Carbon\Carbon::today())->get();
         $total_orders = \App\Models\Order::all();
         $progress = \App\Models\Order::whereNotIn('status', ['Completed', 'Canceled'])->get();
-        $total_price = \App\Models\Order::sum('total_amount');
+        $total_price = \App\Models\Order::sum('price');
         $notices = [];
         
         // Mocking user countries distribution for now as we don't have country_id on users yet
