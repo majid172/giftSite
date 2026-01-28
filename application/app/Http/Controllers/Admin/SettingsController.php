@@ -25,22 +25,27 @@ class SettingsController extends Controller
         $data = $request->except(['_token', '_method']);
 
         foreach ($data as $key => $value) {
-            // Handle File Uploads specifically if needed, or assume generic key-value for now
-            // For now, let's treat everything as string text.
-            // If specific keys need special handling (image upload), we do it here.
-            
+            // Check if specifically handled as file
             if ($request->hasFile($key)) {
-                 $file = $request->file($key);
-                 $path = $file->store('settings', 'public');
-                 $value = $path;
+                $file = $request->file($key);
+                
+                // Remove old file if exists
+                $oldValue = get_setting($key);
+                if ($oldValue && Storage::disk('public')->exists($oldValue)) {
+                    Storage::disk('public')->delete($oldValue);
+                }
+
+                $path = $file->store('settings', 'public');
+                $value = $path;
             }
 
+            // Optimization: Only update if value changed (optional but cleaner)
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]
             );
         }
 
-        return redirect()->back()->with('success', 'Settings updated successfully.');
+        return redirect()->back()->with('success', 'Global settings updated with heritage precision.');
     }
 }

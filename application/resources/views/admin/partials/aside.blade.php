@@ -110,7 +110,7 @@
 
             <!-- Horizontal Circular Logo Area -->
             <div class="px-6 py-10">
-                <a href="{{ url('/dashboard') }}" class="text-logo-container group no-underline">
+                <a href="{{ route('admin.dashboard') }}" class="text-logo-container group no-underline">
                     <div class="logo-letter transform transition-transform group-hover:scale-110 duration-300">H</div>
                     <div class="brand-text-area">
                         <div class="brand-name">HERITAGE</div>
@@ -124,7 +124,7 @@
                     
                     @if(auth()->user()?->role === 'admin')
                     <li>
-                        <a href="{{ url('/dashboard') }}" class="menu-link-heritage {{ request()->is('dashboard') ? 'menu-active' : '' }} flex items-center gap-3 px-4 py-3">
+                        <a href="{{ route('admin.dashboard') }}" class="menu-link-heritage {{ request()->is('admin/dashboard') ? 'menu-active' : '' }} flex items-center gap-3 px-4 py-3">
                             <span class="icon-[tabler--dashboard] size-5"></span>
                             <span>Dashboard</span>
                         </a>
@@ -192,7 +192,7 @@
 
                     <li class="sidebar-section-header">System</li>
                     <li>
-                        <a href="#" class="menu-link-heritage flex items-center gap-3 px-4 py-3">
+                        <a href="{{ route('admin.settings.index') }}" class="menu-link-heritage {{ request()->is('admin/settings*') ? 'menu-active' : '' }} flex items-center gap-3 px-4 py-3">
                             <span class="icon-[tabler--settings] size-5"></span>
                             <span>Settings</span>
                         </a>

@@ -78,7 +78,7 @@ Route::get('/privacy', function () {
 })->name('privacy');
 
 // Admin Routes
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::resource('categories', \App\Http\Controllers\Admin\Category\CategoryController::class, ['as' => 'admin']);
     Route::resource('products', \App\Http\Controllers\Admin\Product\ProductController::class, ['as' => 'admin']);
@@ -100,7 +100,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
     
     // Admin Routes extended
-    Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         // ... existing routes ...
         Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'edit', 'update']);
         Route::get('orders/{id}/invoice', [\App\Http\Controllers\Admin\OrderController::class, 'invoice'])->name('admin.orders.invoice');
