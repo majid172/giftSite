@@ -83,10 +83,13 @@
 
                         <li class="dropdown-footer p-2 pt-1">
                             <a class="btn btn-text btn-error btn-block h-11 justify-start px-3 font-normal"
-                                href="  {{ route('logout') }}">
+                                href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
                                 <span class="icon-[tabler--logout] size-5"></span>
                                 Logout
                             </a>
+                            <form id="admin-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </div>

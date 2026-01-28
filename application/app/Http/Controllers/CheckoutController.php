@@ -51,7 +51,7 @@ class CheckoutController extends Controller
 
         // Process Order
         $order = \App\Models\Order::create([
-            'user_id' => auth()->id() ?? null, // Handle guest checkout if needed, or enforce auth
+            'user_id' => auth()->id(),
             'order_id' => 'ORD-' . strtoupper(uniqid()),
             'status' => 'Pending',
             'price' => $total,

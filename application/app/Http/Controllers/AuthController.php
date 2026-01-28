@@ -18,20 +18,19 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'phone' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        if (Auth::attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']], $request->remember)) {
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.dashboard'));
-
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'phone' => 'The provided credentials do not match our records.',
+        ])->onlyInput('phone');
     }
 
     // Show Register Form
@@ -45,26 +44,31 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users'],
+            'address' => ['required', 'string'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'customer', // Default role
         ]);
 
-        // Create empty user details record
+        // Create empty user details record for compatibility with existing logic
         UserDetail::create([
             'user_id' => $user->id,
+            'phone_number' => $request->phone,
+            'address_line_1' => $request->address,
         ]);
 
         Auth::login($user);
 
         return redirect()->route('admin.dashboard');
-
     }
 
     // Handle Logout

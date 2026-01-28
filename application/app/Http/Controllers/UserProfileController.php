@@ -46,15 +46,19 @@ class UserProfileController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'required|string|max:255|unique:users,phone,' . $user->id,
+            'address' => 'required|string',
+            'email' => 'nullable|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         $user->update([
             'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
             'email' => $request->email,
         ]);
 
-        return redirect()->route('user.show', $user->id)->with('success', 'Profile updated successfully.');
+        return redirect()->route('admin.profile.show', $user->id)->with('success', 'Profile updated successfully.');
     }
 
     /**

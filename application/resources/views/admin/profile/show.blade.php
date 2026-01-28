@@ -39,6 +39,18 @@
                 </label>
                 <div class="text-lg">{{ $user->email }}</div>
             </div>
+            <div>
+                <label class="label">
+                    <span class="label-text font-semibold">Phone</span>
+                </label>
+                <div class="text-lg">{{ $user->phone }}</div>
+            </div>
+            <div class="md:col-span-2">
+                <label class="label">
+                    <span class="label-text font-semibold">Shipping Address</span>
+                </label>
+                <div class="text-lg whitespace-pre-wrap">{{ $user->address }}</div>
+            </div>
              <div>
                 <label class="label">
                     <span class="label-text font-semibold">Joined At</span>

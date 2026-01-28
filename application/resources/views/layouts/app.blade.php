@@ -22,17 +22,29 @@
         h1, h2, h3, h4, h5, h6, .font-serif {
             font-family: 'Playfair Display', serif;
         }
+        [x-cloak] { display: none !important; }
+        :root {
+            --color-primary-dark: #064E3B;
+            --color-primary: #059669;
+            --color-accent: #D97706;
+            --color-bg: #F5F5F4;
+        }
     </style>
+    @stack('styles')
+    @stack('scripts')
 </head>
-<body class="font-sans text-gray-900 antialiased flex flex-col min-h-full bg-gray-50">
+<body class="font-sans text-gray-900 antialiased h-full bg-stone-50">
+    <div class="flex flex-col min-h-screen">
+        @include('partials.topbar')
+        @include('partials.header')
 
-    @include('partials.header')
+        <main class="flex-grow">
+            @yield('content')
+        </main>
 
-    <main class="flex-grow">
-        @yield('content')
-    </main>
+        @include('partials.footer')
+    </div>
 
-    @include('partials.footer')
-
+    @include('partials.cart-drawer')
 </body>
 </html>

@@ -54,9 +54,14 @@
 
             <!-- User -->
             @auth
+            <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('orders.index') }}" class="group flex flex-col items-center" title="Dashboard">
+                <svg class="w-7 h-7 text-stone-600 group-hover:text-emerald-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v8h-6zM4 16h6v4h-6zM14 12h6v8h-6zM14 4h6v4h-6z"></path>
+                </svg>
+            </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="group flex flex-col items-center">
+                <button type="submit" class="group flex flex-col items-center" title="Logout">
                     <svg class="w-7 h-7 text-stone-600 group-hover:text-emerald-700 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 </button>
             </form>

@@ -371,7 +371,7 @@
                         <tr class="text-center">
                             <td>{{ dateFormat($item->created_at) }}</td>
                             <td>
-                                <a href="/admin/order/{{ $item->id }}"
+                                <a href="{{ route('admin.orders.edit', $item->id) }}"
                                     class="text-primary">#{{ $item->order_id }}</a>
                             </td>
 
@@ -414,7 +414,7 @@
                             </td>
 
                             <td>
-                                <a class="btn btn-circle btn-text btn-sm" href="{{ route('order.details',$item->id) }}" aria-label="Action button"><span
+                                <a class="btn btn-circle btn-text btn-sm" href="{{ route('admin.orders.edit',$item->id) }}" aria-label="Action button"><span
                                         class="icon-[tabler--eye] size-5"></span></a>
                                 <button class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span
                                         class="icon-[tabler--trash] size-5"></span></button>

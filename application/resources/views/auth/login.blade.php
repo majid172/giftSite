@@ -37,11 +37,11 @@
                 @csrf
                 <div class="space-y-5">
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-emerald-950 mb-1">Email Address</label>
-                        <input id="email" name="email" type="email" autocomplete="email" required 
+                        <label for="phone" class="block text-sm font-semibold text-emerald-950 mb-1">Phone Number</label>
+                        <input id="phone" name="phone" type="text" required 
                                class="appearance-none block w-full px-4 py-3 border border-stone-200 rounded-lg placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors sm:text-sm" 
-                               placeholder="you@example.com">
-                        @error('email')
+                               placeholder="e.g. 01712345678">
+                        @error('phone')
                             <p class="mt-1 text-sm text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
