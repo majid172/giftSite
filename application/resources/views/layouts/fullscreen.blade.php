@@ -5,7 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'GiftPack - Premium Gift Boxes')</title>
+    <title>@yield('title', get_setting('seo_meta_title', config('app.name', 'GiftPack')))</title>
+    <meta name="description" content="@yield('meta_description', get_setting('seo_meta_description'))">
+    <meta name="keywords" content="@yield('meta_keywords', get_setting('seo_meta_keywords'))">
+
+    {{-- Open Graph / Social --}}
+    <meta property="og:title" content="@yield('title', get_setting('seo_meta_title', config('app.name')))">
+    <meta property="og:description" content="@yield('meta_description', get_setting('seo_meta_description'))">
+    @if(get_setting('seo_social_image'))
+        <meta property="og:image" content="{{ asset(get_setting('seo_social_image')) }}">
+    @endif
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+
+    {{-- Analytics --}}
+    @if(get_setting('seo_analytics_id'))
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ get_setting('seo_analytics_id') }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '{{ get_setting('seo_analytics_id') }}');
+        </script>
+    @endif
+
+    @if(get_setting('seo_pixel_id'))
+        <!-- Facebook Pixel -->
+        <script>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '{{ get_setting('seo_pixel_id') }}');
+            fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
+        /></noscript>
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -87,6 +87,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+
+    // Shipping Routes
+    Route::get('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'index'])->name('admin.shipping.index');
+    Route::post('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'update'])->name('admin.shipping.update');
 });
 
 

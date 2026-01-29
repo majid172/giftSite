@@ -197,6 +197,12 @@
                             <span>Settings</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('admin.shipping.index') }}" class="menu-link-heritage flex items-center gap-3 px-4 py-3">
+                            <span class="icon-[tabler--file-description] size-5"></span>
+                            <span>Shipping</span>
+                        </a>
+                    </li>   
                     @endif
 
                     <li class="sidebar-section-header">Account</li>

@@ -1,295 +1,529 @@
 @extends('admin.layouts.app')
 
+@push('css')
+<style>
+    .kartly-settings-container {
+        font-family: 'Inter', sans-serif;
+        color: #334155;
+    }
+    .kartly-breadcrumb {
+        margin-bottom: 24px;
+        font-size: 14px;
+    }
+    .kartly-breadcrumb .main-title {
+        font-weight: 700;
+        font-size: 18px;
+        color: #1e293b;
+    }
+    .kartly-breadcrumb .divider {
+        margin: 0 8px;
+        color: #94a3b8;
+    }
+    .kartly-breadcrumb .active-tab {
+        color: #3b82f6;
+        font-weight: 500;
+    }
+    .kartly-main-wrapper {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        display: flex;
+        min-height: 700px;
+        overflow: hidden;
+    }
+    .kartly-sidebar {
+        width: 260px;
+        background: #f8fafc;
+        border-right: 1px solid #f1f5f9;
+        padding: 20px 0;
+    }
+    .kartly-nav-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-right: 3px solid transparent;
+        color: #64748b;
+        font-weight: 500;
+        gap: 12px;
+        width: 100%;
+        border-radius: 0;
+    }
+    .kartly-nav-item:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+    .kartly-nav-item.active {
+        background: #ffffff;
+        color: #3b82f6;
+        border-right: 3px solid #3b82f6;
+    }
+    .kartly-nav-item i {
+        font-size: 18px;
+    }
+    .kartly-nav-item.active i {
+        color: #3b82f6;
+    }
+    .kartly-content {
+        flex: 1;
+        padding: 30px 40px;
+    }
+    .kartly-content-header {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .kartly-form-group {
+        display: flex;
+        margin-bottom: 30px;
+        align-items: flex-start;
+    }
+    .kartly-label {
+        width: 250px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        padding-top: 10px;
+    }
+    .kartly-input-wrapper {
+        flex: 1;
+        max-width: 600px;
+    }
+    .kartly-input {
+        width: 100% !important;
+        background: #f1f5f9 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        color: #334155 !important;
+        transition: ring 0.2s;
+    }
+    .kartly-input:focus {
+        box-shadow: 0 0 0 2px #3b82f6 !important;
+        outline: none !important;
+    }
+    .image-preview-box {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border: 1px solid #e2e8f0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        margin-bottom: 10px;
+    }
+    .image-preview-box.rect {
+        border-radius: 4px;
+        width: 120px;
+        height: 80px;
+    }
+    .image-preview-box img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+    }
+    .remove-image-btn {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        color: #94a3b8;
+        font-size: 12px;
+    }
+    .choose-file-link {
+        color: #3b82f6;
+        font-weight: 500;
+        text-decoration: underline;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .logo-grid-header {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 14px;
+        color: #334155;
+        border-radius: 4px 4px 0 0;
+        margin-top: 40px;
+    }
+    .logo-grid-content {
+        border: 1px solid #e2e8f0;
+        border-top: none;
+        padding: 30px;
+        border-radius: 0 0 4px 4px;
+    }
+    .logo-grid {
+        display: grid;
+        grid-template-cols: 1fr 1fr;
+        gap: 40px;
+    }
+    .logo-column-title {
+        font-weight: 700;
+        font-size: 14px;
+        color: #334155;
+        margin-bottom: 20px;
+    }
+    .logo-item {
+        display: flex;
+        margin-bottom: 30px;
+        gap: 30px;
+    }
+    .logo-item-label {
+        width: 150px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #475569;
+        padding-top: 10px;
+    }
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .save-button {
+        background: #3b82f6;
+        color: #fff;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .save-button:hover {
+        background: #2563eb;
+    }
+</style>
+@endpush
+
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h5 class="text-base-content text-lg font-medium">Site Settings <span class="text-xs text-base-content/50">(General Settings)</span></h5>
+<div class="kartly-settings-container">
+    {{-- Breadcrumb --}}
+    <div class="kartly-breadcrumb">
+        <span class="main-title">Business Settings</span>
+       
+    </div>
+
+    <div class="kartly-main-wrapper">
+        {{-- Sidebar --}}
+        <div class="kartly-sidebar">
+            <button class="kartly-nav-item active" onclick="showTab('general', this)">
+                <i class="icon-[tabler--settings]"></i>
+                General
+            </button>
+           
+            <button class="kartly-nav-item" onclick="showTab('media', this)">
+                <i class="icon-[tabler--photo-edit]"></i>
+                Media settings
+            </button>
+            <button class="kartly-nav-item" onclick="showTab('seo', this)">
+                <i class="icon-[tabler--file-description]"></i>
+                SEO settings
+            </button>
         </div>
-        <div class="card-body gap-8">
-            <form class="space-y-6" onsubmit="return false;">
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                        <label class="label-text" for="name">Site Name</label>
-                        <input type="text" id="name" name="name" class="input" placeholder="John">
-                    </div>
-                    <div>
-                        <label class="label-text" for="description">Site Description</label>
-                        <input type="text" id="description" name="description" class="input" placeholder="Doe">
-                    </div>
-                    <div>
-                        <label class="label-text" for=" email">E-mail</label>
-                        <input type="email" id="email" name="email" class="input"
-                            placeholder="john.doe@example.com">
-                    </div>
-                    <div>
-                        <label class="label-text" for="organization">Organization</label>
-                        <input type="text" id="organization" name="organization" class="input" placeholder="Themeselection">
-                    </div>
-                    <div>
-                        <label class="label-text" for="number">Phone Number</label>
-                        <input type="text" id="number" name="number" class="input" placeholder="202 555 0111">
-                    </div>
-                    <div>
-                        <label class="label-text" for="address">Address</label>
-                        <input type="text" id="address" name="address" class="input" placeholder="Address">
-                    </div>
-                    <div>
-                        <label class="label-text" for="state">State</label>
-                        <input type="text" id="state" name="state" class="input" placeholder="California">
-                    </div>
-                    <div>
-                        <label class="label-text" for="zipCode">Zip Code</label>
-                        <input type="text" id="zipCode" name="zipCode" class="input" placeholder="231465"
-                            maxlength="6">
-                    </div>
-                    <div>
-                        <label class="label-text" for="coutry">Country</label>
-                        <div class="max-w-full">
-                            <div class="advance-select relative"><select
-                                    data-select="{
-    &quot;placeholder&quot;: &quot;Select&quot;,
-    &quot;toggleTag&quot;: &quot;&lt;button type=\&quot;button\&quot; aria-expanded=\&quot;false\&quot;&gt;&lt;/button&gt;&quot;,
-    &quot;toggleClasses&quot;: &quot;advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40&quot;,
-    &quot;hasSearch&quot;: true,
-    &quot;dropdownClasses&quot;: &quot;advance-select-menu max-h-52 pt-0 overflow-y-auto&quot;,
-    &quot;optionClasses&quot;: &quot;advance-select-option selected:select-active&quot;,
-    &quot;optionTemplate&quot;: &quot;&lt;div class=\&quot;flex justify-between items-center w-full\&quot;&gt;&lt;span data-title&gt;&lt;/span&gt;&lt;span class=\&quot;icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block \&quot;&gt;&lt;/span&gt;&lt;/div&gt;&quot;,
-    &quot;extraMarkup&quot;: &quot;&lt;span class=\&quot;icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 \&quot;&gt;&lt;/span&gt;&quot;
-    }"
-                                    class="hidden" style="display: none;">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <option value="">Select</option>
-                                    <option value="Australia">Australia</option>
-                                    <option value="Bangladesh">Bangladesh</option>
-                                    <option value="Belarus">Belarus</option>
-                                    <option value="Brazil">Brazil</option>
-                                    <option value="Canada">Canada</option>
-                                    <option value="China">China</option>
-                                    <option value="France">France</option>
-                                    <option value="Germany">Germany</option>
-                                    <option value="India">India</option>
-                                    <option value="Indonesia">Indonesia</option>
-                                    <option value="Israel">Israel</option>
-                                    <option value="Italy">Italy</option>
-                                    <option value="Japan">Japan</option>
-                                    <option value="Korea">Korea, Republic of</option>
-                                    <option value="Mexico">Mexico</option>
-                                    <option value="Philippines">Philippines</option>
-                                    <option value="Russia">Russian Federation</option>
-                                    <option value="South Africa">South Africa</option>
-                                    <option value="Thailand">Thailand</option>
-                                    <option value="Turkey">Turkey</option>
-                                    <option value="Ukraine">Ukraine</option>
-                                    <option value="United Arab Emirates">United Arab Emirates</option>
-                                    <option value="United Kingdom">United Kingdom</option>
-                                    <option value="United States">United States</option>
-                                </select><button type="button" aria-expanded="false"
-                                    class="advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40"><span
-                                        class="truncate">Select</span></button>
-                                <div data-select-dropdown=""
-                                    class="absolute top-full hidden advance-select-menu max-h-52 pt-0 overflow-y-auto"
-                                    role="listbox" tabindex="-1" aria-orientation="vertical">
-                                    <div class="bg-base-100 sticky top-0 mb-2 px-2 pt-3"><input type="text"
-                                            placeholder="Search..."
-                                            class="border-base-content/40 focus:border-primary focus:outline-primary bg-base-100 block w-full rounded-field border px-3 py-2 text-base focus:outline-1">
-                                    </div>
-                                    <div data-value="Australia" data-title-value="Australia" tabindex="0"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="0">
-                                                Kingdom</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="United States" data-title-value="United States" tabindex="23"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="23">
-                                        <div class="flex justify-between items-center w-full"><span data-title="">United
-                                                States</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                </div><span
-                                    class="icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 "></span>
-                            </div>
+        {{-- Content Area --}}
+        <div class="kartly-content">
+            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                
+                {{-- General Tab --}}
+                <div id="tab-general" class="tab-content active">
+                    <div class="kartly-content-header">General Settings</div>
+                    
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Site Title</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="site_name" class="kartly-input" value="{{ get_setting('site_name', 'Kartly') }}">
                         </div>
                     </div>
-                    <div>
-                        <label class="label-text" for="language">Language</label>
-                        <div class="max-w-full">
-                            <div class="advance-select relative"><select
-                                    data-select="{
-    &quot;placeholder&quot;: &quot;Select Language&quot;,
-    &quot;toggleTag&quot;: &quot;&lt;button type=\&quot;button\&quot; aria-expanded=\&quot;false\&quot;&gt;&lt;/button&gt;&quot;,
-    &quot;toggleClasses&quot;: &quot;advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40&quot;,
-    &quot;hasSearch&quot;: true,
-    &quot;dropdownClasses&quot;: &quot;advance-select-menu max-h-52 pt-0 overflow-y-auto&quot;,
-    &quot;optionClasses&quot;: &quot;advance-select-option selected:select-active&quot;,
-    &quot;optionTemplate&quot;: &quot;&lt;div class=\&quot;flex justify-between items-center w-full\&quot;&gt;&lt;span data-title&gt;&lt;/span&gt;&lt;span class=\&quot;icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block \&quot;&gt;&lt;/span&gt;&lt;/div&gt;&quot;,
-    &quot;extraMarkup&quot;: &quot;&lt;span class=\&quot;icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 \&quot;&gt;&lt;/span&gt;&quot;
-    }"
-                                    class="hidden" style="display: none;">
 
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Site Motto</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="site_motto" class="kartly-input" value="{{ get_setting('site_motto', 'Buy more, Earn more') }}">
+                        </div>
+                    </div>
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Site Timezone</label>
+                        <div class="kartly-input-wrapper">
+                            <select name="site_timezone" class="kartly-input">
+                                @foreach(timezone_identifiers_list() as $timezone)
+                                    <option value="{{ $timezone }}" {{ get_setting('site_timezone', 'UTC') == $timezone ? 'selected' : '' }}>{{ $timezone }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Site Description</label>
+                        <div class="kartly-input-wrapper">
+                            <textarea name="site_description" class="kartly-input" rows="3">{{ get_setting('site_description') }}</textarea>
+                        </div>
+                    </div>
 
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Copyright Text</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="site_copyright" class="kartly-input" value="{{ get_setting('site_copyright') }}">
+                        </div>
+                    </div>
 
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Maintenance Mode</label>
+                        <div class="kartly-input-wrapper">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="hidden" name="maintenance_mode" value="0">
+                                <input type="checkbox" name="maintenance_mode" class="toggle toggle-primary" value="1" {{ get_setting('maintenance_mode') ? 'checked' : '' }}>
+                                <span class="text-sm font-medium text-slate-600">Enable Maintenance Mode</span>
+                            </label>
+                        </div>
+                    </div>
 
-                                    <option value="">Select Language</option>
-                                    <option value="en">English</option>
-                                    <option value="fr">French</option>
-                                    <option value="de">German</option>
-                                    <option value="pt">Portuguese</option>
-                                </select><button type="button" aria-expanded="false"
-                                    class="advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40"><span
-                                        class="truncate">Select Language</span></button>
-                                <div data-select-dropdown=""
-                                    class="absolute top-full hidden advance-select-menu max-h-52 pt-0 overflow-y-auto"
-                                    role="listbox" tabindex="-1" aria-orientation="vertical">
-                                    <div class="bg-base-100 sticky top-0 mb-2 px-2 pt-3"><input type="text"
-                                            placeholder="Search..."
-                                            class="border-base-content/40 focus:border-primary focus:outline-primary bg-base-100 block w-full rounded-field border px-3 py-2 text-base focus:outline-1">
-                                    </div>
-                                    <div data-value="en" data-title-value="English" tabindex="0"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="0">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">English</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="fr" data-title-value="French" tabindex="1"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="1">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">French</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="de" data-title-value="German" tabindex="2"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="2">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">German</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="pt" data-title-value="Portuguese" tabindex="3"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="3">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">Portuguese</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                </div><span
-                                    class="icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 "></span>
+                    {{-- Contact Information --}}
+                    <div class="kartly-content-header mt-10">Contact Information</div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Contact Email</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="email" name="contact_email" class="kartly-input" value="{{ get_setting('contact_email') }}" placeholder="support@example.com">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Contact Phone</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="contact_phone" class="kartly-input" value="{{ get_setting('contact_phone') }}" placeholder="+1 234 567 890">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Offset Address</label>
+                        <div class="kartly-input-wrapper">
+                            <textarea name="contact_address" class="kartly-input" rows="3" placeholder="123 Street Name, City, Country">{{ get_setting('contact_address') }}</textarea>
+                        </div>
+                    </div>
+
+                    {{-- Localization --}}
+                    <div class="kartly-content-header mt-10">Localization</div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Currency Code</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="currency_code" class="kartly-input" value="{{ get_setting('currency_code', 'USD') }}" placeholder="USD">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Currency Symbol</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="currency_symbol" class="kartly-input" value="{{ get_setting('currency_symbol', '৳') }}" placeholder="৳">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Order Prefix</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="order_prefix" class="kartly-input" value="{{ get_setting('order_prefix', 'ORD-') }}" placeholder="ORD-">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Tax Percentage (%)</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="number" step="0.01" name="tax_percentage" class="kartly-input" value="{{ get_setting('tax_percentage', '0') }}" placeholder="0">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Favicon</label>
+                        <div class="kartly-input-wrapper">
+                            <div class="image-preview-box">
+                                @if(get_setting('site_favicon'))
+                                    <img src="{{ asset(get_setting('site_favicon')) }}" alt="Favicon">
+                                @else
+                                    <img src="{{ asset('assets/images/default-favicon.png') }}" class="opacity-20" alt="Default">
+                                @endif
+                                <div class="remove-image-btn" onclick="removeImage('site_favicon')">
+                                    <i class="icon-[tabler--x]"></i>
+                                </div>
                             </div>
+                            <label for="site_favicon" class="choose-file-link">Choose File</label>
+                            <input type="file" id="site_favicon" name="site_favicon" class="hidden" onchange="previewSelectedImage(this)">
+                        </div>
+                    </div>
+
+                    {{-- Logo Section --}}
+                    
+                    
+
+                    <div style="margin-top: 50px;">
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </div>
+                </div>
+
+                {{-- Other Tabs Placeholders --}}
+                <!-- <div id="tab-email" class="tab-content">
+                    <div class="kartly-content-header">Email Settings</div>
+                    <div class="p-10 text-center text-slate-400 italic">Email configuration interface coming soon...</div>
+                </div>
+                <div id="tab-templates" class="tab-content">
+                    <div class="kartly-content-header">Email Templates</div>
+                    <div class="p-10 text-center text-slate-400 italic">Email templates management interface coming soon...</div>
+                </div> -->
+                <div id="tab-media" class="tab-content">
+                    <div class="kartly-content-header">Media Settings</div>
+                    
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Max Upload Size (KB)</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="number" name="media_max_size" class="kartly-input" value="{{ get_setting('media_max_size', '2048') }}" placeholder="2048">
+                            <div class="text-xs text-slate-400 mt-2">Maximum file size allowed for uploads in Kilobytes.</div>
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Allowed File Types</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="media_allowed_types" class="kartly-input" value="{{ get_setting('media_allowed_types', 'jpg,jpeg,png,gif,webp,pdf') }}" placeholder="jpg,jpeg,png">
+                            <div class="text-xs text-slate-400 mt-2">Comma separated list of allowed file extensions.</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 50px;">
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </div>
+                </div>
+
+                <div id="tab-seo" class="tab-content">
+                    <div class="kartly-content-header">SEO Settings</div>
+                    
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Meta Title</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="seo_meta_title" class="kartly-input" value="{{ get_setting('seo_meta_title') }}" placeholder="Global Meta Title">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Meta Keywords</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="seo_meta_keywords" class="kartly-input" value="{{ get_setting('seo_meta_keywords') }}" placeholder="keyword1, keyword2, keyword3">
                         </div>
                     </div>
                     
-                    <div>
-                        <label class="label-text" for="currency">Currency</label>
-                        <div class="max-w-full">
-                            <div class="advance-select relative"><select
-                                    data-select="{
-    &quot;placeholder&quot;: &quot;Select Timezone&quot;,
-    &quot;toggleTag&quot;: &quot;&lt;button type=\&quot;button\&quot; aria-expanded=\&quot;false\&quot;&gt;&lt;/button&gt;&quot;,
-    &quot;toggleClasses&quot;: &quot;advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40&quot;,
-    &quot;hasSearch&quot;: true,
-    &quot;dropdownClasses&quot;: &quot;advance-select-menu max-h-52 pt-0 overflow-y-auto&quot;,
-    &quot;optionClasses&quot;: &quot;advance-select-option selected:select-active&quot;,
-    &quot;optionTemplate&quot;: &quot;&lt;div class=\&quot;flex justify-between items-center w-full\&quot;&gt;&lt;span data-title&gt;&lt;/span&gt;&lt;span class=\&quot;icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block \&quot;&gt;&lt;/span&gt;&lt;/div&gt;&quot;,
-    &quot;extraMarkup&quot;: &quot;&lt;span class=\&quot;icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 \&quot;&gt;&lt;/span&gt;&quot;
-    }"
-                                    class="hidden" style="display: none;">
-
-
-
-
-
-                                    <option value="">Select Currency</option>
-                                    <option value="usd">USD</option>
-                                    <option value="euro">Euro</option>
-                                    <option value="pound">Pound</option>
-                                    <option value="bitcoin">Bitcoin</option>
-                                </select><button type="button" aria-expanded="false"
-                                    class="advance-select-toggle select-disabled:pointer-events-none select-disabled:opacity-40"><span
-                                        class="truncate">Select Timezone</span></button>
-                                <div data-select-dropdown=""
-                                    class="absolute top-full hidden advance-select-menu max-h-52 pt-0 overflow-y-auto"
-                                    role="listbox" tabindex="-1" aria-orientation="vertical">
-                                    <div class="bg-base-100 sticky top-0 mb-2 px-2 pt-3"><input type="text"
-                                            placeholder="Search..."
-                                            class="border-base-content/40 focus:border-primary focus:outline-primary bg-base-100 block w-full rounded-field border px-3 py-2 text-base focus:outline-1">
-                                    </div>
-                                    <div data-value="usd" data-title-value="USD" tabindex="0"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="0">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">USD</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="euro" data-title-value="Euro" tabindex="1"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="1">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">Euro</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="pound" data-title-value="Pound" tabindex="2"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="2">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">Pound</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                    <div data-value="bitcoin" data-title-value="Bitcoin" tabindex="3"
-                                        class="cursor-pointer advance-select-option selected:select-active"
-                                        data-id="3">
-                                        <div class="flex justify-between items-center w-full"><span
-                                                data-title="">Bitcoin</span><span
-                                                class="icon-[tabler--check] shrink-0 size-4 text-primary hidden selected:block "></span>
-                                        </div>
-                                    </div>
-                                </div><span
-                                    class="icon-[tabler--chevron-down] shrink-0 size-4 text-base-content absolute top-1/2 end-3 -translate-y-1/2 "></span>
-                            </div>
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Meta Description</label>
+                        <div class="kartly-input-wrapper">
+                            <textarea name="seo_meta_description" class="kartly-input" rows="4" placeholder="Global meta description for search engines.">{{ get_setting('seo_meta_description') }}</textarea>
                         </div>
                     </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Social Share Image</label>
+                        <div class="kartly-input-wrapper">
+                            <div class="image-preview-box rect">
+                                @if(get_setting('seo_social_image'))
+                                    <img src="{{ asset(get_setting('seo_social_image')) }}" alt="Social Image">
+                                @else
+                                    <span class="text-slate-300 font-bold">1200x630</span>
+                                @endif
+                                <div class="remove-image-btn" onclick="removeImage('seo_social_image')">
+                                    <i class="icon-[tabler--x]"></i>
+                                </div>
+                            </div>
+                            <label for="seo_social_image" class="choose-file-link">Choose File</label>
+                            <input type="file" id="seo_social_image" name="seo_social_image" class="hidden" onchange="previewSelectedImage(this)">
+                            <div class="text-xs text-slate-400 mt-2">Recommended size: 1200x630px for Facebook/Twitter.</div>
+                        </div>
+                    </div>
+
+                    <div class="kartly-content-header mt-10">Analytics & Tracking</div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Google Analytics ID</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="seo_analytics_id" class="kartly-input" value="{{ get_setting('seo_analytics_id') }}" placeholder="UA-XXXXX-Y or G-XXXXXXX">
+                        </div>
+                    </div>
+
+                    <div class="kartly-form-group">
+                        <label class="kartly-label">Facebook Pixel ID</label>
+                        <div class="kartly-input-wrapper">
+                            <input type="text" name="seo_pixel_id" class="kartly-input" value="{{ get_setting('seo_pixel_id') }}" placeholder="123456789012345">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 50px;">
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </div>
                 </div>
-                <!-- Submit Button -->
-                <div class="flex gap-3">
-                    <button class="btn btn-primary">Save Changes</button>
-                    <button class="btn btn-soft btn-secondary">Cancel</button>
-                </div>
+
             </form>
         </div>
     </div>
-    </div>
+</div>
 @endsection
+
+@push('js')
+<script>
+    function showTab(tabId, btn) {
+        // Update breadcrumb
+        const titles = {
+            'general': 'General',
+            'media': 'Media settings',
+            'seo': 'SEO settings'
+        };
+        document.getElementById('active-tab-breadcrumb').innerText = titles[tabId];
+
+        // Toggle content
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById('tab-' + tabId).classList.add('active');
+
+        // Toggle button active state
+        document.querySelectorAll('.kartly-nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        btn.classList.add('active');
+    }
+
+    function removeImage(inputId) {
+        // For now just clear the input if any, or hide preview. 
+        // In a real app we might send an AJAX request to delete the file.
+        const input = document.getElementById(inputId);
+        if(input) input.value = '';
+        alert('Image removal logic would go here. For now, it will be replaced upon next upload.');
+    }
+
+    function previewSelectedImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImg = input.previousElementSibling.previousElementSibling.querySelector('img');
+                if(previewImg) previewImg.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+@endpush
