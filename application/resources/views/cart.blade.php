@@ -21,12 +21,14 @@
             <p class="text-stone-500 text-lg max-w-2xl">A curated selection of heritage gifts, prepared for your special moments.</p>
         </div>
 
-        @if(session('success'))
-            <div class="mb-8 bg-emerald-100 border border-emerald-400 text-emerald-700 px-6 py-4 rounded-2xl flex items-center gap-4 shadow-sm animate-fade-in" role="alert">
-                <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                <span class="font-medium tracking-wide">{{ session('success') }}</span>
-            </div>
-        @endif
+        <div id="alert-container">
+            @if(session('success'))
+                <div class="mb-8 bg-emerald-100 border border-emerald-400 text-emerald-700 px-6 py-4 rounded-2xl flex items-center gap-4 shadow-sm animate-fade-in" role="alert">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <span class="font-medium tracking-wide">{{ session('success') }}</span>
+                </div>
+            @endif
+        </div>
 
         @if(isset($cart) && count($cart) > 0)
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -72,14 +74,22 @@
                                         </td>
                                         <td class="px-8 py-8">
                                             <div class="flex flex-col items-center gap-2">
-                                                <div class="inline-flex items-center bg-white border-2 border-stone-200 rounded-xl px-4 py-2 font-bold text-emerald-950">
-                                                    {{ $details['quantity'] }}
+                                                <div class="flex items-center border-2 border-stone-200 rounded-xl overflow-hidden bg-white">
+                                                    <button type="button" class="px-3 py-2 text-stone-500 hover:text-emerald-700 hover:bg-stone-50 transition-colors font-bold quantity-btn" data-id="{{ $id }}" data-action="decrease">-</button>
+                                                    <input type="number" 
+                                                           value="{{ $details['quantity'] }}" 
+                                                           class="w-12 text-center border-none py-2 text-emerald-950 font-bold focus:ring-0 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none quantity-input" 
+                                                           min="1" 
+                                                           id="quantity-{{ $id }}"
+                                                           data-id="{{ $id }}">
+                                                    <button type="button" class="px-3 py-2 text-stone-500 hover:text-emerald-700 hover:bg-stone-50 transition-colors font-bold quantity-btn" data-id="{{ $id }}" data-action="increase">+</button>
                                                 </div>
                                                 <span class="text-[10px] uppercase tracking-tighter text-stone-400 font-bold">Items</span>
                                             </div>
                                         </td>
+                                        
                                         <td class="px-8 py-8 text-right">
-                                            <div class="text-xl font-bold text-emerald-700">
+                                            <div class="text-xl font-bold text-emerald-700" id="item-subtotal-{{ $id }}">
                                                 ${{ number_format($details['price'] * $details['quantity'], 2) }}
                                             </div>
                                         </td>
@@ -101,55 +111,59 @@
 
                 <!-- Order Summary (4 Columns) -->
                 <div class="lg:col-span-4 sticky top-8">
-                    <div class="bg-emerald-950 text-white rounded-[2.5rem] p-10 shadow-2xl shadow-emerald-900/40 relative overflow-hidden border border-emerald-800">
-                        <!-- Decorative Pattern -->
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-800/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
-                        <div class="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -ml-16 -mb-16"></div>
-
-                        <h2 class="text-3xl font-serif font-bold mb-8 relative">Sum of Heritage</h2>
+                    <div class="bg-white rounded-3xl p-8 shadow-xl shadow-stone-200/50 border border-stone-200/60 relative overflow-hidden">
                         
-                        <div class="space-y-6 relative border-b border-emerald-900/50 pb-8 mb-8">
-                            <div class="flex justify-between items-center text-emerald-100/70">
-                                <span class="text-sm uppercase tracking-widest font-medium">Subtotal</span>
-                                <span class="text-lg font-bold text-white">${{ number_format($total, 2) }}</span>
+                        <div class="flex items-center justify-between mb-8 pb-4 border-b border-stone-100">
+                             <h2 class="text-2xl font-serif font-bold text-emerald-950">Order Summary</h2>
+                             <span class="text-stone-400 text-sm">{{ count($cart) }} Items</span>
+                        </div>
+                        
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between items-center text-stone-600">
+                                <span class="text-sm font-medium">Subtotal</span>
+                                <span class="text-base font-bold text-emerald-950" id="cart-subtotal">${{ number_format($total, 2) }}</span>
                             </div>
-                            <div class="flex justify-between items-center text-emerald-100/70">
+                            <div class="flex justify-between items-center text-stone-600">
                                 <div class="flex flex-col">
-                                    <span class="text-sm uppercase tracking-widest font-medium">Standard Shipping</span>
-                                    <span class="text-[10px] text-amber-500 font-bold mt-0.5">Complementary for heritage members</span>
+                                    <span class="text-sm font-medium">Shipping Estimate</span>
+                                    <span class="text-[10px] text-emerald-600 font-bold mt-0.5">Heritage Member Benefit</span>
                                 </div>
-                                <span class="text-lg font-bold text-amber-500">Free</span>
+                                <span class="text-base font-bold text-emerald-600">Free</span>
+                            </div>
+                            <div class="flex justify-between items-center text-stone-600">
+                                <span class="text-sm font-medium">Tax Estimate</span>
+                                <span class="text-base font-bold text-stone-400">Calculated at checkout</span>
                             </div>
                         </div>
 
-                        <div class="flex justify-between items-end mb-10 relative">
-                            <div class="flex flex-col">
-                                <span class="text-amber-500 text-xs font-bold uppercase tracking-widest mb-1">Total Impact</span>
-                                <h3 class="text-sm font-medium text-emerald-100/60">Final amount inclusive of taxes</h3>
+                        <div class="border-t border-dashed border-stone-200 pt-6 mb-8">
+                            <div class="flex justify-between items-end">
+                                <span class="text-lg font-bold text-emerald-950">Total</span>
+                                <span class="text-3xl font-serif font-bold text-emerald-800" id="cart-total">${{ number_format($total, 2) }}</span>
                             </div>
-                            <div class="text-4xl font-black text-white">
-                                ${{ number_format($total, 2) }}
+                            <p class="text-right text-xs text-stone-400 mt-2">Inclusive of all applicable taxes</p>
+                        </div>
+
+                        <a href="{{ route('checkout') }}" class="block w-full text-center bg-emerald-900 hover:bg-emerald-950 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-900/20 active:scale-[0.98] transition-all duration-200 tracking-wider">
+                            Proceed to Checkout
+                        </a>
+                        
+                        <!-- Trust Badges -->
+                        <div class="mt-8 grid grid-cols-3 gap-2 text-center text-[10px] text-stone-400 font-medium">
+                            <div class="flex flex-col items-center gap-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <span>Secure Payment</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                                <span>Safe Shipping</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Authenticity</span>
                             </div>
                         </div>
 
-                        <div class="space-y-4 relative">
-                            <a href="{{ route('checkout') }}" class="block w-full text-center bg-amber-500 hover:bg-amber-600 text-white font-black py-5 rounded-2xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-600/40 transition-all transform hover:-translate-y-1 active:scale-[0.98] tracking-widest uppercase text-sm">
-                                Proceed to Checkout
-                            </a>
-                            
-                            <!-- Payment Icons -->
-                            <div class="pt-6 flex justify-center gap-6 opacity-40 grayscale group hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" class="h-4" alt="Visa">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="h-6" alt="Mastercard">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="h-4" alt="PayPal">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Secure Checkout Badge -->
-                    <div class="mt-6 flex items-center justify-center gap-3 text-stone-400 bg-white/50 backdrop-blur-sm rounded-2xl py-3 border border-stone-200/50">
-                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                        <span class="text-xs font-bold uppercase tracking-widest">End-to-End Secure Transaction</span>
                     </div>
                 </div>
 
@@ -175,6 +189,71 @@
         @endif
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        
+        function updateCart(id, quantity) {
+            $.ajax({
+                url: '{{ route('cart.update') }}',
+                method: "PATCH",
+                data: {
+                    _token: '{{ csrf_token() }}', 
+                    id: id, 
+                    quantity: quantity
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $("#item-subtotal-" + id).text('$' + response.item_subtotal);
+                        $("#cart-subtotal").text('$' + response.total);
+                        $("#cart-total").text('$' + response.total);
+                        
+                        // Also update the input if this came from a button click
+                         $("#quantity-" + id).val(quantity);
+                    } else {
+                        // Revert if failed? or alert
+                    }
+                }
+            });
+        }
+
+        $(".quantity-btn").click(function(e) {
+            e.preventDefault();
+            var btn = $(this);
+            var id = btn.attr("data-id");
+            var action = btn.attr("data-action");
+            var input = $("#quantity-" + id);
+            var currentVal = parseInt(input.val());
+            var newVal = currentVal;
+
+            if (action === "increase") {
+                newVal = currentVal + 1;
+            } else if (action === "decrease") {
+                if (currentVal > 1) {
+                    newVal = currentVal - 1;
+                } else {
+                    return; 
+                }
+            }
+
+            updateCart(id, newVal);
+        });
+
+        $(".quantity-input").change(function() {
+            var input = $(this);
+            var id = input.attr("data-id");
+            var newVal = parseInt(input.val());
+
+            if (newVal < 1) {
+                newVal = 1;
+                input.val(1);
+            }
+
+            updateCart(id, newVal);
+        });
+    });
+</script>
 
 <style>
     @keyframes fade-in {

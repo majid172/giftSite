@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('details')->orderBy('created_at', 'desc')->paginate(10);
+        $users = User::with('details')->where('role', '!=', 'admin')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.users.list', compact('users'));
     }
 
@@ -55,7 +55,6 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,user',
             'status' => 'required|boolean',
         ]);
 
@@ -64,7 +63,6 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'role' => $request->role,
             'status' => $request->status,
         ]);
 

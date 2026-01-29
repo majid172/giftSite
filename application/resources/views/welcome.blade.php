@@ -69,7 +69,7 @@
             <section>
                 <div class="flex items-center justify-between mb-8">
                     <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950">Shop by Category</h2>
-                    <a href="{{ route('occasions.index') }}"
+                    <a href="{{ route('categories.index') }}"
                         class="text-emerald-700 font-bold text-sm hover:text-emerald-900 transition flex items-center gap-1 group">
                         View all <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -78,43 +78,20 @@
                     </a>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    <!-- Category 1 -->
-                    <a href="#" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
-                        <img src="https://images.unsplash.com/photo-1674620213535-9b2a2553ef40?q=80&w=1064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    @foreach($categories as $category)
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
+                        <img src="{{ asset('assets/images/'.$category->image) }}"
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Gift Boxes">
+                            alt="{{ $category->name }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                         <div class="absolute bottom-6 left-6 text-white">
-                            <h3 class="text-xl font-serif font-bold">Premium Gift Boxes</h3>
-                            <p class="text-sm text-stone-300 mt-1 group-hover:text-white transition-colors">Starting at $45
+                            <h3 class="text-xl font-serif font-bold">{{ $category->name }}</h3>
+                            <p class="text-sm text-stone-300 mt-1 group-hover:text-white transition-colors">
+                                {{ Str::limit($category->description, 30) }}
                             </p>
                         </div>
                     </a>
-                    <!-- Category 2 -->
-                    <a href="#" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
-                        <img src="https://images.unsplash.com/photo-1647221598398-934ed5cb0e4f?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Tea Sets">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 text-white">
-                            <h3 class="text-xl font-serif font-bold">Artisan Tea Sets</h3>
-                            <p class="text-sm text-stone-300 mt-1 group-hover:text-white transition-colors">Exclusive Blends
-                            </p>
-                        </div>
-                    </a>
-                    <!-- Category 3 -->
-                    <a href="#" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
-                        <img src="https://images.unsplash.com/photo-1497700003451-e1df943a194b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Festive">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 text-white">
-                            <h3 class="text-xl font-serif font-bold">Seasonal Specials</h3>
-                            <p class="text-sm text-stone-300 mt-1 group-hover:text-white transition-colors">Limited Time
-                                Only
-                            </p>
-                        </div>
-                    </a>
+                    @endforeach
                 </div>
             </section>
 
@@ -291,61 +268,15 @@
             <div
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 bg-white">
 
-                @php
-                    $latestProds = [
-                        [
-                            'id' => 9,
-                            'name' => 'Automotive Universal Fit Black With Red',
-                            'price' => 72.0,
-                            'rating' => 5,
-                            'reviews' => 3,
-                            'badge' => 'NEW',
-                            'badge_color' => 'bg-emerald-500',
-                            'image' =>
-                                'https://images.unsplash.com/photo-1576450105704-c06856c3777c?q=80&w=1104&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        ],
-                        [
-                            'id' => 10,
-                            'name' => 'Aluminum Spacer Quick Steering',
-                            'price' => 119.0,
-                            'old_price' => 140.0,
-                            'rating' => 4,
-                            'reviews' => 2,
-                            'badge' => '-15%',
-                            'badge_color' => 'bg-rose-500',
-                            'image' =>
-                                'https://plus.unsplash.com/premium_photo-1731654764798-6431b78e14e4?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        ],
-                        [
-                            'id' => 11,
-                            'name' => 'Thrustmaster TH8S Shifter Add-On Manual',
-                            'price' => 40.0,
-                            'rating' => 5,
-                            'reviews' => 5,
-                            'image' =>
-                                'https://images.unsplash.com/photo-1576579406887-161dbdd9afe4?q=80&w=1334&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        ],
-                        [
-                            'id' => 12,
-                            'name' => 'Black Yellow Wheel Cover 13 Inch',
-                            'price' => 119.0,
-                            'rating' => 5,
-                            'reviews' => 3,
-                            'image' =>
-                                'https://images.unsplash.com/photo-1574441175562-980866879e31?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        ],
-                    ];
-                @endphp
-
                 @foreach ($latestProds as $item)
                     <div
                         class="group relative p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
 
                         <!-- Badges -->
                         <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                            @if (isset($item['badge']))
+                            @if ($item->badge)
                                 <span
-                                    class="{{ $item['badge_color'] }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">{{ $item['badge'] }}</span>
+                                    class="{{ $item->badge_color ?? 'bg-emerald-500' }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">{{ $item->badge }}</span>
                             @endif
                         </div>
 
@@ -385,47 +316,47 @@
 
                         <!-- Image -->
                         <div class="h-48 mb-4 overflow-hidden relative flex items-center justify-center">
-                            <img src="{{ $item['image'] }}"
+                            <img src="{{ asset($item->image) }}"
                                 class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500"
-                                alt="{{ $item['name'] }}">
+                                alt="{{ $item->name }}">
                         </div>
 
                         <!-- Content -->
                         <div class="text-left">
                             <h3
                                 class="font-bold text-emerald-950 text-sm mb-2 h-10 overflow-hidden line-clamp-2 leading-tight">
-                                <a href="#" class="hover:text-amber-500 transition">{{ $item['name'] }}</a>
+                                <a href="{{ route('product.show', $item->id) }}" class="hover:text-amber-500 transition">{{ $item->name }}</a>
                             </h3>
 
                             <!-- Ratings -->
                             <div class="flex items-center gap-0.5 mb-2">
                                 @for ($i = 0; $i < 5; $i++)
-                                    <svg class="w-3.5 h-3.5 {{ $i < $item['rating'] ? 'text-amber-400 fill-current' : 'text-stone-300' }}"
+                                    <svg class="w-3.5 h-3.5 {{ $i < 5 ? 'text-amber-400 fill-current' : 'text-stone-300' }}"
                                         viewBox="0 0 20 20">
                                         <path
                                             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
                                 @endfor
-                                <span class="text-xs text-stone-400 ml-1">({{ $item['reviews'] }})</span>
+                                <span class="text-xs text-stone-400 ml-1">(5)</span>
                             </div>
 
                             <!-- Price -->
                             <div class="mb-5 flex items-baseline gap-2">
                                 <span
-                                    class="text-lg font-bold text-emerald-950">${{ number_format($item['price'], 2) }}</span>
-                                @if (isset($item['old_price']))
+                                    class="text-lg font-bold text-emerald-950">${{ number_format($item->price, 2) }}</span>
+                                @if ($item->old_price)
                                     <span
-                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">${{ number_format($item['old_price'], 2) }}</span>
+                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">${{ number_format($item->old_price, 2) }}</span>
                                 @endif
                             </div>
 
                             <!-- Add to Cart Button -->
                             <form action="{{ route('cart.store') }}" method="POST">
                                 @csrf
-                                <input type="hidden" name="id" value="{{ $item['id'] }}">
-                                <input type="hidden" name="name" value="{{ $item['name'] }}">
-                                <input type="hidden" name="price" value="{{ $item['price'] }}">
-                                <input type="hidden" name="image" value="{{ $item['image'] }}">
+                                <input type="hidden" name="id" value="{{ $item->id }}">
+                                <input type="hidden" name="name" value="{{ $item->name }}">
+                                <input type="hidden" name="price" value="{{ $item->price }}">
+                                <input type="hidden" name="image" value="{{ $item->image }}">
                                 <button type="submit"
                                     class="w-full bg-stone-100 hover:bg-emerald-900 text-stone-800 hover:text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
                                     Add To Cart

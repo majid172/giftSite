@@ -12,6 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Add the phone column first
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('phone')->nullable()->after('email');
+        });
+
         // Ensure existing users have unique phone numbers before adding the constraint
         $users = DB::table('users')->get();
         foreach ($users as $index => $user) {
@@ -31,7 +36,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['phone']);
+            $table->dropColumn('phone');
         });
     }
 };

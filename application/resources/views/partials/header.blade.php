@@ -110,7 +110,7 @@
                             $categories = \App\Models\Category::all();
                         @endphp
                         @foreach($categories as $category)
-                        <li><a href="#" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">{{ $category->name }}</a></li>
+                        <li><a href="{{ route('products.index', ['category' => $category->id]) }}" class="block px-6 py-3 text-stone-600 hover:bg-stone-50 hover:text-emerald-700 font-medium transition border-b border-stone-50">{{ $category->name }}</a></li>
                         @endforeach
                     </ul>
                 </div>

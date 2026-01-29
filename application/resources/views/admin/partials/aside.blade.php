@@ -1,8 +1,8 @@
 @push('css')
 <style>
     .sidebar-premium {
-        background: #064e3b; /* Deep Heritage Emerald */
-        color: #ecf3f0;
+        background: #0f172a; /* Navy Blue */
+        color: #f8fafc;
     }
     .text-logo-container {
         display: flex;
@@ -175,12 +175,7 @@
                     </li>
 
                     @if(auth()->user()?->role === 'admin')
-                    <li>
-                        <a href="#" class="menu-link-heritage flex items-center gap-3 px-4 py-3">
-                            <span class="icon-[tabler--currency-dollar] size-5"></span>
-                            <span>Payments</span>
-                        </a>
-                    </li>
+
 
                     <li class="sidebar-section-header">People</li>
                     <li>

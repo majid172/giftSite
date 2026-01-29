@@ -9,9 +9,15 @@ class ProductController extends Controller
 {
     //
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::where('status', 1)->latest()->get();
+        $query = Product::where('status', 1);
+
+        if ($request->has('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        $products = $query->latest()->get();
         return view('products', compact('products'));
     }
 

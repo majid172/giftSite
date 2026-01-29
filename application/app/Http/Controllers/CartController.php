@@ -52,6 +52,39 @@ class CartController extends Controller
     }
 
     /**
+     * Update the cart.
+     */
+    public function update(Request $request)
+    {
+        if($request->id && $request->quantity){
+            $cart = session()->get('cart');
+            $cart[$request->id]["quantity"] = $request->quantity;
+            session()->put('cart', $cart);
+
+            // Calculate new totals
+            $itemSubtotal = $cart[$request->id]['price'] * $request->quantity;
+            $total = array_reduce($cart, function ($carry, $item) {
+                return $carry + ($item['price'] * $item['quantity']);
+            }, 10); // Start with 0 or however initialized
+
+            // Actually, let's copy exactly what works, assuming $total calculation logic is consistent.
+            // Re-calculating $total:
+            $total = 0;
+            foreach($cart as $id => $details) {
+                $total += $details['price'] * $details['quantity'];
+            }
+
+            session()->flash('success', 'Cart updated successfully');
+
+            return response()->json([
+                'success' => true,
+                'item_subtotal' => number_format($itemSubtotal, 2),
+                'total' => number_format($total, 2)
+            ]);
+        }
+    }
+
+    /**
      * Remove an item from the cart.
      */
     public function destroy($id)

@@ -224,4 +224,130 @@
     .badge-blue { background: #eff6ff; color: #1e40af; }
     .badge-green { background: #f0fdf4; color: #166534; }
     .badge-red { background: #fef2f2; color: #991b1b; }
+    /* Kartly Layout & User Edit Styles */
+    .kartly-breadcrumb {
+        margin-bottom: 24px;
+        font-size: 14px;
+    }
+    .kartly-breadcrumb .main-title {
+        font-weight: 700;
+        font-size: 18px;
+        color: #1e293b;
+    }
+    .kartly-breadcrumb .divider {
+        margin: 0 8px;
+        color: #94a3b8;
+    }
+    .kartly-breadcrumb .active-tab {
+        color: #3b82f6;
+        font-weight: 500;
+    }
+    .kartly-main-wrapper {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        display: flex;
+        min-height: 600px;
+        overflow: hidden;
+    }
+    .kartly-sidebar {
+        width: 260px;
+        background: #f8fafc;
+        border-right: 1px solid #f1f5f9;
+        padding: 20px 0;
+    }
+    .kartly-nav-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-right: 3px solid transparent;
+        color: #64748b;
+        font-weight: 500;
+        gap: 12px;
+        width: 100%;
+        border-radius: 0;
+        text-decoration: none;
+    }
+    .kartly-nav-item:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+    .kartly-nav-item.active {
+        background: #ffffff;
+        color: #3b82f6;
+        border-right: 3px solid #3b82f6;
+    }
+    .kartly-nav-item i {
+        font-size: 18px;
+    }
+    .kartly-nav-item.active i {
+        color: #3b82f6;
+    }
+    .kartly-content {
+        flex: 1;
+        padding: 30px 40px;
+    }
+    .kartly-content-header {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .kartly-form-group {
+        display: flex;
+        margin-bottom: 30px;
+        align-items: flex-start;
+    }
+    .kartly-label {
+        width: 250px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #475569;
+        padding-top: 10px;
+    }
+    .kartly-input-wrapper {
+        flex: 1;
+        max-width: 600px;
+    }
+    .kartly-input {
+        width: 100% !important;
+        background: #f1f5f9 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 10px 16px !important;
+        font-size: 14px !important;
+        color: #334155 !important;
+        transition: ring 0.2s;
+    }
+    .kartly-input:focus {
+        box-shadow: 0 0 0 2px #3b82f6 !important;
+        outline: none !important;
+    }
+    .save-button {
+        background: #3b82f6;
+        color: #fff;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .save-button:hover {
+        background: #2563eb;
+    }
+    .cancel-link {
+        color: #64748b;
+        font-weight: 500;
+        margin-right: 20px;
+        text-decoration: none;
+    }
+    .cancel-link:hover {
+        color: #334155;
+        text-decoration: underline;
+    }
 </style>

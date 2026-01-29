@@ -21,9 +21,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\AuthController;
 
 // Home
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 // Authentication Routes
@@ -49,11 +47,14 @@ Route::get('/occasions', function () {
     return view('occasions');
 })->name('occasions.index');
 
+Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+
 // Cart & Checkout
 
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+Route::patch('/cart', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 Route::middleware(['auth'])->group(function () {

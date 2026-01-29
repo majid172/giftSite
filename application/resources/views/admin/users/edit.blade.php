@@ -1,72 +1,67 @@
 @extends('admin.layouts.app')
 
+
+
 @section('content')
-<div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
-    <div class="card-body">
-        <h2 class="card-title text-2xl mb-6">Edit User: {{ $user->name }}</h2>
+<div class="kartly-settings-container">
+    {{-- Breadcrumb --}}
+    <div class="kartly-breadcrumb">
+        <span class="main-title">Edit User</span>
+        
+    </div>
 
-        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+    <div class="kartly-main-wrapper">
+        {{-- Content Area --}}
+        <div class="kartly-content">
+            <div class="kartly-content-header">Edit Profile: {{ $user->name }}</div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Name -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Full Name</span>
-                    </label>
-                    <input type="text" name="name" value="{{ old('name', $user->name) }}" class="input input-bordered w-full" required />
+            <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="kartly-form-group">
+                    <label class="kartly-label">Full Name</label>
+                    <div class="kartly-input-wrapper">
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
+                    </div>
                 </div>
 
-                <!-- Email -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Email Address</span>
-                    </label>
-                    <input type="email" name="email" value="{{ old('email', $user->email) }}" class="input input-bordered w-full" required />
+                <div class="kartly-form-group">
+                    <label class="kartly-label">Email Address</label>
+                    <div class="kartly-input-wrapper">
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
+                    </div>
                 </div>
 
-                <!-- Phone -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Phone Number</span>
-                    </label>
-                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="input input-bordered w-full" />
+                <div class="kartly-form-group">
+                    <label class="kartly-label">Phone Number</label>
+                    <div class="kartly-input-wrapper">
+                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
+                    </div>
                 </div>
 
-                <!-- Role -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Role</span>
-                    </label>
-                    <select name="role" class="select select-bordered w-full">
-                        <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Customer</option>
-                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Administrator</option>
-                    </select>
+             
+                <div class="kartly-form-group">
+                    <label class="kartly-label">Status</label>
+                    <div class="kartly-input-wrapper">
+                        <select name="status" class="kartly-input">
+                            <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        <div class="text-xs text-slate-400 mt-2">
+                            <span class="icon-[tabler--info-circle] size-3 relative top-0.5"></span>
+                            Setting status to "Inactive" will prevent login.
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Status -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Status</span>
-                    </label>
-                    <select name="status" class="select select-bordered w-full">
-                        <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Inactive</option>
-                    </select>
+                <div style="margin-top: 50px; display: flex; align-items: center;">
+                    <a href="{{ route('admin.users.index') }}" class="cancel-link">Cancel</a>
+                    <button type="submit" class="save-button">Update Status</button>
                 </div>
-            </div>
-            
-            <div class="alert alert-info mt-6 text-sm">
-                <span class="icon-[tabler--info-circle] size-5"></span>
-                <span>Note: Changing the status to "Inactive" will prevent the user from logging in.</span>
-            </div>
 
-            <div class="card-actions justify-end mt-6">
-                <a href="{{ route('admin.users.index') }}" class="btn btn-ghost">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update User</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

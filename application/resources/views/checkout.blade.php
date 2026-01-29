@@ -1,204 +1,199 @@
 @extends('layouts.fullscreen')
 
+@section('title', 'Secure Checkout - Heritage Gifts')
+
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100 py-12">
+<div class="bg-stone-50 min-h-screen py-10 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Progress Steps -->
-        <div class="mb-12">
-            <div class="flex items-center justify-center">
-                <div class="flex items-center space-x-4">
-                    <!-- Step 1: Cart -->
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 text-white">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-emerald-600 hidden sm:block">Cart</span>
-                    </div>
-                    <div class="w-16 h-0.5 bg-emerald-600"></div>
-                    
-                    <!-- Step 2: Checkout (Active) -->
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shadow-amber-500/50 ring-4 ring-amber-100">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <span class="ml-2 text-sm font-bold text-amber-500 hidden sm:block">Checkout</span>
-                    </div>
-                    <div class="w-16 h-0.5 bg-stone-300"></div>
-                    
-                    <!-- Step 3: Complete -->
-                    <div class="flex items-center">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-stone-300 text-stone-500">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-stone-400 hidden sm:block">Complete</span>
-                    </div>
-                </div>
+        <!-- Header / Progress -->
+        <div class="mb-12 text-center">
+            <h1 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950 mb-6">Secure Checkout</h1>
+            <div class="flex items-center justify-center space-x-4 text-sm font-medium">
+                <span class="flex items-center text-emerald-700">
+                    <span class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center mr-2 text-emerald-700">✓</span>
+                    Cart
+                </span>
+                <span class="w-12 h-px bg-stone-300"></span>
+                <span class="flex items-center text-emerald-950 font-bold">
+                    <span class="w-6 h-6 rounded-full bg-emerald-950 text-white flex items-center justify-center mr-2">2</span>
+                    Checkout
+                </span>
+                <span class="w-12 h-px bg-stone-300"></span>
+                <span class="flex items-center text-stone-400">
+                    <span class="w-6 h-6 rounded-full border border-stone-300 flex items-center justify-center mr-2">3</span>
+                    Complete
+                </span>
             </div>
         </div>
 
-        <form action="{{ route('checkout.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <form action="{{ route('checkout.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             @csrf
             
-            <!-- Left Column: Forms (2/3 width) -->
-            <div class="lg:col-span-2 space-y-6">
+            <!-- Main Form Section -->
+            <div class="lg:col-span-7 space-y-8">
                 
-                <!-- Contact Information Card -->
-                <div class="bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden">
-                    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <!-- Errors -->
+                @if ($errors->any())
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Please correct the following errors:</h3>
+                                <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                        <h2 class="text-xl font-bold text-white">Contact Information</h2>
                     </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-bold text-stone-700 mb-2">First Name *</label>
-                                <input type="text" name="first_name" required 
-                                    class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                    placeholder="John">
+                @endif
+
+                <!-- Contact & Shipping -->
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                    <div class="px-8 py-6 border-b border-stone-100 bg-stone-50/50 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-serif font-bold text-emerald-950">Customer Details</h2>
+                    </div>
+                    
+                    <div class="p-8 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-widest text-stone-500">First Name</label>
+                                <input type="text" name="first_name" value="{{ old('first_name', auth()->user()->name ?? '') }}" required 
+                                    class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                             </div>
-                            <div>
-                                <label class="block text-sm font-bold text-stone-700 mb-2">Last Name *</label>
-                                <input type="text" name="last_name" required 
-                                    class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                    placeholder="Doe">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Last Name</label>
+                                <input type="text" name="last_name" value="{{ old('last_name') }}" required 
+                                    class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                             </div>
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-bold text-stone-700 mb-2">Email Address *</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Email Address</label>
+                            <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required 
+                                class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Phone Number (Optional)</label>
+                            <input type="tel" name="phone" value="{{ old('phone') }}" 
+                                class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
+                        </div>
+
+                        <div class="border-t border-stone-100 pt-6 mt-2">
+                            <h3 class="text-sm font-bold text-emerald-900 mb-4 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Shipping Address
+                            </h3>
+                            
+                            <div class="space-y-6">
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Street Address</label>
+                                    <input type="text" name="address" value="{{ old('address') }}" required 
+                                        class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="space-y-2">
+                                        <label class="text-xs font-bold uppercase tracking-widest text-stone-500">City</label>
+                                        <input type="text" name="city" value="{{ old('city') }}" required 
+                                            class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                                     </div>
-                                    <input type="email" name="email" required 
-                                        class="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                        placeholder="john.doe@example.com">
+                                    <div class="space-y-2">
+                                        <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Postal Code</label>
+                                        <input type="text" name="zip" value="{{ old('zip') }}" required 
+                                            class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Shipping Address Card -->
-                <div class="bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden">
-                    <div class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <!-- Payment Method -->
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                    <div class="px-8 py-6 border-b border-stone-100 bg-stone-50/50 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                         </div>
-                        <h2 class="text-xl font-bold text-white">Shipping Address</h2>
+                        <h2 class="text-xl font-serif font-bold text-emerald-950">Payment Method</h2>
                     </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 gap-5">
-                            <div>
-                                <label class="block text-sm font-bold text-stone-700 mb-2">Street Address *</label>
-                                <input type="text" name="address" required 
-                                    class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                    placeholder="123 Main Street, Apt 4B">
+                    
+                    <div class="p-8">
+                        <label class="relative flex items-center p-6 border-2 border-emerald-500 bg-emerald-50/30 rounded-xl cursor-pointer transition-all hover:bg-emerald-50">
+                            <input type="radio" name="payment_method" value="cod" checked class="w-5 h-5 text-emerald-600 border-stone-300 focus:ring-emerald-500">
+                            <div class="ml-4 flex-grow">
+                                <span class="block text-lg font-bold text-emerald-950">Cash on Delivery</span>
+                                <span class="block text-sm text-stone-500 mt-1">Pay securely upon receiving your items</span>
                             </div>
-                            <div class="grid grid-cols-2 gap-5">
-                                <div>
-                                    <label class="block text-sm font-bold text-stone-700 mb-2">City *</label>
-                                    <input type="text" name="city" required 
-                                        class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                        placeholder="New York">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-bold text-stone-700 mb-2">Postal Code *</label>
-                                    <input type="text" name="zip" required 
-                                        class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-100 transition-all outline-none"
-                                        placeholder="10001">
-                                </div>
-                            </div>
-                        </div>
+                            <svg class="w-8 h-8 text-emerald-600 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        </label>
                     </div>
                 </div>
 
-                <!-- Payment Method Card -->
-                <div class="bg-white rounded-2xl shadow-lg border border-stone-200 overflow-hidden">
-                    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                        </div>
-                        <h2 class="text-xl font-bold text-white">Payment Method</h2>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center justify-center p-8 bg-stone-50 rounded-xl border-2 border-dashed border-stone-300">
-                            <div class="text-center">
-                                <svg class="w-16 h-16 mx-auto text-stone-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                <p class="text-stone-600 font-medium">Cash on Delivery</p>
-                                <p class="text-sm text-stone-500 mt-1">Pay when you receive your order</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Right Column: Order Summary (1/3 width) -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden sticky top-24">
-                    <!-- Header -->
-                    <div class="bg-gradient-to-br from-emerald-900 to-emerald-800 px-6 py-5">
-                        <h2 class="text-xl font-bold text-white flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                            Order Summary
-                        </h2>
+            <!-- Order Summary -->
+            <div class="lg:col-span-5 sticky top-8">
+                <div class="bg-white rounded-2xl shadow-xl shadow-stone-200/60 border border-stone-200 overflow-hidden">
+                    <div class="bg-white px-8 py-6 border-b border-stone-100">
+                        <h2 class="text-xl font-serif font-bold text-emerald-950">Order Summary</h2>
+                        <p class="text-stone-400 text-sm mt-1">Order #PENDING-{{ rand(1000,9999) }}</p>
                     </div>
 
-                    <!-- Products List -->
-                    <div class="p-6 max-h-80 overflow-y-auto">
-                        <div class="space-y-4">
-                            @foreach($cart as $details)
-                            <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-stone-50 transition-colors">
-                                <div class="w-16 h-16 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm">
-                                    <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-grow min-w-0">
-                                    <h4 class="text-sm font-bold text-emerald-950 truncate">{{ $details['name'] }}</h4>
-                                    <p class="text-xs text-stone-500 mt-1">Qty: <span class="font-semibold">{{ $details['quantity'] }}</span></p>
-                                </div>
-                                <div class="text-sm font-bold text-emerald-700 flex-shrink-0">
-                                    ${{ number_format($details['price'] * $details['quantity'], 2) }}
+                    <!-- Items -->
+                    <div class="max-h-96 overflow-y-auto px-8 py-2 divide-y divide-stone-100">
+                        @foreach($cart as $details)
+                        <div class="py-6 flex gap-4">
+                            <div class="w-20 h-20 rounded-lg bg-stone-100 overflow-hidden flex-shrink-0 border border-stone-200">
+                                <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-bold text-emerald-900 line-clamp-2 leading-snug">{{ $details['name'] }}</h4>
+                                <div class="flex justify-between items-end mt-2">
+                                    <p class="text-sm text-stone-500">Qty: {{ $details['quantity'] }}</p>
+                                    <p class="font-bold text-emerald-700 font-serif">${{ number_format($details['price'] * $details['quantity'], 2) }}</p>
                                 </div>
                             </div>
-                            @endforeach
                         </div>
+                        @endforeach
                     </div>
 
-                    <!-- Price Breakdown -->
-                    <div class="px-6 pb-6">
-                        <div class="border-t-2 border-stone-100 pt-5 space-y-3">
-                            <div class="flex justify-between text-stone-600">
-                                <span class="font-medium">Subtotal</span>
-                                <span class="font-bold">${{ number_format($subtotal, 2) }}</span>
-                            </div>
-                            <div class="flex justify-between text-stone-600">
-                                <span class="font-medium">Shipping</span>
-                                <span class="font-bold text-emerald-600 flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                    @if($shippingCost > 0)
-                                        ${{ number_format($shippingCost, 2) }}
-                                    @else
-                                        Free
-                                    @endif
-                                </span>
-                            </div>
-                            <div class="border-t-2 border-stone-100 pt-4 flex justify-between items-center">
-                                <span class="text-lg font-bold text-emerald-950">Total</span>
-                                <span class="text-2xl font-black text-emerald-700">${{ number_format($total, 2) }}</span>
-                            </div>
+                    <!-- Totals -->
+                    <div class="p-8 bg-stone-50 border-t border-stone-100 space-y-4">
+                        <div class="flex justify-between items-center text-sm text-stone-600">
+                            <span>Subtotal</span>
+                            <span class="font-bold text-emerald-950">${{ number_format($subtotal, 2) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-stone-600">
+                            <span>Shipping</span>
+                            @if($shippingCost > 0)
+                                <span class="font-bold text-emerald-950">${{ number_format($shippingCost, 2) }}</span>
+                            @else
+                                <span class="font-bold text-amber-600">Free</span>
+                            @endif
+                        </div>
+                        
+                        <div class="pt-4 mt-4 border-t border-stone-200 flex justify-between items-end">
+                            <span class="text-lg font-bold text-emerald-950 font-serif">Total</span>
+                            <span class="text-3xl font-bold text-emerald-800 font-serif mb-1">${{ number_format($total, 2) }}</span>
                         </div>
 
-                        <!-- Place Order Button -->
-                        <button type="submit" class="mt-6 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-amber-500/50 hover:shadow-xl hover:shadow-amber-600/50 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center group">
-                            <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Place Order Now
+                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-600/30 transition-all transform hover:-translate-y-0.5 active:scale-[0.99] mt-6 flex items-center justify-center gap-2 group">
+                            <span>Complete Order</span>
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </button>
-
-                        <!-- Security Badge -->
-                        <div class="mt-4 flex items-center justify-center text-xs text-stone-500">
-                            <svg class="w-4 h-4 mr-1 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            Secure Checkout
+                        
+                        <div class="flex items-center justify-center gap-2 text-xs text-stone-400 mt-4">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            <span>Encrypted & Secured Transaction</span>
                         </div>
                     </div>
                 </div>
