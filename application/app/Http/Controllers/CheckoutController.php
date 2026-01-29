@@ -17,11 +17,22 @@ class CheckoutController extends Controller
             return redirect()->route('products.index')->with('error', 'Your cart is empty.');
         }
 
-        $total = array_reduce($cart, function ($carry, $item) {
+        $subtotal = array_reduce($cart, function ($carry, $item) {
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
-        return view('checkout', compact('cart', 'total'));
+        // Calculate Shipping Cost
+        $shippingType = get_setting('shipping_type', 'flat_rate');
+        $shippingCost = 0;
+
+        if ($shippingType === 'flat_rate') {
+            $shippingCost = (float) get_setting('shipping_flat_rate', 0);
+        }
+        // Add logic for other shipping types here if needed
+
+        $total = $subtotal + $shippingCost;
+
+        return view('checkout', compact('cart', 'subtotal', 'shippingCost', 'total'));
     }
 
     /**
@@ -45,16 +56,27 @@ class CheckoutController extends Controller
             return redirect()->route('products.index')->with('error', 'Your cart is empty.');
         }
 
-        $total = array_reduce($cart, function ($carry, $item) {
+        $subtotal = array_reduce($cart, function ($carry, $item) {
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
+
+        // Calculate Shipping Cost
+        $shippingType = get_setting('shipping_type', 'flat_rate');
+        $shippingCost = 0;
+
+        if ($shippingType === 'flat_rate') {
+            $shippingCost = (float) get_setting('shipping_flat_rate', 0);
+        }
+
+        $total = $subtotal + $shippingCost;
 
         // Process Order
         $order = \App\Models\Order::create([
             'user_id' => auth()->id(),
             'order_id' => 'ORD-' . strtoupper(uniqid()),
             'status' => 'Pending',
-            'price' => $total,
+            'price' => $total, // Total now includes shipping
+            'shipping_cost' => $shippingCost,
             'is_paid' => false, // Default to unpaid for COD
             'shipping_address' => [
                 'first_name' => $request->first_name,

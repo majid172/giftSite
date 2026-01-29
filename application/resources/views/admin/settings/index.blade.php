@@ -219,22 +219,23 @@
     {{-- Breadcrumb --}}
     <div class="kartly-breadcrumb">
         <span class="main-title">Business Settings</span>
-       
+        <span class="divider">/</span>
+        <span id="active-tab-breadcrumb" class="active-tab">General</span>
     </div>
 
     <div class="kartly-main-wrapper">
         {{-- Sidebar --}}
         <div class="kartly-sidebar">
-            <button class="kartly-nav-item active" onclick="showTab('general', this)">
+            <button class="kartly-nav-item active" data-tab="general" onclick="showTab('general', this)">
                 <i class="icon-[tabler--settings]"></i>
                 General
             </button>
            
-            <button class="kartly-nav-item" onclick="showTab('media', this)">
+            <button class="kartly-nav-item" data-tab="media" onclick="showTab('media', this)">
                 <i class="icon-[tabler--photo-edit]"></i>
                 Media settings
             </button>
-            <button class="kartly-nav-item" onclick="showTab('seo', this)">
+            <button class="kartly-nav-item" data-tab="seo" onclick="showTab('seo', this)">
                 <i class="icon-[tabler--file-description]"></i>
                 SEO settings
             </button>
@@ -381,14 +382,6 @@
                 </div>
 
                 {{-- Other Tabs Placeholders --}}
-                <!-- <div id="tab-email" class="tab-content">
-                    <div class="kartly-content-header">Email Settings</div>
-                    <div class="p-10 text-center text-slate-400 italic">Email configuration interface coming soon...</div>
-                </div>
-                <div id="tab-templates" class="tab-content">
-                    <div class="kartly-content-header">Email Templates</div>
-                    <div class="p-10 text-center text-slate-400 italic">Email templates management interface coming soon...</div>
-                </div> -->
                 <div id="tab-media" class="tab-content">
                     <div class="kartly-content-header">Media Settings</div>
                     
@@ -485,14 +478,28 @@
 
 @push('js')
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const activeTab = localStorage.getItem('activeSettingsTab') || 'general';
+        const btn = document.querySelector(`button[data-tab="${activeTab}"]`);
+        if(btn) {
+            showTab(activeTab, btn);
+        }
+    });
+
     function showTab(tabId, btn) {
+        // Save to localStorage
+        localStorage.setItem('activeSettingsTab', tabId);
+
         // Update breadcrumb
         const titles = {
             'general': 'General',
             'media': 'Media settings',
             'seo': 'SEO settings'
         };
-        document.getElementById('active-tab-breadcrumb').innerText = titles[tabId];
+        const activeTabEl = document.getElementById('active-tab-breadcrumb');
+        if(activeTabEl) {
+            activeTabEl.innerText = titles[tabId];
+        }
 
         // Toggle content
         document.querySelectorAll('.tab-content').forEach(tab => {

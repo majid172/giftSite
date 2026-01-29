@@ -170,13 +170,17 @@
                         <div class="border-t-2 border-stone-100 pt-5 space-y-3">
                             <div class="flex justify-between text-stone-600">
                                 <span class="font-medium">Subtotal</span>
-                                <span class="font-bold">${{ number_format($total, 2) }}</span>
+                                <span class="font-bold">${{ number_format($subtotal, 2) }}</span>
                             </div>
                             <div class="flex justify-between text-stone-600">
                                 <span class="font-medium">Shipping</span>
                                 <span class="font-bold text-emerald-600 flex items-center">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                    Free
+                                    @if($shippingCost > 0)
+                                        ${{ number_format($shippingCost, 2) }}
+                                    @else
+                                        Free
+                                    @endif
                                 </span>
                             </div>
                             <div class="border-t-2 border-stone-100 pt-4 flex justify-between items-center">

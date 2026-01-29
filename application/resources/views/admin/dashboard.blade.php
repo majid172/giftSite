@@ -1,523 +1,371 @@
 @extends('admin.layouts.app')
+
 @section('content')
-    <div class="shadow-base-300/10 rounded-box bg-base-100 flex gap-4 p-6 shadow-md max-xl:flex-col">
-        <div class="flex flex-1 gap-4 max-sm:flex-col">
-            <div class="flex flex-1 flex-col gap-4">
-                <div class="text-base-content flex items-center gap-2">
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-base-200 rounded-field size-9">
-                            <span class="icon-[tabler--eye] size-5"></span>
-                        </div>
+<div class="kartly-settings-container">
+    <div class="kartly-title">
+        <div class="flex items-center gap-2">
+            <span class="icon-[tabler--dashboard] size-6"></span>
+            Dashboard
+        </div>
+        <div class="text-sm text-slate-500 font-normal">
+            Overview of your store's performance
+        </div>
+    </div>
+
+    <!-- 1. Key Metrics Grid -->
+    <div class="flex flex-col xl:flex-row gap-6 mb-8">
+        <!-- Today's Orders -->
+        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
+            <div class="card-body p-6 flex flex-col justify-between h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                        <span class="icon-[tabler--shopping-cart] size-6"></span>
                     </div>
-                    <h5 class="text-lg font-medium">Today's Order</h5>
                 </div>
                 <div>
-                    <div class="text-base-content text-xl font-semibold text-success">{{ $today_orders->count() }}</div>
-                    {{-- <div class="flex items-center gap-2 text-sm font-semibold">
-                        <span class="text-success inline-flex items-center gap-1">
-                            <span class="icon-[tabler--arrow-up] size-4"></span>
-                            25.6%
-                        </span>
-                        <span class="text-base-content/50 font-medium">EPC: 308.20</span>
-                    </div> --}}
-                </div>
-            </div>
-            <div class="divider sm:divider-horizontal"></div>
-            <div class="flex flex-1 flex-col gap-4">
-                <div class="text-base-content flex items-center gap-2">
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-base-200 rounded-field size-9">
-                            <span class="icon-[tabler--mouse] size-6"></span>
-                        </div>
-                    </div>
-                    <h5 class="text-lg font-medium">Order Progress</h5>
-                </div>
-                <div>
-                    <div class="text-base-content text-xl font-semibold text-error">{{ $progress->count() }}</div>
-                    {{-- <div class="flex items-center gap-2 text-sm font-semibold">
-                        <span class="text-error inline-flex items-center gap-1">
-                            <span class="icon-[tabler--arrow-down] size-4"></span>
-                            25.6%
-                        </span>
-                        <span class="text-base-content/50 font-medium">Related Value: 77,359</span>
-                    </div> --}}
+                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $today_orders->count() }}</h3>
+                    <p class="text-slate-500 text-sm font-medium">Orders Today</p>
                 </div>
             </div>
         </div>
-        <div class="divider xl:divider-horizontal"></div>
-        <div class="flex flex-1 gap-4 max-sm:flex-col">
-            <div class="flex flex-1 flex-col gap-4">
-                <div class="text-base-content flex items-center gap-2">
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-base-200 rounded-field size-9">
-                            <span class="icon-[tabler--chart-bar] size-6"></span>
-                        </div>
+
+        <!-- Pending Orders -->
+        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
+            <div class="card-body p-6 flex flex-col justify-between h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                        <span class="icon-[tabler--clock] size-6"></span>
                     </div>
-                    <h5 class="text-lg font-medium">Total Orders</h5>
                 </div>
                 <div>
-                    <div class="text-base-content text-xl font-semibold text-success">{{ $total_orders->count() }}</div>
-                    {{-- <div class="flex items-center gap-2 text-sm font-semibold">
-                        <span class="text-success inline-flex items-center gap-1">
-                            <span class="icon-[tabler--arrow-up] size-4"></span>
-                            25.6%
-                        </span>
-                        <span class="text-base-content/50 font-medium">Related Value: 77,359</span>
-                    </div> --}}
+                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $progress->count() }}</h3>
+                    <p class="text-slate-500 text-sm font-medium">Pending Orders</p>
                 </div>
             </div>
-            <div class="divider sm:divider-horizontal"></div>
-            <div class="flex flex-1 flex-col gap-4">
-                <div class="text-base-content flex items-center gap-2">
-                    <div class="avatar avatar-placeholder">
-                        <div class="bg-base-200 rounded-field size-9">
-                            <span class="icon-[tabler--currency-dollar] size-6"></span>
-                        </div>
+        </div>
+
+        <!-- Total Orders -->
+        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
+            <div class="card-body p-6 flex flex-col justify-between h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
+                        <span class="icon-[tabler--package] size-6"></span>
                     </div>
-                    <h5 class="text-lg font-medium">Sales</h5>
                 </div>
                 <div>
-                    <div class="text-base-content text-xl font-semibold">22</div>
-                    {{-- <div class="flex items-center gap-2 text-sm font-semibold">
-                        <span class="text-success inline-flex items-center gap-1">
-                            <span class="icon-[tabler--arrow-up] size-4"></span>
-                            25.6%
-                        </span>
-                        <span class="text-base-content/50 font-medium">Related Value: 13.85</span>
-                    </div> --}}
+                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $total_orders_count }}</h3>
+                    <p class="text-slate-500 text-sm font-medium">Total Orders</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Sales -->
+        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
+            <div class="card-body p-6 flex flex-col justify-between h-full">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                        <span class="icon-[tabler--currency-dollar] size-6"></span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-1">${{ number_format(\App\Models\Order::where('is_paid', true)->sum('price'), 2) }}</h3>
+                    <p class="text-slate-500 text-sm font-medium">Total Revenue</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-3">
-        <div class="flex flex-col gap-6 md:flex-row xl:flex-col">
-            <!-- Meeting Schedules -->
-            <div class="card shadow-base-300/10 grow shadow-md">
-                <div class="card-header flex items-center justify-between gap-2">
-                    <h4 class="card-title text-xl">Latest Notices</h4>
-                    <div class="dropdown relative inline-flex">
-                        <button id="dropdown-meeting-schedules" type="button"
-                            class="dropdown-toggle btn btn-text text-base-content/50 btn-circle btn-sm" aria-haspopup="menu"
-                            aria-expanded="false" aria-label="Dropdown">
-                            <span class="icon-[tabler--dots-vertical] size-5.5"></span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu"
-                            aria-orientation="vertical" aria-labelledby="dropdown-meeting-schedules">
-                            <li><a class="dropdown-item" href="#">Last 28 Days</a></li>
-                            <li><a class="dropdown-item" href="#">Last Month</a></li>
-                            <li><a class="dropdown-item" href="#">Last Year</a></li>
-                        </ul>
-                    </div>
+    <!-- 2. Charts Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <!-- Revenue Analytics (Area Chart) -->
+        <div class="section-card xl:col-span-2 flex flex-col">
+            <div class="card-header justify-between">
+                <div>
+                    <span>Revenue Analytics</span>
+                    <span class="text-xs font-normal text-slate-500 hidden sm:inline-block ml-2">- Monthly Performance ({{ date('Y') }})</span>
                 </div>
-                <div class="card-body">
-                    <ul class="flex h-full flex-col justify-between gap-3">
-                        @forelse ($notices as $item)
-                            <li class="py-1">
-                                <div class="flex items-start gap-3">
-                                    <!-- Icon Container -->
-                                    <div class="avatar placeholder">
-                                        <div
-                                            class="bg-blue-50 text-blue-600 rounded-full size-10 flex items-center justify-center">
-                                            <!-- You can swap this icon based on the update type -->
-                                            <span class="icon-[tabler--bell] size-5"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="grow">
-                                        <h6 class="text-base-content font-medium text-sm leading-snug">
-                                            {{ $item->title }}
-                                        </h6>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span
-                                                class="text-xs font-medium bg-base-200 px-2 py-0.5 rounded text-base-content/70">
-                                                {{ dateFormat($item->publish_date) }}
-                                            </span>
-                                            <span class="text-[10px] text-base-content/40">•</span>
-                                            <span class="text-xs text-base-content/50">Update</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        @empty
-                            <li>
-                                <div class="flex items-center gap-3">
-                                    <div class="avatar">
-                                        <div class="rounded-field size-10">
-                                            <img src="../assets/img/avatars/1.png" alt="avatar" />
-                                        </div>
-                                    </div>
-
-                                    <div class="grow">
-                                        <h6 class="text-base-content mb-px font-medium">Empty Notice</h6>
-                                        <div class="text-base-content/50 flex items-center gap-1 text-sm">
-                                            <span class="icon-[tabler--calendar] size-4.5"></span>
-                                            <span>No data found</span>
-                                        </div>
-                                    </div>
-                                    <span class="badge badge-primary badge-soft rounded-field font-medium">Empty</span>
-                                </div>
-                            </li>
-                        @endforelse
-
-
-                    </ul>
+                <div class="flex gap-2">
+                     <span class="badge badge-blue">Sales</span>
                 </div>
             </div>
-
-            <!-- Students By Countries -->
-            <div class="card shadow-base-300/10 shadow-md">
-                <div class="card-header flex items-start justify-between gap-2">
-                    <div>
-                        <h4 class="card-title text-lg">User by Countries</h4>
-
-                    </div>
-                    <div class="dropdown relative inline-flex">
-
-                        <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu"
-                            aria-orientation="vertical" aria-labelledby="dropdown-students-by-countries">
-                            <li><a class="dropdown-item" href="#">Last 28 Days</a></li>
-                            <li><a class="dropdown-item" href="#">Last Month</a></li>
-                            <li><a class="dropdown-item" href="#">Last Year</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <ul class="flex h-full flex-col justify-between gap-6">
-                        @foreach ($countries as $item)
-                            <li>
-                                <div class="flex items-center gap-3">
-                                    <div class="avatar">
-                                        <div class="size-11 rounded-full">
-                                            <img src="data:image/jpeg;base64,{{ base64_encode($item->country?->image) }}"
-                                                alt="united states flag" />
-                                        </div>
-                                    </div>
-
-                                    <div class="grow">
-                                        <div class="flex items-center gap-2.5">
-                                            <h6 class="text-base-content font-semibold">{{ $item->total }}</h6>
-                                            {{-- <div class="text-error flex items-center">
-                                            <span class="icon-[tabler--chevron-down] size-4"></span>
-                                            <p class="text-sm">7.0%</p>
-                                        </div> --}}
-                                        </div>
-                                        <p class="text-base-content/50 text-sm">{{ $item->country?->name }}</p>
-                                    </div>
-
-
-                                </div>
-                            </li>
-                        @endforeach
-
-
-                        {{-- <li>
-                            <div class="flex items-center gap-3">
-                                <div class="avatar">
-                                    <div class="size-11 rounded-full">
-                                        <img src="../assets/img/canada.png" alt="canada flag" />
-                                    </div>
-                                </div>
-
-                                <div class="grow">
-                                    <div class="flex items-center gap-2.5">
-                                        <h6 class="text-base-content font-semibold">112k</h6>
-                                        <div class="text-success flex items-center">
-                                            <span class="icon-[tabler--chevron-up] size-4"></span>
-                                            <p class="text-sm">6.3%</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-base-content/50 text-sm">Canada</p>
-                                </div>
-
-                                <div>
-                                    <span class="text-base-content font-medium">227k</span>
-                                    <span class="text-base-content/50 text-sm">/new</span>
-                                </div>
-                            </div>
-                        </li> --}}
-
-
-                    </ul>
-                </div>
+            <div class="card-body">
+                <div id="revenue-chart" class="w-full h-[300px]"></div>
             </div>
         </div>
 
-        <!-- Sales Metrics -->
-        <div class="card shadow-base-300/10 shadow-md xl:col-span-2">
-            <div class="card-body gap-6">
-                <div class="flex w-full items-start gap-6 max-md:flex-col">
-                    <div class="gap-7.5 flex grow flex-col max-md:w-full">
-                        <h2 class="card-title text-xl">Order Chart</h2>
-
-                        <!-- Company Info -->
-                        <div class="grid gap-4 sm:grid-cols-1">
-                            <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
-                                <div class="avatar avatar-placeholder">
-                                    <div class="bg-warning/20 text-warning rounded-field size-11.5">
-                                        <span class="icon-[tabler--trending-up] size-6.5"></span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-base-content/50 text-sm font-medium">Total Sales</span>
-                                    <span class="text-base-content text-lg font-semibold">$22</span>
-                                </div>
-                            </div>
-                            <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
-                                <div class="avatar avatar-placeholder">
-                                    <div class="text-success bg-success/20 rounded-field size-11.5">
-                                        <span class="icon-[tabler--chart-bar] size-6.5"></span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-base-content/50 text-sm font-medium">Total Profit</span>
-                                    <span class="text-base-content text-lg font-semibold">$33</span>
-                                </div>
-                            </div>
-                            <!-- <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
-                                <div class="avatar avatar-placeholder">
-                                    <div class="text-primary bg-primary/20 rounded-field size-11.5">
-                                        <span class="icon-[tabler--discount-2] size-6.5"></span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-base-content/50 text-sm font-medium">Discounts</span>
-                                    <span class="text-base-content text-lg font-semibold">$00</span>
-                                </div>
-                            </div> -->
-                            <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
-                                <div class="avatar avatar-placeholder">
-                                    <div class="text-accent bg-accent/20 rounded-field size-11.5">
-                                        <span class="icon-[tabler--wallet] size-6.5"></span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-base-content/50 text-sm font-medium">Refunds</span>
-                                    <span class="text-base-content text-lg font-semibold">$00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Revenue Goal Section -->
-                    <div class="bg-base-200 item-center rounded-box flex justify-center max-md:w-full">
-                        <div class="bg-base-200 rounded-box space-y-4 p-4">
-                            <h3 class="text-base-content text-xl font-medium">Order Statuses</h3>
-                            <!-- Radial Progress -->
-                            <div id="order-status-chart" class="w-full"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Section -->
-                {{-- <div class="border-base-content/20 rounded-box flex gap-8 border p-6 max-md:flex-col">
-                    <!-- Sales Plan -->
-                    <div class="space-y-4">
-                        <h3 class="card-title">Sales Plan</h3>
-                        <div class="text-base-content text-7xl font-medium">54%</div>
-                        <p class="text-base-content/50 text-lg">Percentage profit from total sales</p>
-                    </div>
-
-                    <!-- Cohort Analysis -->
-                    <div class="space-y-6">
-                        <h3 class="text-base-content text-xl font-medium">Cohart analysis indicators</h3>
-                        <p class="text-base-content/50">Cohort analysis thoroughly analyzes the behaviour and engagement
-                            patterns of a group of users who joined a product or service at the same time, tracking their
-                            actions and retention over a certain period for deeper insights.</p>
-
-                        <!-- Statistics Icons -->
-                        <div class="text-base-content flex gap-6 max-sm:flex-col sm:items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="icon-[tabler--chart-infographic] size-6"></span>
-                                <span class="text-lg font-medium">Open Statistics</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="icon-[tabler--percentage] size-6"></span>
-                                <span class="text-lg font-medium">Percentage Change</span>
-                            </div>
-                        </div>
-
-                        <div class="progress rounded-field h-7 *:rounded-none">
-                            <div class="progress-bar progress-primary w-full"></div>
-                            <div class="progress-bar bg-primary/50 w-3/4"></div>
-                            <div class="progress-bar bg-primary/30 w-2/4"></div>
-                            <div class="progress-bar bg-primary/10 w-1/4"></div>
-                        </div>
-                    </div>
-                </div> --}}
+        <!-- Order Status Distribution (Donut Chart) -->
+        <div class="section-card xl:col-span-1 flex flex-col">
+            <div class="card-header">
+                <span>Order Status</span>
+            </div>
+            <div class="card-body flex flex-col items-center justify-center h-full">
+                <div id="order-status-chart" class="w-full"></div>
             </div>
         </div>
     </div>
 
-    <!-- Payment Status Table -->
-    <div class="rounded-box shadow-base-300/10 bg-base-100 w-full pb-2 shadow-md">
-        <div class="overflow-x-auto">
-            <table class="table">
-                <thead>
-                    <tr class="text-center">
-                        <th>Date</th>
-                        <th>Order No.</th>
-                        <th>Job Title</th>
-                        <th>Amount</th>
-                        <th>Quantity</th>
-                        <th>Payment</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @forelse ($total_orders as $item)
-                        <tr class="text-center">
-                            <td>{{ dateFormat($item->created_at) }}</td>
-                            <td>
-                                <a href="{{ route('admin.orders.edit', $item->id) }}"
-                                    class="text-primary">#{{ $item->order_id }}</a>
-                            </td>
-
-                            <td>{{ Str::ucfirst($item->job_title) }}</td>
-                            <td>${{ $item->price }} </td>
-                            <td>{{ $item->image_quantity }} </td>
-                            <td>
-                                @if ($item->is_paid == 1)
-                                    <span class="badge badge-soft badge-primary text-xs">@lang('Paid')</span>
-                                @else
-                                    <span class="badge badge-soft badge-error text-xs">@lang('Unpaid')</span>
-                                @endif
-
-                            </td>
-                            <td>
-
-                                @if ($item->status == 'In Review')
-                                    <a href="" class=""><span
-                                            class="badge badge-soft badge-success text-xs">In Review</span></a>
-                                @elseif ($item->status == 'Pending')
-                                    <a href="" class="badge badge-soft badge-primary text-xs">Pending</a>
-                                @elseif ($item->status == 'Processing')
-                                    <a href="" class="badge badge-soft badge-primary text-xs">Processing</a>
-                                @elseif ($item->status == 'Received')
-                                    <a href="" class="badge badge-soft badge-success text-xs">Received</a>
-                                @elseif($item->status == 'Finalizing')
-                                    <a href=""><span
-                                            class="badge badge-soft badge-success text-xs">@lang('Finalized')</span></a>
-                                @elseif($item->status == 'Completed')
-                                    <a href="" class="badge badge-soft badge-success text-xs">@lang('Completed')</a>
-                                @elseif($item->status == 'Invoiced')
-                                    <a href="" class="badge badge-soft badge-info text-xs">@lang('Invoiced')</a>
-                                @elseif ($item->status == 'Downloaded')
-                                    <a href="" class="badge badge-soft badge-warning text-xs">Downloaded</a>
-                                @elseif ($item->status == 'Canceled')
-                                    <a href="" class="badge badge-soft badge-error text-xs">Canceled</a>
-                                @endif
-
-
-                            </td>
-
-                            <td>
-                                <a class="btn btn-circle btn-text btn-sm" href="{{ route('admin.orders.edit',$item->id) }}" aria-label="Action button"><span
-                                        class="icon-[tabler--eye] size-5"></span></a>
-                                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span
-                                        class="icon-[tabler--trash] size-5"></span></button>
-                                <button class="btn btn-circle btn-text btn-sm" aria-label="Action button"><span
-                                        class="icon-[tabler--dots-vertical] size-5"></span></button>
-                            </td>
-                        </tr>
-
-                    @empty
+    <!-- 3. Widgets Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Top Selling Products -->
+        <div class="section-card h-full flex flex-col">
+            <div class="card-header">
+                <span>Top Products</span>
+            </div>
+            <div class="card-body p-0 overflow-y-auto max-h-[400px]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
                         <tr>
-                            <td colspan="8">
-                                <p class="text-center text-error text-md font-semibold">@lang('No orders found')</p>
-                            </td>
-
+                            <th class="px-4 py-3 font-semibold">Product</th>
+                            <th class="px-4 py-3 font-semibold text-right">Orders</th>
                         </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @forelse($top_products as $product)
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden border border-slate-200">
+                                        @if($product->images->first())
+                                            <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                        @else
+                                             <div class="w-full h-full flex items-center justify-center text-slate-400">
+                                                <span class="icon-[tabler--photo] size-5"></span>
+                                             </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-slate-700 line-clamp-1" title="{{ $product->name }}">{{ $product->name }}</div>
+                                        <div class="text-xs text-slate-500">{{ $product->category->name ?? 'Uncategorized' }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-right font-bold text-slate-700">
+                                {{ $product->order_items_count }}
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="2" class="px-4 py-8 text-center text-sm text-slate-400">No data available</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- New Customers -->
+        <div class="section-card h-full flex flex-col">
+            <div class="card-header">
+                <span>New Customers</span>
+            </div>
+            <div class="card-body p-0 overflow-y-auto max-h-[400px]">
+                <ul class="divide-y divide-slate-100">
+                    @forelse($new_customers as $customer)
+                    <li class="p-4 hover:bg-slate-50/50 transition-colors flex items-center gap-3">
+                        <div class="avatar placeholder">
+                            <div class="bg-indigo-50 text-indigo-600 rounded-full w-10 h-10 flex items-center justify-center font-bold text-sm">
+                                {{ substr($customer->name, 0, 1) }}
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-semibold text-slate-700">{{ $customer->name }}</div>
+                            <div class="text-xs text-slate-500">{{ $customer->email }}</div>
+                        </div>
+                        <div class="text-xs text-slate-400">
+                            {{ $customer->created_at->diffForHumans(null, true, true) }}
+                        </div>
+                    </li>
+                    @empty
+                    <li class="p-8 text-center text-sm text-slate-400">No new customers</li>
                     @endforelse
-
-
-
-                </tbody>
-            </table>
+                </ul>
+            </div>
         </div>
     </div>
+
+    <!-- 4. Recent Orders Table -->
+    <div class="section-card">
+        <div class="card-header justify-between">
+            <div>
+                <span>Recent Orders</span>
+                <span class="text-xs font-normal text-slate-500 hidden sm:inline-block">- Latest 5 transactions</span>
+            </div>
+            <a href="{{ route('admin.orders.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                View All <span class="icon-[tabler--arrow-right] size-4"></span>
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="overflow-x-auto">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($total_orders as $item)
+                        <tr>
+                            <td>
+                                <a href="{{ route('admin.orders.edit', $item->id) }}" class="font-bold text-blue-700 hover:text-blue-900">
+                                    #{{ $item->order_id }}
+                                </a>
+                            </td>
+                            <td>
+                                <div class="font-medium text-slate-700">{{ $item->user->name ?? 'Guest' }}</div>
+                            </td>
+                            <td>
+                                @php
+                                    $statusClass = 'badge-blue';
+                                    if(in_array($item->status, ['Received', 'Completed', 'Finalizing'])) $statusClass = 'badge-green';
+                                    elseif($item->status == 'Canceled') $statusClass = 'badge-red';
+                                    elseif($item->status == 'Invoiced') $statusClass = 'badge-blue';
+                                    elseif($item->status == 'Downloaded') $statusClass = 'badge-gray';
+                                @endphp
+                                <span class="badge {{ $statusClass }}">{{ $item->status }}</span>
+                            </td>
+                            <td class="font-bold text-slate-800">${{ $item->price }}</td>
+                            <td class="text-slate-500 text-xs">{{ dateFormat($item->created_at) }}</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-1">
+                                    <a href="{{ route('admin.orders.edit', $item->id) }}" class="action-btn" title="View Details">
+                                        <span class="icon-[tabler--eye] size-4.5"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-8">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <span class="icon-[tabler--file-off] size-8 text-slate-300"></span>
+                                    <span class="text-slate-500 font-medium">No orders found</span>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('js')
 <script>
     window.addEventListener('load', () => {
+        // --- Order Status Chart (Donut) ---
         (function() {
-            const statusLabels = @json($statusLabels);
-            const statusValues = @json($statusValues);
-            const totalOrders = statusValues.reduce((a, b) => a + b, 0);
-
-            // Order Status Chart
-            buildChart('#order-status-chart', () => ({
-                chart: {
-                    height: 250,
-                    width: '100%',
-                    type: 'donut',
-                    offsetX: 0,
-                    parentHeightOffset: 0
-                },
-                labels: statusLabels,
-                series: statusValues,
-                colors: ['var(--color-primary)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-error)', 'var(--color-info)'],
-                stroke: {
-                    width: 4,
-                    colors: ['var(--color-base-200)']
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                legend: {
-                    show: true,
-                    position: 'bottom',
-                    horizontalAlign: 'center', 
-                },
-                grid: {
-                    show: false
-                },
-                states: {
-                    hover: {
-                        filter: { type: 'none' }
+            const statusLabels = @json($statusLabels ?? []);
+            const statusValues = @json($statusValues ?? []);
+            
+            if(statusValues.length > 0) {
+                 const totalOrders = statusValues.reduce((a, b) => a + b, 0);
+                 buildChart('#order-status-chart', () => ({
+                    chart: {
+                        height: 280,
+                        width: '100%',
+                        type: 'donut',
+                        fontFamily: 'Inter, ui-sans-serif',
                     },
-                    active: {
-                        filter: { type: 'none' }
-                    }
-                },
-                plotOptions: {
-                    pie: {
-                        expandOnClick: false,
-                        donut: {
-                            size: '75%',
-                            background: 'transparent',
-                            labels: {
-                                show: true,
-                                value: {
-                                    fontSize: '1.5rem',
-                                    fontFamily: 'Inter, ui-sans-serif',
-                                    fontWeight: 700,
-                                    color: 'var(--color-base-content)',
-                                    offsetY: -5,
-                                    formatter: function(val) {
-                                        return parseInt(val);
-                                    }
-                                },
-                                name: {
-                                    offsetY: 20,
-                                    fontFamily: 'Inter, ui-sans-serif'
-                                },
-                                total: {
+                    labels: statusLabels,
+                    series: statusValues,
+                    colors: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'],
+                    stroke: { show: false },
+                    dataLabels: { enabled: false },
+                    legend: {
+                        show: true,
+                        position: 'bottom',
+                        markers: { radius: 12 },
+                        itemMargin: { horizontal: 10, vertical: 5 }
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '70%',
+                                labels: {
                                     show: true,
-                                    fontSize: '14px',
-                                    color: 'var(--color-base-content)',
-                                    fontWeight: 500,
-                                    label: 'Total Orders',
-                                    formatter: function(w) {
-                                        return totalOrders;
+                                    name: { fontSize: '12px', color: '#64748b' },
+                                    value: {
+                                        fontSize: '24px',
+                                        fontWeight: 700,
+                                        color: '#0f172a',
+                                        formatter: function(val) { return parseInt(val); }
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Total',
+                                        color: '#64748b',
+                                        formatter: function(w) { return totalOrders; }
                                     }
                                 }
                             }
                         }
                     }
+                }));
+            }
+        })();
+
+        // --- Revenue Chart (Area) ---
+        (function() {
+            const revenueData = @json($revenueData ?? []);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            buildChart('#revenue-chart', () => ({
+                chart: {
+                    height: 300,
+                    type: 'area',
+                    fontFamily: 'Inter, ui-sans-serif',
+                    toolbar: { show: false },
+                    zoom: { enabled: false }
+                },
+                series: [{
+                    name: 'Revenue',
+                    data: revenueData
+                }],
+                colors: ['#3b82f6'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.4,
+                        opacityTo: 0.05,
+                        stops: [0, 100]
+                    }
+                },
+                dataLabels: { enabled: false },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                xaxis: {
+                    categories: months,
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: {
+                        style: { colors: '#94a3b8', fontSize: '12px' }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        style: { colors: '#94a3b8', fontSize: '12px' },
+                        formatter: (val) => { return '$' + val }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f5f9',
+                    strokeDashArray: 4,
+                    yaxis: { lines: { show: true } },
+                    xaxis: { lines: { show: false } },
+                    padding: { top: 0, right: 0, bottom: 0, left: 10 }
+                },
+                tooltip: {
+                    y: { formatter: function (val) { return "$" + val } }
                 }
             }));
         })();

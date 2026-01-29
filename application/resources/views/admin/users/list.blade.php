@@ -1,92 +1,76 @@
-@extends('panel.layouts.app')
+@extends('admin.layouts.app')
 @section('content')
-    <div class="rounded-box shadow-base-300/10 bg-base-100 w-full pb-2 shadow-md">
-        <h3 class="p-4 text-primary font-semibold">Users List</h3>
-        <div class="overflow-x-auto">
+<div class="card bg-base-100 shadow-xl">
+        <div class="card-body overflow-x-auto">
             <table class="table">
                 <thead>
                     <tr>
-                        <th>SL.</th>
-                        <th>Name</th>
-                        <th>IP</th>
-                        <th>Status</th>
-                        <th>Create Acc.</th>
-                        <th>Last Login</th>
+                        <th>User</th>
 
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ Str::ucfirst($item->name) }} <br>
-                            <span class="text-xs">{{ __($item->email) }}</span>
-                            </td>
-                            <td>{{ $item->userDetail?->ip}}</td>
-                            <td><span
-                                    class="badge badge-soft badge-{{ $item->status == 1 ? 'success' : 'error' }}  text-xs">{{ $item->status == 1 ? 'Active' : 'Inactive' }}</span>
-                            </td>
-                            <td>{{ $item->created_at }}</td>
-                            <td>{{ $item->userDetail?->last_access_at }}</td>
+                        <tr class="hover:bg-base-200/50 transition-colors">
                             <td>
-                                {{-- Show Profile --}}
-                                <a class="btn btn-circle btn-text btn-sm" href="{{ route('user.show', $item->id) }}"
-                                    aria-label="View Profile"><span class="icon-[tabler--eye] size-5"></span></a>
+                                <div class="flex items-center gap-4">
+                                    <div class="avatar">
+                                        <div class="h-11 w-11 rounded-full ring-2 ring-base-200 ring-offset-1 flex items-center justify-center bg-base-200 overflow-hidden">
+                                            @if($item->image)
+                                                <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="object-cover">
+                                            @else
+                                                <span class="text-lg font-bold opacity-50">{{ substr($item->name, 0, 1) }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-base-content">{{ Str::ucfirst($item->name) }}</div>
+                                        <div class="text-xs text-base-content/50">User ID: #{{ $item->id }}</div>
+                                    </div>
+                                </div>
+                            </td>
 
-                                @if ($item->is_admin == 1)
-                                    {{-- Admin: Delete --}}
-                                    <form action="{{ route('user.destroy', $item->id) }}" method="POST" style="display: inline;"
-                                        onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            <td class="text-base-content/70">
+                                <span class="font-medium">{{ $item->email }}</span>
+                            </td>
+
+                            <td>
+                                {{ $item->phone ?? 'N/A' }}
+                            </td>
+
+                            <td>
+                                @if($item->status == 1)
+                                    <span class="badge badge-soft badge-success text-xs">Active</span>
+                                @else
+                                    <span class="badge badge-soft badge-error text-xs">Inactive</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                <div class="flex gap-1 justify-end">
+                                    <a href="{{ route('admin.users.edit', $item->id) }}" class="btn btn-ghost btn-sm btn-square">
+                                        <span class="icon-[tabler--pencil] size-5"></span>
+                                    </a>
+                                    
+                                    <form action="{{ route('admin.users.destroy', $item->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-circle btn-text btn-sm" aria-label="Delete user">
+                                        <button type="submit" class="btn btn-ghost btn-sm btn-square text-error">
                                             <span class="icon-[tabler--trash] size-5"></span>
                                         </button>
                                     </form>
-                                @else
-                                    {{-- Customer: Edit --}}
-                                    <a class="btn btn-circle btn-text btn-sm" href="{{ route('user.edit', $item->id) }}"
-                                        aria-label="Action button"><span class="icon-[tabler--pencil] size-5"></span></a>
-                                @endif
+                                </div>
                             </td>
                         </tr>
                     @endforeach
-
-
-                </tbody>
             </table>
-        </div>
-
-        {{-- Pagination Links --}}
-        @if ($users->hasPages())
-            <div class="flex justify-center items-center gap-2 p-4">
-                <div class="join">
-                    {{-- Previous Button --}}
-                    @if ($users->onFirstPage())
-                        <button class="join-item btn btn-disabled" disabled>«</button>
-                    @else
-                        <a href="{{ $users->previousPageUrl() }}" class="join-item btn">«</a>
-                    @endif
-
-                    {{-- Page Numbers --}}
-                    @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
-                        @if ($page == $users->currentPage())
-                            <button class="join-item btn btn-active">{{ $page }}</button>
-                        @else
-                            <a href="{{ $url }}" class="join-item btn">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    {{-- Next Button --}}
-                    @if ($users->hasMorePages())
-                        <a href="{{ $users->nextPageUrl() }}" class="join-item btn">»</a>
-                    @else
-                        <button class="join-item btn btn-disabled" disabled>»</button>
-                    @endif
-                </div>
+            <div class="mt-4 px-4 pb-4">
+                {{ $users->links('pagination::tailwind') }}
             </div>
-        @endif
-
+        </div>
     </div>
 @endsection

@@ -11,8 +11,13 @@
                 <div class="card-body items-center text-center">
                     <div class="avatar mb-4">
                         <div class="size-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                            <img src="{{ $user->user_image ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random&color=fff' }}"
-                                alt="{{ $user->name }}" class="rounded-full object-cover" />
+                            @if($user->image)
+                                <img src="{{ asset($user->image) }}" alt="{{ $user->name }}" class="rounded-full object-cover" />
+                            @else
+                                <div class="bg-neutral text-neutral-content rounded-full w-full h-full flex items-center justify-center text-3xl font-bold">
+                                    {{ substr($user->name, 0, 1) }}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -21,12 +26,11 @@
 
                     <div class="w-full flex justify-between items-center py-2 border-b border-base-content/10">
                         <span class="text-base-content/70">Role</span>
-                        <span class="font-medium">{{ $user->is_admin ? 'Admin' : 'User' }}</span>
+                        <span class="font-medium">{{ $user->role === 'admin' ? 'Administrator' : 'Customer' }}</span>
                     </div>
                     <div class="w-full flex justify-between items-center py-2 border-b border-base-content/10">
                         <span class="text-base-content/70">User ID</span>
-                        <span class="badge badge-soft badge-error font-bold">{{ $user->userDetail?->uuid }}</span>
-
+                        <span class="badge badge-soft badge-ghost font-bold">#{{ $user->id }}</span>
                     </div>
                     <div class="w-full flex justify-between items-center py-2 border-b border-base-content/10">
                         <span class="text-base-content/70">Joined</span>
@@ -35,11 +39,9 @@
                     <div class="w-full flex justify-between items-center py-2">
                         <span class="text-base-content/70">Status</span>
                         @if ($user->status == 1)
-                            <span class="badge badge-soft badge-primary">Active</span>
-                        @elseif($user->status == 2)
-                            <span class="badge badge-soft badge-error">Banned</span>
+                            <span class="badge badge-soft badge-success">Active</span>
                         @else
-                            <span class="badge badge-soft badge-warning">Inactive</span>
+                            <span class="badge badge-soft badge-error">Inactive</span>
                         @endif
                     </div>
                 </div>
@@ -68,7 +70,7 @@
                             <div class="flex flex-col">
                                 <span class="text-base-content/50 text-sm font-medium">Phone Number</span>
                                 <span class="text-base-content text-sm font-semibold truncate">
-                                    {{ $user->userDetail?->phone ?? 'N/A' }}
+                                    {{ $user->phone ?? 'N/A' }}
                                 </span>
                             </div>
                         </div>
@@ -83,12 +85,12 @@
                             <div class="flex flex-col">
                                 <span class="text-base-content/50 text-sm font-medium">Address</span>
                                 <span class="text-base-content text-sm font-semibold truncate">
-                                    {{ $user->userDetail?->address ?? 'N/A' }}
+                                    {{ $user->address ?? 'N/A' }}
                                 </span>
                             </div>
                         </div>
 
-                        <!-- City/State -->
+                        <!-- City/State (from details) -->
                         <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
                             <div class="avatar avatar-placeholder">
                                 <div class="text-primary bg-primary/20 rounded-field size-11.5">
@@ -98,12 +100,12 @@
                             <div class="flex flex-col">
                                 <span class="text-base-content/50 text-sm font-medium">City / State</span>
                                 <span class="text-base-content text-sm font-semibold truncate">
-                                    {{ $user->userDetail?->city ?? '-' }} / {{ $user->userDetail?->state ?? '-' }}
+                                    {{ $user->details?->city ?? '-' }} / {{ $user->details?->state ?? '-' }}
                                 </span>
                             </div>
                         </div>
 
-                        <!-- Country -->
+                        <!-- Country (from details) -->
                         <div class="border-base-content/20 rounded-box flex gap-4 border px-4 py-3">
                             <div class="avatar avatar-placeholder">
                                 <div class="text-accent bg-accent/20 rounded-field size-11.5">
@@ -113,7 +115,7 @@
                             <div class="flex flex-col">
                                 <span class="text-base-content/50 text-sm font-medium">Country</span>
                                 <span class="text-base-content text-sm font-semibold truncate">
-                                    {{ $user->userDetail?->country->name ?? '-' }}
+                                    {{ $user->details?->country->name ?? '-' }}
                                 </span>
                             </div>
                         </div>

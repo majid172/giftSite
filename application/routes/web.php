@@ -91,6 +91,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Shipping Routes
     Route::get('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'index'])->name('admin.shipping.index');
     Route::post('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'update'])->name('admin.shipping.update');
+    
+    // User Management
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 });
 
 

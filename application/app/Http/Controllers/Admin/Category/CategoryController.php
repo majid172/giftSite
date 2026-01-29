@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver; // Using GD driver
+
 class CategoryController extends Controller
 {
     /**
@@ -41,8 +44,19 @@ class CategoryController extends Controller
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('categories'), $imageName);
-            $data['image'] = 'categories/' . $imageName;
+            $destinationPath = base_path('../assets/images/category');
+            
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+            
+            // Resize and save image
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($request->file('image'));
+            $image->scale(width: 800); 
+            $image->save($destinationPath . '/' . $imageName);
+
+            $data['image'] = 'category/' . $imageName;
         }
 
         Category::create($data);
@@ -83,13 +97,25 @@ class CategoryController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($category->image && file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
+            $oldImagePath = base_path('../assets/images/' . $category->image);
+            if ($category->image && file_exists($oldImagePath)) {
+                unlink($oldImagePath);
             }
 
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('categories'), $imageName);
-            $data['image'] = 'categories/' . $imageName;
+            $destinationPath = base_path('../assets/images/category');
+            
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+
+            // Resize and save image
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($request->file('image'));
+            $image->scale(width: 800); // Resize to max width 800px
+            $image->save($destinationPath . '/' . $imageName);
+
+            $data['image'] = 'category/' . $imageName;
         }
 
         $category->update($data);

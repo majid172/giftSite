@@ -64,28 +64,26 @@ class ProductController extends Controller
         $data['slug'] = $slug;
         $data['description'] = $request->description;
 
-        $product = Product::create($data);
-
         // Base upload path
-        $basePath = public_path('assets/images/product/' . $product->id . '/uploads');
+        $destinationPath = base_path('../assets/images/product');
 
         // Ensure directory exists
-        if (!file_exists($basePath)) {
-            mkdir($basePath, 0755, true);
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
         }
 
         // Store main image with resizing
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             
             // Resize and save
-            $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+            $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
 
-            $product->update([
-                'image' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
-            ]);
+            $data['image'] = 'assets/images/product/' . $fileName;
         }
+
+        $product = Product::create($data);
 
         // Store gallery images with resizing
         if ($request->hasFile('others')) {
@@ -93,10 +91,10 @@ class ProductController extends Controller
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 
                 // Resize and save
-                $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+                $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
 
                 $product->images()->create([
-                    'image_path' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
+                    'image_path' => 'assets/images/product/' . $fileName,
                     'is_primary' => 0,
                 ]);
             }
@@ -155,26 +153,29 @@ class ProductController extends Controller
              $data['slug'] = $slug;
         }
 
-        $basePath = public_path('assets/images/product/' . $product->id . '/uploads');
+        $destinationPath = base_path('../assets/images/product');
 
         // Ensure directory exists
-        if (!file_exists($basePath)) {
-            mkdir($basePath, 0755, true);
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
         }
 
         if ($request->hasFile('image')) {
             // Delete old primary image if it exists
-            if ($product->image && file_exists(public_path($product->image))) {
-                @unlink(public_path($product->image));
+            if ($product->image) {
+                $oldImagePath = base_path('../' . $product->image);
+                if (file_exists($oldImagePath)) {
+                    @unlink($oldImagePath);
+                }
             }
             
             $file = $request->file('image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             
             // Resize and save
-            $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+            $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
             
-            $data['image'] = 'assets/images/product/' . $product->id . '/uploads/' . $fileName;
+            $data['image'] = 'assets/images/product/' . $fileName;
         }
 
         $product->update($data);
@@ -185,10 +186,10 @@ class ProductController extends Controller
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 
                 // Resize and save
-                $this->resizeImage($file, $basePath . '/' . $fileName, 800, 800);
+                $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
 
                 $product->images()->create([
-                    'image_path' => 'assets/images/product/' . $product->id . '/uploads/' . $fileName,
+                    'image_path' => 'assets/images/product/' . $fileName,
                     'is_primary' => 0,
                 ]);
             }
@@ -265,8 +266,9 @@ class ProductController extends Controller
         $image = \App\Models\ProductImage::findOrFail($id);
         
         // Delete file
-        if (file_exists(dirname(base_path()).'/'.$image->image_path)) {
-            @unlink(dirname(base_path()).'/'.$image->image_path);
+        $filePath = base_path('../' . $image->image_path);
+        if (file_exists($filePath)) {
+            @unlink($filePath);
         }
         
         $image->delete();
@@ -279,9 +281,22 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // Delete primary image
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            $imagePath = base_path('../' . $product->image);
+            if (file_exists($imagePath)) {
+                @unlink($imagePath);
+            }
         }
+
+        // Delete gallery images
+        foreach($product->images as $image) {
+            $galleryPath = base_path('../' . $image->image_path);
+            if (file_exists($galleryPath)) {
+                @unlink($galleryPath);
+            }
+        }
+        
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');

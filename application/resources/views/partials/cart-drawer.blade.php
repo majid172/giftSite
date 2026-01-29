@@ -18,7 +18,7 @@
             @foreach(session('cart') as $id => $details)
                 <div class="flex gap-4 group">
                     <div class="w-20 h-20 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 border border-stone-100">
-                        <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
+                        <img src="{{ asset($details['image']) }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 flex flex-col justify-between">
                         <div>

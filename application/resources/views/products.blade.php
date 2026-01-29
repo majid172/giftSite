@@ -8,6 +8,8 @@
     </div>
 
     <!-- Products Grid -->
+    <!-- Products Grid -->
+    @if($products->isNotEmpty())
     <div class="border border-stone-200 rounded-lg overflow-hidden">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 bg-white">
             @foreach($products as $product)
@@ -77,5 +79,22 @@
             @endforeach
         </div>
     </div>
+    @else
+    <div class="py-20 text-center border border-dashed border-stone-200 rounded-lg bg-stone-50">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-white rounded-full mb-6 shadow-sm">
+            <svg class="w-10 h-10 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4M4 12L12 4M4 12L12 20"></path>
+                <!-- Changing icon to Package Off similar to Tabler -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zm0 9l8-4.5M12 12v9m0-9L4 7.5m16 0l-5 2.8"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18"/>
+            </svg>
+        </div>
+        <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-2">No Products Found</h3>
+        <p class="text-stone-500 mb-8 max-w-md mx-auto text-lg">We couldn't find any products in our collection at the moment. Please check back soon!</p>
+        <a href="{{ route('home') }}" class="inline-block bg-emerald-950 text-white px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-emerald-900 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+            Back to Home
+        </a>
+    </div>
+    @endif
 </div>
 @endsection

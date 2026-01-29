@@ -17,7 +17,26 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        return view('product', compact('product'));
+        $product = Product::with(['images', 'category'])->findOrFail($id);
+        
+        // Products from same category (More from this collection)
+        $relatedProducts = Product::where('status', 1)
+            ->where('id', '!=', $id)
+            ->where('category_id', $product->category_id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+
+        // Other Categories with products (Explore more)
+        $otherCategories = \App\Models\Category::where('id', '!=', $product->category_id)
+            ->whereHas('products')
+            ->inRandomOrder()
+            ->limit(2)
+            ->with(['products' => function($query) {
+                $query->where('status', 1)->inRandomOrder()->limit(4);
+            }])
+            ->get();
+            
+        return view('product', compact('product', 'relatedProducts', 'otherCategories'));
     }
 }

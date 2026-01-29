@@ -184,9 +184,9 @@
 
                     <li class="sidebar-section-header">People</li>
                     <li>
-                        <a href="#" class="menu-link-heritage flex items-center gap-3 px-4 py-3">
+                        <a href="{{ route('admin.users.index') }}" class="menu-link-heritage {{ request()->is('admin/users*') ? 'menu-active' : '' }} flex items-center gap-3 px-4 py-3">
                             <span class="icon-[tabler--users] size-5"></span>
-                            <span>Customers</span>
+                            <span>Users</span>
                         </a>
                     </li>
 

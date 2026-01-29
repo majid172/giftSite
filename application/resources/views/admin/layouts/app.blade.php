@@ -86,6 +86,7 @@
             }
         })();
     </script> --}}
+    @include('admin.partials.custom-css')
 </head>
 
 <body>

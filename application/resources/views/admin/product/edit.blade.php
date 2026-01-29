@@ -1,225 +1,245 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="container mx-auto">
-        <div class="flex items-center justify-between gap-4 mb-8">
-            <div>
-                <h1 class="text-3xl font-extrabold text-gray-900">Edit Product</h1>
-                <p class="text-sm text-gray-500 mt-1">Modify information for <span class="text-primary font-medium">{{ $product->name }}</span></p>
-            </div>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-outline btn-sm">
-                <span class="icon-[tabler--arrow-left] size-4"></span>
-                Back to List
-            </a>
+<div class="kartly-settings-container">
+    <div class="kartly-title justify-between">
+        <div class="flex items-center gap-2">
+            <span class="icon-[tabler--pencil] size-6"></span>
+            Edit Product
         </div>
+        <a href="{{ route('admin.products.index') }}" class="back-btn">
+            <span class="icon-[tabler--arrow-left] size-4"></span>
+            Back to List
+        </a>
+    </div>
 
-        <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
-            @csrf
-            @method('PUT')
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left: General Information -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- General Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <span class="icon-[tabler--info-circle] size-6 text-primary"></span>
-                            General Information
-                        </h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Product Name <span class="text-error">*</span></span></label>
-                                <input type="text" name="name" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('name') input-error @enderror" value="{{ old('name', $product->name) }}" required>
-                                @error('name') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Left Column: Product Information -->
+            <div class="w-full lg:w-2/3 space-y-6">
+                <!-- General Info Card -->
+                <div class="section-card">
+                    <div class="card-header">General Information</div>
+                    <div class="card-body">
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label class="form-label" for="name">Product Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}" required>
+                                @error('name') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Category <span class="text-error">*</span></span></label>
-                                <select name="category_id" class="select select-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('category_id') select-error @enderror" required>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('category_id') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Price ($) <span class="text-error">*</span></span></label>
-                                <input type="number" step="0.01" name="price" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('price') input-error @enderror" value="{{ old('price', $product->price) }}" required>
-                                @error('price') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Old Price ($) <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="number" step="0.01" name="old_price" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('old_price') input-error @enderror" value="{{ old('old_price', $product->old_price) }}">
-                            </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Stock Quantity <span class="text-error">*</span></span></label>
-                                <input type="number" name="stock" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('stock') input-error @enderror" value="{{ old('stock', $product->stock) }}" required>
-                                @error('stock') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Text <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge" placeholder="e.g. BEST SELLER" value="{{ old('badge', $product->badge) }}">
-                            </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Color Class <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge_color" placeholder="e.g. bg-amber-500" value="{{ old('badge_color', $product->badge_color) }}">
-                            </div>
-                        </div>
-
-                        <div class="form-control mt-6">
-                            <label class="label"><span class="label-text font-bold text-gray-700">Description</span></label>
-                            <div id="editor" style="height: 300px;" class="rounded-xl border border-gray-300">
-                                {!! old('description', $product->description) !!}
-                            </div>
-                            <input type="hidden" name="description" id="description">
-                        </div>
-                    </div>
-
-                    <!-- Images Gallery Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                                <span class="icon-[tabler--photo] size-6 text-primary"></span>
-                                Product Gallery
-                            </h3>
-                        </div>
-
-                        <!-- Existing Gallery Images -->
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-8">
-                            @foreach($product->images as $galleryImg)
-                                <div class="relative group aspect-square rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 shadow-sm transition-all hover:shadow-md" id="gallery-img-{{ $galleryImg->id }}">
-                                    <img src="{{ asset($galleryImg->image_path) }}" class="h-full w-full object-cover">
-                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <button type="button" onclick="deleteGalleryImage({{ $galleryImg->id }})" class="btn btn-error btn-sm btn-circle shadow-lg transform scale-90 group-hover:scale-100 transition-transform">
-                                            <span class="icon-[tabler--trash] size-5 text-white"></span>
-                                        </button>
-                                    </div>
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="category_id">Category <span class="text-red-500">*</span></label>
+                                    <select name="category_id" id="category_id" class="form-control" required>
+                                        <option value="" disabled>Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                                 </div>
-                            @endforeach
-                            
-                            <!-- Add More Placeholder / Info -->
-                            <div class="aspect-square rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-400">
-                                <span class="icon-[tabler--plus] size-8 mb-1"></span>
-                                <span class="text-[10px] font-bold uppercase tracking-wider">Add More Below</span>
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="stock">Stock Quantity <span class="text-red-500">*</span></label>
+                                    <input type="number" name="stock" id="stock" class="form-control" value="{{ old('stock', $product->stock) }}" required>
+                                    @error('stock') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-control">
-                            <label class="label"><span class="label-text font-bold text-gray-700">Upload New Gallery Images</span></label>
-                            <input type="file" name="others[]" class="file-input file-input-bordered w-full" multiple accept="image/*">
-                            <p class="text-[10px] text-gray-400 mt-2 italic">You can select multiple images to add to the gallery.</p>
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="price">Price ($) <span class="text-red-500">*</span></label>
+                                    <input type="number" step="0.01" name="price" id="price" class="form-control" value="{{ old('price', $product->price) }}" required>
+                                    @error('price') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="old_price">Old Price ($) <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                    <input type="number" step="0.01" name="old_price" id="old_price" class="form-control" value="{{ old('old_price', $product->old_price) }}">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <div id="editor" style="height: 200px; background: white;" class="rounded-md border border-slate-200">{!! old('description', $product->description) !!}</div>
+                                <input type="hidden" name="description" id="description" value="{{ old('description', $product->description) }}">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Sidebar: Primary Image & Status -->
-                <div class="space-y-8">
-                    <!-- Primary Image Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                         <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <span class="icon-[tabler--star] size-5 text-yellow-500"></span>
-                            Primary Image
-                        </h3>
-                        
-                        <div class="mb-6">
-                            <div class="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-inner group">
-                                <img id="primary-preview" src="{{ $product->image ? asset($product->image) : 'https://placehold.co/400x400?text=No+Image' }}" class="h-full w-full object-contain">
-                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                 <!-- Gallery Management Card -->
+                 <div class="section-card">
+                    <div class="card-header">Existing Gallery Images</div>
+                    <div class="card-body">
+                        @if($product->images && $product->images->count() > 0)
+                            <div class="flex flex-wrap gap-4">
+                                @foreach($product->images as $galleryImg)
+                                    <div class="relative group w-32 h-32 rounded-lg overflow-hidden border border-slate-200 shadow-sm transition-all hover:shadow-md hover:border-blue-400" id="gallery-img-{{ $galleryImg->id }}">
+                                        <img src="{{ asset($galleryImg->image_path) }}" class="h-full w-full object-cover">
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                                            <button type="button" onclick="deleteGalleryImage({{ $galleryImg->id }})" class="bg-white text-red-500 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all transform scale-90 group-hover:scale-100 shadow-lg" title="Delete Image">
+                                                <span class="icon-[tabler--trash] size-5"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-8 text-slate-400 text-sm">
+                                No gallery images uploaded.
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Badges Card -->
+                <div class="section-card">
+                    <div class="card-header">Product Badge</div>
+                    <div class="card-body">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="badge">Badge Text <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                <input type="text" name="badge" id="badge" class="form-control" value="{{ old('badge', $product->badge) }}" placeholder="e.g. NEW">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="badge_color">Badge Color Class <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                <input type="text" name="badge_color" id="badge_color" class="form-control" value="{{ old('badge_color', $product->badge_color) }}" placeholder="e.g. bg-blue-500">
+                                <div class="text-xs text-gray-400 mt-1">Accepts Tailwind color classes</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="form-control">
-                            <label class="label"><span class="label-text font-bold text-gray-700">Replace Primary Image</span></label>
-                            <input type="file" name="image" class="file-input file-input-bordered file-input-primary w-full" accept="image/*" onchange="previewPrimary(this)">
+            <!-- Right Column: Images & Publish -->
+            <div class="w-full lg:w-1/3 space-y-6">
+                <div class="flex gap-4">
+                    <div class="section-card flex-1">
+                        <div class="card-header">Primary Image</div>
+                        <div class="card-body">
+                            <div class="image-preview-box" onclick="document.getElementById('image').click()">
+                                <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)">
+                                @if($product->image)
+                                    <img id="primary-preview" src="{{ asset($product->image) }}" alt="Preview" class="image-preview">
+                                    <div id="upload-placeholder" class="upload-placeholder hidden">
+                                        <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
+                                        <p class="text-xs text-slate-500 font-medium">Click to replace</p>
+                                    </div>
+                                @else
+                                    <div id="upload-placeholder" class="upload-placeholder">
+                                        <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
+                                        <p class="text-xs text-slate-500 font-medium">Click to upload</p>
+                                    </div>
+                                    <img id="primary-preview" src="#" alt="Preview" class="image-preview hidden">
+                                @endif
+                                
+                            </div>
+                            <div class="text-xs text-center text-slate-400 mt-2">Click image to replace</div>
+                            @error('image') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
-                    <!-- Actions Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <button type="submit" class="btn btn-primary w-full gap-2 rounded-xl py-4 h-auto text-lg shadow-lg shadow-primary/20">
-                            <span class="icon-[tabler--device-floppy] size-6"></span>
+                    <div class="section-card flex-1 h-full"> 
+                        <div class="card-header">Add Gallery Images</div>
+                        <div class="card-body">
+                             <div class="form-group">
+                                <label class="form-label text-xs mb-2">Upload new images</label>
+                                <input type="file" name="others[]" class="form-control text-sm" multiple accept="image/*">
+                                <div class="text-xs text-slate-400 mt-2 italic">Hold Ctrl/Cmd to select multiple files</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="card-header">Publish Changes</div>
+                    <div class="card-body">
+                        <button type="submit" class="save-btn w-full justify-center">
+                            <span class="icon-[tabler--device-floppy] size-5"></span>
                             Update Product
                         </button>
-                        
-                        <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-ghost w-full mt-4 rounded-xl">
-                            Cancel Changes
+                        <a href="{{ route('admin.products.index') }}" class="action-btn w-full mt-3 justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 no-underline py-2">
+                            Cancel
                         </a>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
-    @push('plugins')
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    @endpush
+@push('plugins')
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 
-    @push('js')
-    <script>
-        // Initialize Quill
-        const quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link', 'clean']
-                ]
+@push('js')
+<script>
+    // Initialize Quill
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'clean']
+            ]
+        }
+    });
+
+    // Sync Quill to hidden input on submit
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function() {
+        document.querySelector('#description').value = quill.root.innerHTML;
+    });
+
+    // Primary Image Preview
+    function previewPrimary(input) {
+        const preview = document.getElementById('primary-preview');
+        const placeholder = document.getElementById('upload-placeholder');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                if(placeholder) placeholder.classList.add('hidden');
             }
-        });
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
-        // Sync Quill to hidden input on submit
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function() {
-            document.querySelector('#description').value = quill.root.innerHTML;
-        });
-
-        // Primary Image Preview
-        function previewPrimary(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('primary-preview').src = e.target.result;
+    // AJAX Delete Gallery Image
+    function deleteGalleryImage(id) {
+        if (confirm('Are you sure you want to remove this image?')) {
+            fetch(`/admin/products/image/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const el = document.getElementById(`gallery-img-${id}`);
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 300);
+                } else {
+                    alert('Failed to delete image: ' + (data.message || 'Unknown error'));
                 }
-                reader.readAsDataURL(input.files[0]);
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the image.');
+            });
         }
-
-        // AJAX Delete Gallery Image
-        function deleteGalleryImage(id) {
-            if (confirm('Are you sure you want to remove this image from the gallery?')) {
-                fetch(`/admin/products/image/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const el = document.getElementById(`gallery-img-${id}`);
-                        el.style.transform = 'scale(0)';
-                        el.style.opacity = '0';
-                        setTimeout(() => el.remove(), 300);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to delete image.');
-                });
-            }
-        }
-    </script>
-    @endpush
+    }
+</script>
+@endpush
 @endsection

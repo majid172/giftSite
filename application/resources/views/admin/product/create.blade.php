@@ -1,180 +1,179 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="container mx-auto">
-        <div class="flex items-center justify-between gap-4 mb-8">
-            <div>
-                <h1 class="text-3xl font-extrabold text-gray-900">Create Product</h1>
-                <p class="text-sm text-gray-500 mt-1">Add a new product to your catalog</p>
-            </div>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-outline btn-sm">
-                <span class="icon-[tabler--arrow-left] size-4"></span>
-                Back to List
-            </a>
+<div class="kartly-settings-container">
+    <div class="kartly-title justify-between">
+        <div class="flex items-center gap-2">
+            <span class="icon-[tabler--box] size-6"></span>
+            Create New Product
         </div>
+        <a href="{{ route('admin.products.index') }}" class="back-btn">
+            <span class="icon-[tabler--arrow-left] size-4"></span>
+            Back to List
+        </a>
+    </div>
 
-        <form method="post" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" class="space-y-8">
-            @csrf
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left: General Information -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- General Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <span class="icon-[tabler--info-circle] size-6 text-primary"></span>
-                            General Information
-                        </h3>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Product Name <span class="text-error">*</span></span></label>
-                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('name') input-error @enderror" name="name" placeholder="e.g. Luxury Gift Box" value="{{ old('name') }}" required>
-                                @error('name') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+    <form method="post" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+        @csrf
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Left Column: Product Information -->
+            <div class="w-full lg:w-2/3 space-y-6">
+                <!-- General Info Card -->
+                <div class="section-card">
+                    <div class="card-header">General Information</div>
+                    <div class="card-body">
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label class="form-label" for="name">Product Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" placeholder="e.g. Luxury Gift Box" required>
+                                @error('name') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                             </div>
 
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Category <span class="text-error">*</span></span></label>
-                                <select class="select select-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('category_id') select-error @enderror" name="category_id" required>
-                                    <option value="" disabled selected>Select Category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('category_id') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="category_id">Category <span class="text-red-500">*</span></label>
+                                    <select name="category_id" id="category_id" class="form-control" required>
+                                        <option value="" disabled selected>Select Category</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="stock">Stock Quantity <span class="text-red-500">*</span></label>
+                                    <input type="number" name="stock" id="stock" class="form-control" value="{{ old('stock') }}" placeholder="0" required>
+                                    @error('stock') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                                </div>
                             </div>
 
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Price ($) <span class="text-error">*</span></span></label>
-                                <input type="number" step="0.01" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('price') input-error @enderror" name="price" placeholder="0.00" value="{{ old('price') }}" required>
-                                @error('price') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="price">Price ($) <span class="text-red-500">*</span></label>
+                                    <input type="number" step="0.01" name="price" id="price" class="form-control" value="{{ old('price') }}" placeholder="0.00" required>
+                                    @error('price') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                                </div>
+                                <div class="form-group flex-1">
+                                    <label class="form-label" for="old_price">Old Price ($) <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                    <input type="number" step="0.01" name="old_price" id="old_price" class="form-control" value="{{ old('old_price') }}" placeholder="0.00">
+                                </div>
                             </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Old Price ($) <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="number" step="0.01" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('old_price') input-error @enderror" name="old_price" placeholder="0.00" value="{{ old('old_price') }}">
-                                <span class="text-xs text-gray-400 mt-1">Shows as strikethrough if set</span>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <div id="editor" style="height: 200px; background: white;" class="rounded-md border border-slate-200"></div>
+                                <input type="hidden" name="description" id="description">
                             </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Stock Quantity <span class="text-error">*</span></span></label>
-                                <input type="number" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all @error('stock') input-error @enderror" name="stock" placeholder="0" value="{{ old('stock') }}" required>
-                                @error('stock') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Text <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge" placeholder="e.g. BEST SELLER" value="{{ old('badge') }}">
-                            </div>
-
-                            <div class="form-control">
-                                <label class="label"><span class="label-text font-bold text-gray-700">Badge Color Class <span class="text-gray-400 font-normal">(Optional)</span></span></label>
-                                <input type="text" class="input input-bordered w-full focus:ring-2 focus:ring-primary/20 transition-all" name="badge_color" placeholder="e.g. bg-amber-500" value="{{ old('badge_color') }}">
-                                <span class="text-xs text-gray-400 mt-1">Tailwind class (e.g., bg-red-500, bg-blue-600)</span>
-                            </div>
-                        </div>
-
-                        <div class="form-control mt-6">
-                            <label class="label"><span class="label-text font-bold text-gray-700">Description</span></label>
-                            <div id="editor" style="height: 200px;" class="rounded-xl border border-gray-300"></div>
-                            <input type="hidden" name="description" id="description">
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Sidebar: Images & Actions -->
-                <div class="space-y-8">
-                    <!-- Primary Image Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <span class="icon-[tabler--star] size-5 text-yellow-500"></span>
-                            Primary Image <span class="text-error">*</span>
-                        </h3>
-                        
-                        <div class="mb-6">
-                            <div class="relative aspect-square rounded-2xl overflow-hidden border border-gray-200 bg-gray-50 shadow-inner group flex items-center justify-center">
-                                <img id="primary-preview" src="#" class="hidden h-full w-full object-contain">
-                                <div id="upload-placeholder" class="text-center p-6">
-                                    <span class="icon-[tabler--photo-plus] size-12 text-gray-300 mb-2"></span>
-                                    <p class="text-sm text-gray-400">Upload Image</p>
-                                </div>
+                <!-- Badges Card -->
+                <div class="section-card">
+                    <div class="card-header">Product Badge</div>
+                    <div class="card-body">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="badge">Badge Text <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                <input type="text" name="badge" id="badge" class="form-control" value="{{ old('badge') }}" placeholder="e.g. NEW">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="badge_color">Badge Color Class <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
+                                <input type="text" name="badge_color" id="badge_color" class="form-control" value="{{ old('badge_color') }}" placeholder="e.g. bg-blue-500">
+                                <div class="text-xs text-gray-400 mt-1">Accepts Tailwind color classes</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="form-control">
-                            <input type="file" name="image" class="file-input file-input-bordered file-input-primary w-full" accept="image/*" onchange="previewPrimary(this)" required>
-                            @error('image') <span class="text-error text-xs mt-1">{{ $message }}</span> @enderror
+            <!-- Right Column: Images & Publish -->
+            <div class="w-full lg:w-1/3 space-y-6">
+               
+
+                <div class="flex gap-4">
+                    <div class="section-card flex-1">
+                        <div class="card-header">Primary Image <span class="text-red-500">*</span></div>
+                        <div class="card-body">
+                            <div class="image-preview-box" onclick="document.getElementById('image').click()">
+                                <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)" required>
+                                <div id="upload-placeholder" class="upload-placeholder">
+                                    <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
+                                    <p class="text-xs text-slate-500 font-medium">Click to upload</p>
+                                </div>
+                                <img id="primary-preview" src="#" alt="Preview" class="image-preview hidden">
+                            </div>
+                            @error('image') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
-                    <!-- Gallery Images Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                         <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                            <span class="icon-[tabler--photo] size-5 text-primary"></span>
-                            Gallery Images
-                        </h3>
-
-                        <div class="form-control">
-                            <input type="file" name="others[]" class="file-input file-input-bordered w-full" multiple accept="image/*">
-                            <p class="text-[10px] text-gray-400 mt-2 italic">Select multiple images for the gallery.</p>
+                    <div class="section-card flex-1 h-full"> <! -- Added h-full to match height if needed -->
+                        <div class="card-header">Gallery Images</div>
+                        <div class="card-body">
+                             <div class="form-group">
+                                <label class="form-label text-xs mb-2">Upload multiple images</label>
+                                <input type="file" name="others[]" class="form-control text-sm" multiple accept="image/*">
+                                <div class="text-xs text-slate-400 mt-2 italic">Hold Ctrl/Cmd to select multiple files</div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Actions Card -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                        <button type="submit" class="btn btn-primary w-full gap-2 rounded-xl py-4 h-auto text-lg shadow-lg shadow-primary/20">
-                            <span class="icon-[tabler--check] size-6"></span>
+                 <div class="section-card">
+                    <div class="card-header">Publish</div>
+                    <div class="card-body">
+                        <button type="submit" class="save-btn w-full justify-center">
+                            <span class="icon-[tabler--check] size-5"></span>
                             Create Product
                         </button>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
-    @push('plugins')
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    @endpush
+@push('plugins')
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+@endpush
 
-    @push('js')
-    <script>
-        // Initialize Quill
-        const quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link', 'clean']
-                ]
-            }
-        });
-
-        // Sync Quill to hidden input on submit
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function() {
-            document.querySelector('#description').value = quill.root.innerHTML;
-        });
-
-        // Primary Image Preview
-        function previewPrimary(input) {
-            const preview = document.getElementById('primary-preview');
-            const placeholder = document.getElementById('upload-placeholder');
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+@push('js')
+<script>
+    // Initialize Quill
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'clean']
+            ]
         }
-    </script>
-    @endpush
+    });
+
+    // Sync Quill to hidden input on submit
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function() {
+        document.querySelector('#description').value = quill.root.innerHTML;
+    });
+
+    // Primary Image Preview
+    function previewPrimary(input) {
+        const preview = document.getElementById('primary-preview');
+        const placeholder = document.getElementById('upload-placeholder');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+@endpush
 @endsection

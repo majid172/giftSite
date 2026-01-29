@@ -18,6 +18,7 @@ class Order extends Model
         'image_quantity',
         'is_paid',
         'shipping_address',
+        'shipping_cost',
         'payment_method',
     ];
 
