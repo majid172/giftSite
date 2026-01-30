@@ -43,6 +43,10 @@ use App\Http\Controllers\ProductController;
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/product/{id}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
+});
+
 Route::get('/occasions', function () {
     return view('occasions');
 })->name('occasions.index');

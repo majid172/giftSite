@@ -78,11 +78,15 @@
                     <h1 class="text-4xl font-serif font-bold text-emerald-950 mb-3">{{ $product->name }}</h1>
                     <div class="flex items-center gap-4">
                         <div class="flex items-center gap-1">
-                            @for($i=0; $i<5; $i++)
-                                <svg class="w-5 h-5 {{ $i < 5 ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            @php
+                                $avgRating = $product->reviews->avg('rating') ?: 0;
+                                $reviewsCount = $product->reviews->count();
+                            @endphp
+                            @for($i=1; $i<=5; $i++)
+                                <svg class="w-5 h-5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             @endfor
                         </div>
-                        <span class="text-sm text-stone-600">(0 reviews)</span>
+                        <span class="text-sm text-stone-600">({{ $reviewsCount }} reviews)</span>
                         
                         @if($product->stock > 0)
                             <span class="text-sm text-emerald-600 font-medium">In Stock</span>
@@ -191,16 +195,103 @@
         <!-- Tabs Section -->
         <div class="bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden mb-16">
             <div class="border-b border-stone-200">
-                <div class="flex">
-                    <button class="px-8 py-4 font-bold text-emerald-700 border-b-2 border-emerald-700">Description</button>
-                    <!-- <button class="px-8 py-4 font-bold text-stone-500 hover:text-emerald-700 transition">Reviews (0)</button>
-                    <button class="px-8 py-4 font-bold text-stone-500 hover:text-emerald-700 transition">Shipping Info</button> -->
+                <div class="flex gap-4 px-8">
+                    <button class="px-4 py-4 font-bold text-emerald-700 border-b-2 border-emerald-700 transition tab-btn" data-tab="description">Description</button>
+                    <button class="px-4 py-4 font-bold text-stone-500 hover:text-emerald-700 transition border-b-2 border-transparent tab-btn" data-tab="reviews">Reviews ({{ $reviewsCount }})</button>
+                    <!-- <button class="px-8 py-4 font-bold text-stone-500 hover:text-emerald-700 transition">Shipping Info</button> -->
                 </div>
             </div>
             <div class="p-8">
-                <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-4">Product Description</h3>
-                <div class="prose prose-stone max-w-none">
-                   {!! $product->description !!}
+                <!-- Description Tab -->
+                <div id="description-tab" class="tab-content">
+                    <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-4">Product Description</h3>
+                    <div class="prose prose-stone max-w-none">
+                       {!! $product->description !!}
+                    </div>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div id="reviews-tab" class="hidden tab-content">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- Reviews List -->
+                        <div class="space-y-8">
+                            <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-4">Customer Reviews</h3>
+                            
+                            @forelse($product->reviews as $review)
+                            <div class="border-b border-stone-200 pb-8 last:border-0 last:pb-0">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold">
+                                            {{ substr($review->user->name ?? 'A', 0, 1) }}
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-emerald-950">{{ $review->user->name ?? 'Anonymous' }}</h4>
+                                            <span class="text-xs text-stone-500">{{ $review->created_at->format('M d, Y') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-amber-400">
+                                        @for($i=1; $i<=5; $i++)
+                                            <svg class="w-4 h-4 {{ $i <= $review->rating ? 'fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        @endfor
+                                    </div>
+                                </div>
+                                @if($review->review)
+                                <p class="text-stone-600 leading-relaxed">{{ $review->review }}</p>
+                                @endif
+                                <!-- Status badge if needed -->
+                                @if($review->status === 'pending')
+                                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full mt-2 inline-block">Pending Approval</span>
+                                @endif
+                            </div>
+                            @empty
+                            <p class="text-stone-500 italic">No reviews yet. Be the first to write one!</p>
+                            @endforelse
+                        </div>
+
+                        <!-- Write Review Form -->
+                        <div class="bg-stone-50 p-8 rounded-3xl border border-stone-200 h-fit">
+                            <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-6">Write a Review</h3>
+                            
+                            @auth
+                                @if(auth()->user()->role === 'admin')
+                                    <div class="text-center py-8">
+                                        <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                        <p class="text-stone-600">Administrators cannot submit reviews.</p>
+                                    </div>
+                                @else
+                                    <form action="{{ route('review.store', $product->id) }}" method="POST">
+                                        @csrf
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-bold text-stone-700 mb-2">Rating</label>
+                                            <div class="flex items-center gap-2 rating-input">
+                                                @for($i=1; $i<=5; $i++)
+                                                <label class="cursor-pointer group">
+                                                    <input type="radio" name="rating" value="{{ $i }}" class="hidden" required>
+                                                    <svg class="w-8 h-8 text-stone-300 group-hover:text-amber-400 peer-checked:text-amber-400 star-d transition-colors" fill="currentColor" viewBox="0 0 20 20" data-val="{{ $i }}"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                </label>
+                                                @endfor
+                                            </div>
+                                            @error('rating') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label for="review" class="block text-sm font-bold text-stone-700 mb-2">Your Review (Optional)</label>
+                                            <textarea name="review" id="review" rows="4" class="w-full px-4 py-3 rounded-xl border-2 border-stone-200 focus:border-emerald-500 focus:outline-none transition-colors" placeholder="Share your thoughts about this product..."></textarea>
+                                            @error('review') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
+
+                                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">Submit Review</button>
+                                    </form>
+                                @endif
+                            @else
+                            <div class="text-center py-8">
+                                <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <p class="text-stone-600 mb-4">Please log in to write a review.</p>
+                                <a href="{{ route('login') }}" class="inline-block bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl hover:bg-emerald-800 transition">Log In</a>
+                            </div>
+                            @endauth
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,6 +432,90 @@
     if (quantityInput) {
         quantityInput.addEventListener('change', function() {
             selectedQuantity.value = this.value;
+        });
+    }
+
+    // Tabs functionality
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Deactivate all buttons
+            tabBtns.forEach(b => {
+                b.classList.remove('text-emerald-700', 'border-emerald-700');
+                b.classList.add('text-stone-500', 'border-transparent');
+            });
+            // Activate clicked button
+            btn.classList.remove('text-stone-500', 'border-transparent');
+            btn.classList.add('text-emerald-700', 'border-emerald-700');
+
+            // Hide all contents
+            tabContents.forEach(c => c.classList.add('hidden'));
+            // Show target content
+            document.getElementById(btn.dataset.tab + '-tab').classList.remove('hidden');
+        });
+    });
+
+    // Star rating interaction
+    const starLabels = document.querySelectorAll('.rating-input label');
+    const stars = document.querySelectorAll('.rating-input .star-d');
+
+    starLabels.forEach((label, index) => {
+        label.addEventListener('mouseover', () => {
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.add('text-amber-400');
+                    s.classList.remove('text-stone-300');
+                } else {
+                    s.classList.remove('text-amber-400');
+                    s.classList.add('text-stone-300');
+                }
+            });
+        });
+
+        label.addEventListener('click', () => {
+             // Reset logic handled by CSS peer-checked, 
+             // but we might want to persist hover state or just let CSS handle it.
+             // With peer-checked CSS we might not need this JS, but for better hover effects:
+             
+             // Actually, let's just stick to CSS peer-checked if possible, 
+             // but 'star-d' class needs to be handled.
+             // Let's implement simple JS for updating visual state based on selection.
+             
+             stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.add('fill-current'); 
+                } else {
+                    s.classList.remove('fill-current');
+                }
+             });
+        });
+    });
+
+    const ratingContainer = document.querySelector('.rating-input');
+    if(ratingContainer) {
+        ratingContainer.addEventListener('mouseleave', () => {
+            // Restore state based on checked input
+            const checkedInput = ratingContainer.querySelector('input:checked');
+            if(checkedInput) {
+                const checkedIndex = parseInt(checkedInput.value) - 1;
+                stars.forEach((s, i) => {
+                    if (i <= checkedIndex) {
+                        s.classList.add('text-amber-400');
+                        s.classList.remove('text-stone-300');
+                    } else {
+                        s.classList.remove('text-amber-400');
+                        s.classList.add('text-stone-300');
+                    }
+                });
+            } else {
+                // none checked, clear
+                stars.forEach(s => {
+                    s.classList.remove('text-amber-400');
+                    s.classList.add('text-stone-300');
+                });
+            }
         });
     }
 </script>

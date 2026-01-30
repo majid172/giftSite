@@ -40,7 +40,7 @@ class ProductController extends Controller
              $query->latest();
         }
 
-        $products = $query->get();
+        $products = $query->with('reviews')->get();
         return view('products', compact('products'));
     }
 
