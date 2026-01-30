@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
 
 class AdminController extends Controller
 {
     public function index()
     {
         // 1. Stats Data
-        $today_orders = \App\Models\Order::whereDate('created_at', \Carbon\Carbon::today())->get();
-        $progress = \App\Models\Order::where('status', 'Pending')->get();
-        $total_orders = \App\Models\Order::latest()->limit(5)->get(); // Reduced limit to 5 for layout balance
-        $total_orders_count = \App\Models\Order::count();
-        
-        // 2. Notices
-        $notices = []; 
-
+        $today_orders = Order::whereDate('created_at', \Carbon\Carbon::today())->get();
+        $progress = Order::where('status', 'Pending')->get();
+        $total_orders = Order::latest()->limit(5)->get(); // Reduced limit to 5 for layout balance
+        $total_orders_count = Order::count();
+      
         // 3. Chart Data (Status)
-        $statusCounts = \App\Models\Order::selectRaw('status, count(*) as count')
+        $statusCounts = Order::selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -31,9 +31,9 @@ class AdminController extends Controller
         }
 
         // 4. Revenue Chart Data (Monthly Sales)
-        $monthly_sales = \App\Models\Order::selectRaw('MONTH(created_at) as month, SUM(price) as total')
+        $monthly_sales = Order::selectRaw('MONTH(created_at) as month, SUM(price) as total')
             ->whereYear('created_at', date('Y'))
-            ->where('is_paid', 1)
+            ->where('status', 'Delivered')
             ->groupBy('month')
             ->pluck('total', 'month')
             ->toArray();
@@ -44,28 +44,31 @@ class AdminController extends Controller
         }
 
         // 5. Top Products
-        $top_products = \App\Models\Product::withCount('orderItems')
+        $top_products = Product::withCount('orderItems')
             ->orderBy('order_items_count', 'desc')
             ->limit(5)
             ->get();
 
         // 6. New Customers
-        $new_customers = \App\Models\User::where('role', 'user')
+        $new_customers = User::where('role', 'customer')
             ->latest()
             ->limit(5)
             ->get();
+            
+        // 7. Earned Profit (Revenue from Delivered/Completed Orders)
+        $earned_profit = Order::where('status', 'Delivered')->sum('price');
 
         return view('admin.dashboard', compact(
             'today_orders',
             'progress',
             'total_orders',
             'total_orders_count',
-            'notices',
             'statusLabels',
             'statusValues',
             'revenueData',
             'top_products',
-            'new_customers'
+            'new_customers',
+            'earned_profit'
         ));
     }
 }
