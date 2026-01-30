@@ -51,7 +51,8 @@
                                 <div style="display: flex; gap: 12px; align-items: center;">
                                     <div style="width: 48px; height: 48px; border-radius: var(--radius); background: #f8fafc; border: 1px solid var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center;">
                                         @if($item->product && $item->product->image)
-                                            <img src="{{ $item->product->image }}" alt="{{ $item->product_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+
+                                            <img src="{{ asset($item->product->image) }}" alt="{{ $item->product_name }}" style="width: 100%; height: 100%; object-fit: cover;">
                                         @else
                                             <i class="ti ti-photo" style="color: var(--text-muted);"></i>
                                         @endif
@@ -82,7 +83,7 @@
                         @method('PUT')
                         <div style="flex: 1;">
                             <select name="status" class="form-control">
-                                @foreach(['Pending', 'Processing', 'Shipped', 'Completed', 'Canceled', 'Finalizing'] as $status)
+                                @foreach(['Pending', 'Approved', 'Ready to Ship', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refund Processing'] as $status)
                                     <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ $status }}</option>
                                 @endforeach
                             </select>

@@ -35,20 +35,34 @@
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
             <h3 class="text-lg font-bold text-gray-900 mb-6">Order Status</h3>
             @php
-                $statuses = ['Pending', 'Processing', 'Completed'];
-                $currentIndex = array_search($order->status, $statuses);
-                if ($order->status === 'Canceled') {
-                    $statuses = ['Pending', 'Canceled'];
-                    $currentIndex = 1;
+                // Define the sequential progress flow
+                $progressFlow = ['Pending', 'Approved', 'Ready to Ship', 'Shipped', 'Delivered'];
+                
+                // Determine current step index
+                $currentIndex = array_search($order->status, $progressFlow);
+                
+                // Handle non-sequential statuses (Cancelled, Returned, Refund Processing)
+                $isNonSequential = false;
+                if ($currentIndex === false) {
+                    $isNonSequential = true;
+                    // If status is Cancelled, Returned, etc., we show a simplified or specific view
+                    // For now, let's just map them effectively or show a danger state
+                    if (in_array($order->status, ['Cancelled', 'Returned', 'Refund Processing'])) {
+                         $progressFlow = ['Pending', $order->status];
+                         $currentIndex = 1;
+                    } else {
+                        // Fallback
+                        $currentIndex = 0; 
+                    }
                 }
             @endphp
             <div class="relative">
                 <div class="absolute top-5 left-0 w-full h-0.5 bg-gray-100"></div>
                 <div class="relative flex justify-between">
-                    @foreach($statuses as $index => $status)
+                    @foreach($progressFlow as $index => $status)
                         <div class="flex flex-col items-center">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center z-10 
-                                {{ $index <= $currentIndex ? ($order->status === 'Canceled' ? 'bg-rose-500 text-white' : 'bg-primary text-white') : 'bg-white border-2 border-gray-100 text-gray-400' }}">
+                                {{ $index <= $currentIndex ? (in_array($order->status, ['Cancelled', 'Returned', 'Refund Processing']) ? 'bg-rose-500 text-white' : 'bg-primary text-white') : 'bg-white border-2 border-gray-100 text-gray-400' }}">
                                 @if($index < $currentIndex)
                                     <span class="icon-[tabler--check] size-6"></span>
                                 @else

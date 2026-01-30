@@ -22,7 +22,13 @@ class HomeController extends Controller
 
         // Fetch latest 4 products for the "Latest Arrivals" section
         $latestProds = Product::latest()->take(4)->get();
+
+        // Fetch 3 random products for "Bestselling Products"
+        $bestSellingProducts = Product::inRandomOrder()->take(3)->get();
+
+        // Fetch 6 featured products
+        $featuredProducts = Product::where('is_featured', 1)->take(6)->get();
         
-        return view('welcome', compact('latestProds', 'categories'));
+        return view('welcome', compact('latestProds', 'categories', 'bestSellingProducts', 'featuredProducts'));
     }
 }

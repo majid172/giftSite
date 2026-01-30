@@ -8,9 +8,24 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with('user')->latest()->simplePaginate(10);
+        $query = Order::with('user')->latest();
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('order_id') && $request->order_id != '') {
+            $query->where('order_id', 'like', '%' . $request->order_id . '%');
+        }
+
+        if ($request->has('date') && $request->date != '') {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $orders = $query->simplePaginate(15)->appends($request->all());
+        
         return view('admin.orders.index', compact('orders'));
     }
 

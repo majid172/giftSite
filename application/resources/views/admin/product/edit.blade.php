@@ -145,6 +145,18 @@
                     </div>
                 </div>
 
+                <!-- Featured Switch -->
+                <div class="flex items-center justify-between p-4 bg-stone-50 rounded-xl border border-stone-100 mb-4">
+                    <div>
+                        <h4 class="text-sm font-semibold text-stone-700">Featured Product</h4>
+                        <p class="text-xs text-stone-500 mt-0.5">Display in "Featured Products" section</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="is_featured" value="1" class="sr-only peer" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}>
+                        <div class="w-11 h-6 bg-stone-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label">Description</label>
                     <div id="editor" style="height: 200px; background: white; border-radius: var(--radius); border: 1px solid var(--border-color);">{!! old('description', $product->description) !!}</div>

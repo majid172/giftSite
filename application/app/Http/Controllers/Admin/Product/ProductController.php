@@ -63,6 +63,7 @@ class ProductController extends Controller
         $data = $request->except(['image', 'others']);
         $data['slug'] = $slug;
         $data['description'] = $request->description;
+        $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
 
         // Base upload path
         $destinationPath = base_path('../assets/images/product');
@@ -142,6 +143,7 @@ class ProductController extends Controller
         ]);
 
         $data = $request->except(['image', 'others']);
+        $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
         
         // Update slug if name changes
         if ($request->name !== $product->name) {

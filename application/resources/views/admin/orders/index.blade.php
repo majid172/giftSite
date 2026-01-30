@@ -14,6 +14,44 @@
 </div>
 @endif
 
+<!-- Filter Form -->
+<div class="card" style="margin-bottom: 24px;">
+    <form action="{{ route('admin.orders.index') }}" method="GET" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;">
+        <!-- Status Filter -->
+        <div style="flex: 1; min-width: 200px;">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                @foreach(['Pending', 'Approved', 'Ready to Ship', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refund Processing'] as $status)
+                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Order ID Filter -->
+        <div style="flex: 1; min-width: 200px;">
+            <label class="form-label">Order ID</label>
+            <input type="text" name="order_id" class="form-control" placeholder="Search ID..." value="{{ request('order_id') }}">
+        </div>
+
+        <!-- Date Filter -->
+        <div style="flex: 1; min-width: 200px;">
+            <label class="form-label">Date</label>
+            <input type="date" name="date" class="form-control" value="{{ request('date') }}">
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="height: 42px; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="ti ti-filter"></i> Filter
+            </button>
+            <a href="{{ route('admin.orders.index') }}" class="btn btn-outline" style="height: 42px; display: inline-flex; align-items: center; justify-content: center;">
+                Reset
+            </a>
+        </div>
+    </form>
+</div>
+
 <div class="card">
     <div class="table-responsive">
         <table class="table">

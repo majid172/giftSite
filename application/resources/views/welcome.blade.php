@@ -164,92 +164,58 @@
                 <!-- Right Product Grid -->
                 <div class="lg:col-span-8">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full">
-                        @php
-                            $products = [
-                                [
-                                    'name' => 'Signature Tea Chest with Ribbon',
-                                    'price' => 119.0,
-                                    'rating' => 5,
-                                    'reviews' => 3,
-                                    'badge' => 'NEW',
-                                    'badge_color' => 'bg-emerald-600',
-                                    'image' =>
-                                        'https://images.unsplash.com/photo-1497700003451-e1df943a194b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                                ],
-                                [
-                                    'name' => 'Technaxx ' . get_setting('site_name', config('app.name')) . ' Gift Sampler Pack',
-                                    'price' => 40.5,
-                                    'old_price' => 45.0,
-                                    'rating' => 5,
-                                    'reviews' => 4,
-                                    'badge' => '-10%',
-                                    'badge_color' => 'bg-rose-500',
-                                    'image' =>
-                                        'https://plus.unsplash.com/premium_photo-1661547926513-d3cb4eadd310?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                                ],
-                                [
-                                    'name' => 'Firestone Oval Wide Luxury Box',
-                                    'price' => 110.0,
-                                    'rating' => 4,
-                                    'reviews' => 4,
-                                    'badge' => null,
-                                    'image' =>
-                                        'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=400&q=80',
-                                ],
-                            ];
-                        @endphp
-
-                        @foreach ($products as $product)
-                            <div
-                                class="bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                        @foreach ($bestSellingProducts as $product)
+                            <div class="bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
 
                                 <!-- Product Image Container -->
                                 <div class="relative h-48 mb-6 flex items-center justify-center overflow-hidden">
-                                    @if ($product['badge'])
+                                     @if ($product->old_price)
                                         <div class="absolute top-0 left-0 z-10">
-                                            <span
-                                                class="{{ $product['badge_color'] }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ $product['badge'] }}</span>
+                                            <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
                                         </div>
                                     @endif
 
-                                    <img src="{{ $product['image'] }}"
+                                    <img src="{{ asset($product->image) }}"
                                         class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500"
-                                        alt="{{ $product['name'] }}">
+                                        alt="{{ $product->name }}">
                                 </div>
 
                                 <!-- Product Info -->
                                 <div class="flex flex-col flex-grow">
                                     <h4 class="text-sm font-bold text-emerald-950 mb-3 h-10 overflow-hidden leading-tight">
-                                        {{ $product['name'] }}
+                                        <a href="{{ route('product.show', $product->id) }}" class="hover:text-amber-500 transition">{{ $product->name }}</a>
                                     </h4>
 
-                                    <!-- Star Rating (Yellow stars like reference) -->
+                                    <!-- Star Rating (Static 5 for now as per design request/lack of reviews table) -->
                                     <div class="flex items-center gap-0.5 mb-3">
                                         @for ($i = 0; $i < 5; $i++)
-                                            <svg class="w-3.5 h-3.5 {{ $i < $product['rating'] ? 'text-amber-400' : 'text-stone-200' }} fill-current"
-                                                viewBox="0 0 20 20">
-                                                <path
-                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            <svg class="w-3.5 h-3.5 text-amber-400 fill-current" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                             </svg>
                                         @endfor
-                                        <span class="text-xs text-stone-400 ml-1">({{ $product['reviews'] }})</span>
+                                        <span class="text-xs text-stone-400 ml-1">(5)</span>
                                     </div>
 
                                     <!-- Price -->
                                     <div class="flex items-baseline gap-2 mb-5">
-                                        <span
-                                            class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['price'], 2) }}</span>
-                                        @if (isset($product['old_price']))
-                                            <span
-                                                class="text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['old_price'], 2) }}</span>
+                                        <span class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
+                                        @if ($product->old_price)
+                                            <span class="text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->old_price, 2) }}</span>
                                         @endif
                                     </div>
 
-                                    <!-- Button (Gray like reference) -->
-                                    <button
-                                        class="mt-auto w-full bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-xs uppercase py-3 rounded-full transition-all">
-                                        Add To Cart
-                                    </button>
+                                    <!-- Button -->
+                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $product->id }}">
+                                        <input type="hidden" name="name" value="{{ $product->name }}">
+                                        <input type="hidden" name="price" value="{{ $product->price }}">
+                                        <input type="hidden" name="image" value="{{ $product->image }}">
+                                        <button type="submit"
+                                            class="w-full bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-xs uppercase py-3 rounded-full transition-all">
+                                            Add To Cart
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @endforeach
@@ -372,6 +338,7 @@
     </section>
     <!-- 2. Featured Products -->
     <!-- Featured Products Section -->
+    @if($featuredProducts->count() > 0)
     <section class="py-16">
         <!-- Header Section -->
         <div class="mb-8 text-center md:text-left">
@@ -382,137 +349,69 @@
 
         <!-- Product Grid: Using thin borders to create the cell look from the image -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-stone-200 bg-white shadow-sm">
-            @php
-                $featuredProducts = [
-                    [
-                        'name' => get_setting('site_name', config('app.name')) . ' Grand Leaf Edition Box',
-                        'price' => 119.0,
-                        'rating' => 5,
-                        'reviews' => 3,
-                        'badge' => null,
-                        'image' =>
-                            'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=300&q=80',
-                        'action' => 'CUSTOMIZE',
-                    ],
-                    [
-                        'name' => 'Flexible Sylhet Monsoon Tea Sampler',
-                        'price' => 135.0,
-                        'rating' => 5,
-                        'reviews' => 5,
-                        'badge' => null,
-                        'image' =>
-                            'https://images.unsplash.com/photo-1679452233773-b02d98c6c83c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        'action' => 'ADD TO CART',
-                    ],
-                    [
-                        'name' => 'Artisan Silk Wrapped Luxury Tin',
-                        'price' => 80.0,
-                        'rating' => 4,
-                        'reviews' => 3,
-                        'badge' => null,
-                        'image' =>
-                            'https://images.unsplash.com/photo-1599910490526-260dbce86aa0?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        'action' => 'ADD TO CART',
-                    ],
-                    [
-                        'name' => 'Limited Edition Gold Foil Crate',
-                        'price' => 119.0,
-                        'old_price' => 140.0,
-                        'rating' => 5,
-                        'reviews' => 4,
-                        'badge' => '-15%',
-                        'badge_color' => 'bg-rose-500',
-                        'image' =>
-                            'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=300&q=80',
-                        'action' => 'ADD TO CART',
-                    ],
-                    [
-                        'name' => 'Organic Matcha Ceremonial Set',
-                        'price' => 45.5,
-                        'old_price' => 50.0,
-                        'rating' => 5,
-                        'reviews' => 4,
-                        'badge' => '-9%',
-                        'badge_color' => 'bg-emerald-600',
-                        'image' =>
-                            'https://images.unsplash.com/photo-1573168549138-2636bbdba606?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        'action' => 'ADD TO CART',
-                    ],
-                    [
-                        'name' => 'Corporate ' . get_setting('site_name', config('app.name')) . ' Gifting Bundle',
-                        'price' => 59.0,
-                        'rating' => 4,
-                        'reviews' => 4,
-                        'badge' => 'PACK',
-                        'badge_color' => 'bg-amber-500',
-                        'image' =>
-                            'https://images.unsplash.com/photo-1614631016624-cb89bceec02c?q=80&w=1029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        'action' => 'ADD TO CART',
-                    ],
-                ];
-            @endphp
-
             @foreach ($featuredProducts as $product)
-                <div
-                    class="relative border-r border-b border-stone-200 p-6 flex items-center gap-6 group hover:bg-stone-50 transition-colors duration-300">
+                <div class="relative border-r border-b border-stone-200 p-6 flex items-center gap-6 group hover:bg-stone-50 transition-colors duration-300">
 
                     <!-- Discount/Pack Badge -->
-                    @if (isset($product['badge']))
+                    @if ($product->badge)
                         <div class="absolute top-4 left-4 z-10">
-                            <span
-                                class="{{ $product['badge_color'] }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ $product['badge'] }}</span>
+                            <span class="{{ $product->badge_color ?? 'bg-emerald-600' }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ $product->badge }}</span>
+                        </div>
+                    @elseif($product->old_price)
+                         <div class="absolute top-4 left-4 z-10">
+                            <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
                         </div>
                     @endif
 
                     <!-- Left Side: Image -->
                     <div class="w-1/3 flex-shrink-0 overflow-hidden">
-                        <img src="{{ $product['image'] }}"
+                        <img src="{{ asset($product->image) }}"
                             class="w-full h-28 object-contain transform group-hover:scale-110 transition-transform duration-500"
-                            alt="{{ $product['name'] }}">
+                            alt="{{ $product->name }}">
                     </div>
 
                     <!-- Right Side: Details -->
                     <div class="w-2/3">
-                        <h3
-                            class="text-sm font-bold text-emerald-950 leading-tight mb-2 h-10 overflow-hidden line-clamp-2">
-                            {{ $product['name'] }}
+                        <h3 class="text-sm font-bold text-emerald-950 leading-tight mb-2 h-10 overflow-hidden line-clamp-2">
+                             <a href="{{ route('product.show', $product->id) }}" class="hover:text-amber-500 transition">{{ $product->name }}</a>
                         </h3>
 
                         <!-- Rating -->
                         <div class="flex items-center gap-0.5 mb-2">
                             @for ($i = 0; $i < 5; $i++)
-                                <svg class="w-3 h-3 {{ $i < $product['rating'] ? 'text-amber-400 fill-current' : 'text-stone-300' }}"
-                                    viewBox="0 0 20 20">
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                <svg class="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
                             @endfor
-                            <span class="text-[10px] text-stone-400 ml-1">({{ $product['reviews'] }})</span>
+                            <span class="text-[10px] text-stone-400 ml-1">(5)</span>
                         </div>
 
                         <!-- Price -->
                         <div class="flex items-baseline gap-2 mb-3">
-                            <span
-                                class="text-base font-black text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['price'], 2) }}</span>
-                            @if (isset($product['old_price']))
-                                <span
-                                    class="text-[11px] text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['old_price'], 2) }}</span>
+                            <span class="text-base font-black text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
+                            @if ($product->old_price)
+                                <span class="text-[11px] text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->old_price, 2) }}</span>
                             @endif
                         </div>
 
-                        <!-- Action Link -->
-                        <a href="#"
-                            class="text-[11px] font-black uppercase tracking-widest text-stone-500 hover:text-emerald-700 transition-colors border-b-2 border-transparent hover:border-emerald-700 pb-0.5">
-                            {{ $product['action'] }}
-                        </a>
+                         <!-- Add to Cart Button -->
+                        <form action="{{ route('cart.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $product->id }}">
+                            <input type="hidden" name="name" value="{{ $product->name }}">
+                            <input type="hidden" name="price" value="{{ $product->price }}">
+                            <input type="hidden" name="image" value="{{ $product->image }}">
+                               <button type="submit"
+                                class="text-[11px] font-black uppercase tracking-widest text-stone-500 hover:text-emerald-700 transition-colors border-b-2 border-transparent hover:border-emerald-700 pb-0.5">
+                                ADD TO CART
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endforeach
         </div>
     </section>
-
-
-
+    @endif
 
     <section class=" p-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">

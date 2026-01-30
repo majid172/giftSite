@@ -18,6 +18,7 @@ class Product extends Model
         'badge',
         'badge_color',
         'status',
+        'is_featured',
     ];
 
     public function category()
