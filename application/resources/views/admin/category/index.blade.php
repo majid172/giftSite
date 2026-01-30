@@ -1,94 +1,77 @@
+
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="kartly-settings-container">
-    <div class="kartly-title justify-between">
-        <div class="flex items-center gap-2">
-            <span class="icon-[tabler--category] size-6"></span>
-            Categories
-        </div>
-        <a href="{{ route('admin.categories.create') }}" class="create-btn">
-            <span class="icon-[tabler--plus] size-4"></span>
-            Add New Category
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Categories</h2>
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
+            <i class="ti ti-plus"></i> Add New Category
         </a>
     </div>
 
     @if(session('success'))
-    <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
+    <div style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border: 1px solid #bbf7d0;">
+        {{ session('success') }}
     </div>
     @endif
 
-    <div class="section-card">
-        <div class="card-header">
-            <span>All Categories</span>
-            <span class="text-xs font-normal text-slate-500">Manage your product categories</span>
-        </div>
-        <div class="card-body">
-            <div class="overflow-x-auto">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th width="80">Image</th>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Description</th>
-                            <th class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($categories as $category)
-                        <tr>
-                            <td>
-                                @if($category->image)
-                                    <img src="{{ asset('assets/images/' . $category->image) }}" alt="{{ $category->name }}" class="table-img" />
-                                @else
-                                    <div class="table-img flex items-center justify-center text-slate-400">
-                                        <span class="icon-[tabler--photo] size-5"></span>
-                                    </div>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="font-semibold text-slate-700">{{ $category->name }}</div>
-                            </td>
-                            <td>
-                                <span class="badge badge-gray">{{ $category->slug }}</span>
-                            </td>
-                            <td>
-                                <p class="text-slate-500 line-clamp-1 max-w-xs">{{ $category->description ?: '-' }}</p>
-                            </td>
-                            <td class="text-right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="action-btn" title="Edit">
-                                        <span class="icon-[tabler--pencil] size-4.5"></span>
-                                    </a>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="action-btn delete" title="Delete" onclick="return confirm('Are you sure?')">
-                                            <span class="icon-[tabler--trash] size-4.5"></span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-12">
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300">
-                                        <span class="icon-[tabler--folder-off] size-8"></span>
-                                    </div>
-                                    <div class="text-slate-500 font-medium">No categories found</div>
-                                    <p class="text-sm text-slate-400">Get started by creating your first category.</p>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="80">Image</th>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th>Description</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($categories as $category)
+                <tr>
+                    <td>
+                        @if($category->image)
+                            <img src="{{ asset('assets/images/' . $category->image) }}" alt="{{ $category->name }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 0.375rem;" />
+                        @else
+                            <div style="width: 48px; height: 48px; background: #f1f5f9; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+                                <i class="ti ti-category"></i>
+                            </div>
+                        @endif
+                    </td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--text-main);">{{ $category->name }}</div>
+                    </td>
+                    <td>
+                         <span style="font-family: monospace; font-size: 0.8em; background: #f1f5f9; padding: 2px 4px; border-radius: 4px;">{{ $category->slug }}</span>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ $category->description ?? '-' }}
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-outline btn-icon" style="padding: 4px 8px;" title="Edit">
+                            <i class="ti ti-pencil"></i>
+                        </a>
+                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display: inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline btn-icon" style="padding: 4px 8px; color: var(--danger); border-color: var(--danger);" title="Delete" onclick="return confirm('Are you sure?')">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 3rem;">
+                        <div style="color: var(--text-muted); font-size: 0.875rem;">No categories found.</div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

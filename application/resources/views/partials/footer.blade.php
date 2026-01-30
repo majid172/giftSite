@@ -4,7 +4,7 @@
             <!-- Brand -->
             <div class="col-span-1 md:col-span-1">
                 <a href="{{ route('home') }}" class="text-2xl font-serif font-bold text-white tracking-wide block mb-6">
-                    HERI<span class="text-amber-500">TAGE</span>
+                    {{ get_setting('site_name', config('app.name')) }}
                 </a>
                 <p class="text-emerald-100/80 text-sm leading-relaxed mb-6">
                     Curating moments of joy with our premium gift collections. Wrapped with love, delivered with care.

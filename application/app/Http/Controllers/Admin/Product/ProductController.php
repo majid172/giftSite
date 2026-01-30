@@ -47,9 +47,9 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'badge' => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
             'others' => 'nullable|array',
-            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
         ]);
 
         // Slug
@@ -136,9 +136,9 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'badge' => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
             'others' => 'nullable|array',
-            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
         ]);
 
         $data = $request->except(['image', 'others']);

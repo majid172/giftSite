@@ -1,257 +1,221 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="kartly-settings-container">
-    <div class="kartly-title">
-        <div class="flex items-center gap-2">
-            <span class="icon-[tabler--dashboard] size-6"></span>
-            Dashboard
-        </div>
-        <div class="text-sm text-slate-500 font-normal">
-            Overview of your store's performance
-        </div>
-    </div>
+<div style="margin-bottom: 24px;">
+    <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Dashboard</h2>
+    <div style="font-size: 0.875rem; color: var(--text-muted);">Welcome back! Here's what's happening with your store today.</div>
+</div>
 
-    <!-- 1. Key Metrics Grid -->
-    <div class="flex flex-col xl:flex-row gap-6 mb-8">
-        <!-- Today's Orders -->
-        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
-            <div class="card-body p-6 flex flex-col justify-between h-full">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                        <span class="icon-[tabler--shopping-cart] size-6"></span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $today_orders->count() }}</h3>
-                    <p class="text-slate-500 text-sm font-medium">Orders Today</p>
-                </div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Today's Orders -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+        <div class="card-body" style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Orders Today</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">{{ $today_orders->count() }}</div>
             </div>
-        </div>
-
-        <!-- Pending Orders -->
-        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
-            <div class="card-body p-6 flex flex-col justify-between h-full">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                        <span class="icon-[tabler--clock] size-6"></span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $progress->count() }}</h3>
-                    <p class="text-slate-500 text-sm font-medium">Pending Orders</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Orders -->
-        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
-            <div class="card-body p-6 flex flex-col justify-between h-full">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
-                        <span class="icon-[tabler--package] size-6"></span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-slate-800 mb-1">{{ $total_orders_count }}</h3>
-                    <p class="text-slate-500 text-sm font-medium">Total Orders</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Sales -->
-        <div class="section-card flex-1 transition-transform hover:-translate-y-1 duration-300">
-            <div class="card-body p-6 flex flex-col justify-between h-full">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
-                        <span class="icon-[tabler--currency-dollar] size-6"></span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-slate-800 mb-1">${{ number_format(\App\Models\Order::where('is_paid', true)->sum('price'), 2) }}</h3>
-                    <p class="text-slate-500 text-sm font-medium">Total Revenue</p>
-                </div>
+            <div style="width: 48px; height: 48px; background: rgba(var(--primary-rgb), 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                <i class="ti ti-shopping-cart" style="font-size: 1.5rem;"></i>
             </div>
         </div>
     </div>
 
-    <!-- 2. Charts Section -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
-        <!-- Revenue Analytics (Area Chart) -->
-        <div class="section-card xl:col-span-2 flex flex-col">
-            <div class="card-header justify-between">
-                <div>
-                    <span>Revenue Analytics</span>
-                    <span class="text-xs font-normal text-slate-500 hidden sm:inline-block ml-2">- Monthly Performance ({{ date('Y') }})</span>
-                </div>
-                <div class="flex gap-2">
-                     <span class="badge badge-blue">Sales</span>
-                </div>
+    <!-- Pending Orders -->
+    <div class="card" style="border-left: 4px solid var(--warning);">
+        <div class="card-body" style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Pending</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">{{ $progress->count() }}</div>
             </div>
-            <div class="card-body">
-                <div id="revenue-chart" class="w-full h-[300px]"></div>
-            </div>
-        </div>
-
-        <!-- Order Status Distribution (Donut Chart) -->
-        <div class="section-card xl:col-span-1 flex flex-col">
-            <div class="card-header">
-                <span>Order Status</span>
-            </div>
-            <div class="card-body flex flex-col items-center justify-center h-full">
-                <div id="order-status-chart" class="w-full"></div>
+            <div style="width: 48px; height: 48px; background: rgba(var(--warning-rgb), 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--warning);">
+                <i class="ti ti-clock" style="font-size: 1.5rem;"></i>
             </div>
         </div>
     </div>
 
-    <!-- 3. Widgets Row -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Top Selling Products -->
-        <div class="section-card h-full flex flex-col">
-            <div class="card-header">
-                <span>Top Products</span>
+    <!-- Total Orders -->
+    <div class="card" style="border-left: 4px solid var(--info);">
+        <div class="card-body" style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Orders</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">{{ $total_orders_count }}</div>
             </div>
-            <div class="card-body p-0 overflow-y-auto max-h-[400px]">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
-                        <tr>
-                            <th class="px-4 py-3 font-semibold">Product</th>
-                            <th class="px-4 py-3 font-semibold text-right">Orders</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @forelse($top_products as $product)
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-4 py-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-lg bg-slate-100 flex-shrink-0 overflow-hidden border border-slate-200">
-                                        @if($product->images->first())
-                                            <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                                        @else
-                                             <div class="w-full h-full flex items-center justify-center text-slate-400">
-                                                <span class="icon-[tabler--photo] size-5"></span>
-                                             </div>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <div class="text-sm font-semibold text-slate-700 line-clamp-1" title="{{ $product->name }}">{{ $product->name }}</div>
-                                        <div class="text-xs text-slate-500">{{ $product->category->name ?? 'Uncategorized' }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-right font-bold text-slate-700">
-                                {{ $product->order_items_count }}
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="2" class="px-4 py-8 text-center text-sm text-slate-400">No data available</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div style="width: 48px; height: 48px; background: rgba(var(--info-rgb), 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--info);">
+                <i class="ti ti-package" style="font-size: 1.5rem;"></i>
             </div>
         </div>
+    </div>
 
-        <!-- New Customers -->
-        <div class="section-card h-full flex flex-col">
-            <div class="card-header">
-                <span>New Customers</span>
+    <!-- Revenue -->
+    <div class="card" style="border-left: 4px solid var(--success);">
+        <div class="card-body" style="padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Revenue</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-top: 4px;">${{ number_format(\App\Models\Order::where('is_paid', true)->sum('price'), 2) }}</div>
             </div>
-            <div class="card-body p-0 overflow-y-auto max-h-[400px]">
-                <ul class="divide-y divide-slate-100">
+            <div style="width: 48px; height: 48px; background: rgba(var(--success-rgb), 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--success);">
+                <i class="ti ti-currency-dollar" style="font-size: 1.5rem;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+    <!-- Revenue Chart -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">Revenue Analytics</span>
+        </div>
+        <div class="card-body">
+            <div id="revenue-chart" style="width: 100%; height: 300px;"></div>
+        </div>
+    </div>
+
+    <!-- Status Chart -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">Order Status</span>
+        </div>
+        <div class="card-body" style="display: flex; align-items: center; justify-content: center;">
+            <div id="order-status-chart" style="width: 100%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Widgets Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Top Products -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">Top Selling Products</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="60">Image</th>
+                        <th>Product Name</th>
+                        <th style="text-align: right;">Orders</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($top_products as $product)
+                    <tr>
+                        <td>
+                            <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                                @if($product->images->first())
+                                    <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                @else
+                                    <i class="ti ti-photo" style="color: var(--text-muted);"></i>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ $product->name }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $product->category->name ?? 'Uncategorized' }}</div>
+                        </td>
+                        <td style="text-align: right; font-weight: 700; color: var(--text-main);">{{ $product->order_items_count }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No data available</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- New Customers -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-title">New Customers</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <tbody>
                     @forelse($new_customers as $customer)
-                    <li class="p-4 hover:bg-slate-50/50 transition-colors flex items-center gap-3">
-                        <div class="avatar placeholder">
-                            <div class="bg-indigo-50 text-indigo-600 rounded-full w-10 h-10 flex items-center justify-center font-bold text-sm">
+                    <tr>
+                        <td width="50">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-weight: 700;">
                                 {{ substr($customer->name, 0, 1) }}
                             </div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-sm font-semibold text-slate-700">{{ $customer->name }}</div>
-                            <div class="text-xs text-slate-500">{{ $customer->email }}</div>
-                        </div>
-                        <div class="text-xs text-slate-400">
-                            {{ $customer->created_at->diffForHumans(null, true, true) }}
-                        </div>
-                    </li>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-main);">{{ $customer->name }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $customer->email }}</div>
+                        </td>
+                        <td style="text-align: right; font-size: 0.75rem; color: var(--text-muted);">
+                            {{ $customer->created_at->diffForHumans() }}
+                        </td>
+                    </tr>
                     @empty
-                    <li class="p-8 text-center text-sm text-slate-400">No new customers</li>
+                    <tr>
+                         <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No new customers</td>
+                    </tr>
                     @endforelse
-                </ul>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 
-    <!-- 4. Recent Orders Table -->
-    <div class="section-card">
-        <div class="card-header justify-between">
-            <div>
-                <span>Recent Orders</span>
-                <span class="text-xs font-normal text-slate-500 hidden sm:inline-block">- Latest 5 transactions</span>
-            </div>
-            <a href="{{ route('admin.orders.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                View All <span class="icon-[tabler--arrow-right] size-4"></span>
-            </a>
-        </div>
-        <div class="card-body p-0">
-            <div class="overflow-x-auto">
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                            <th class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($total_orders as $item)
-                        <tr>
-                            <td>
-                                <a href="{{ route('admin.orders.edit', $item->id) }}" class="font-bold text-blue-700 hover:text-blue-900">
-                                    #{{ $item->order_id }}
-                                </a>
-                            </td>
-                            <td>
-                                <div class="font-medium text-slate-700">{{ $item->user->name ?? 'Guest' }}</div>
-                            </td>
-                            <td>
-                                @php
-                                    $statusClass = 'badge-blue';
-                                    if(in_array($item->status, ['Received', 'Completed', 'Finalizing'])) $statusClass = 'badge-green';
-                                    elseif($item->status == 'Canceled') $statusClass = 'badge-red';
-                                    elseif($item->status == 'Invoiced') $statusClass = 'badge-blue';
-                                    elseif($item->status == 'Downloaded') $statusClass = 'badge-gray';
-                                @endphp
-                                <span class="badge {{ $statusClass }}">{{ $item->status }}</span>
-                            </td>
-                            <td class="font-bold text-slate-800">${{ $item->price }}</td>
-                            <td class="text-slate-500 text-xs">{{ dateFormat($item->created_at) }}</td>
-                            <td class="text-right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ route('admin.orders.edit', $item->id) }}" class="action-btn" title="View Details">
-                                        <span class="icon-[tabler--eye] size-4.5"></span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-8">
-                                <div class="flex flex-col items-center justify-center gap-2">
-                                    <span class="icon-[tabler--file-off] size-8 text-slate-300"></span>
-                                    <span class="text-slate-500 font-medium">No orders found</span>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- Recent Orders -->
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Recent Orders</span>
+        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="table-responsive">
+         <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($total_orders as $item)
+                <tr>
+                    <td>
+                        <a href="{{ route('admin.orders.edit', $item->id) }}" style="font-weight: 600; color: var(--primary);">#{{ $item->order_id }}</a>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">{{ $item->user->name ?? 'Guest' }}</div>
+                    </td>
+                    <td>
+                        @php
+                            $statusClass = 'badge-primary';
+                            if(in_array($item->status, ['Received', 'Completed', 'Finalizing'])) $statusClass = 'badge-success';
+                            elseif($item->status == 'Canceled') $statusClass = 'badge-danger';
+                            elseif($item->status == 'Invoiced') $statusClass = 'badge-info';
+                            elseif($item->status == 'Downloaded') $statusClass = 'badge-secondary';
+                        @endphp
+                        <span class="badge {{ $statusClass }}">{{ $item->status }}</span>
+                    </td>
+                    <td style="font-weight: 600;">${{ $item->price }}</td>
+                    <td style="font-size: 0.75rem; color: var(--text-muted);">{{ dateFormat($item->created_at) }}</td>
+                    <td style="text-align: right;">
+                        <a href="{{ route('admin.orders.edit', $item->id) }}" class="btn btn-outline btn-icon" style="padding: 4px 8px;">
+                            <i class="ti ti-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem;">
+                        <i class="ti ti-file-off" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.875rem; color: var(--text-muted);">No orders found</div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection
@@ -266,48 +230,42 @@
             
             if(statusValues.length > 0) {
                  const totalOrders = statusValues.reduce((a, b) => a + b, 0);
-                 buildChart('#order-status-chart', () => ({
-                    chart: {
-                        height: 280,
-                        width: '100%',
-                        type: 'donut',
-                        fontFamily: 'Inter, ui-sans-serif',
-                    },
-                    labels: statusLabels,
+                 var options = {
                     series: statusValues,
-                    colors: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'],
-                    stroke: { show: false },
-                    dataLabels: { enabled: false },
-                    legend: {
-                        show: true,
-                        position: 'bottom',
-                        markers: { radius: 12 },
-                        itemMargin: { horizontal: 10, vertical: 5 }
+                    labels: statusLabels,
+                    chart: {
+                        type: 'donut',
+                        height: 300,
+                        fontFamily: 'Inter, sans-serif'
                     },
+                    colors: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'],
                     plotOptions: {
                         pie: {
                             donut: {
                                 size: '70%',
                                 labels: {
                                     show: true,
-                                    name: { fontSize: '12px', color: '#64748b' },
-                                    value: {
-                                        fontSize: '24px',
-                                        fontWeight: 700,
-                                        color: '#0f172a',
-                                        formatter: function(val) { return parseInt(val); }
-                                    },
                                     total: {
                                         show: true,
                                         label: 'Total',
-                                        color: '#64748b',
-                                        formatter: function(w) { return totalOrders; }
+                                        formatter: function (w) {
+                                            return totalOrders;
+                                        }
                                     }
                                 }
                             }
                         }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    },
+                    dataLabels: {
+                        enabled: false
                     }
-                }));
+                };
+
+                var chart = new ApexCharts(document.querySelector("#order-status-chart"), options);
+                chart.render();
             }
         })();
 
@@ -316,32 +274,24 @@
             const revenueData = @json($revenueData ?? []);
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            buildChart('#revenue-chart', () => ({
+            var options = {
+                series: [{
+                    name: "Revenue",
+                    data: revenueData
+                }],
                 chart: {
                     height: 300,
                     type: 'area',
-                    fontFamily: 'Inter, ui-sans-serif',
+                    fontFamily: 'Inter, sans-serif',
                     toolbar: { show: false },
                     zoom: { enabled: false }
                 },
-                series: [{
-                    name: 'Revenue',
-                    data: revenueData
-                }],
-                colors: ['#3b82f6'],
-                fill: {
-                    type: 'gradient',
-                    gradient: {
-                        shadeIntensity: 1,
-                        opacityFrom: 0.4,
-                        opacityTo: 0.05,
-                        stops: [0, 100]
-                    }
+                dataLabels: {
+                    enabled: false
                 },
-                dataLabels: { enabled: false },
                 stroke: {
                     curve: 'smooth',
-                    width: 3
+                    width: 2
                 },
                 xaxis: {
                     categories: months,
@@ -360,14 +310,21 @@
                 grid: {
                     borderColor: '#f1f5f9',
                     strokeDashArray: 4,
-                    yaxis: { lines: { show: true } },
-                    xaxis: { lines: { show: false } },
-                    padding: { top: 0, right: 0, bottom: 0, left: 10 }
                 },
-                tooltip: {
-                    y: { formatter: function (val) { return "$" + val } }
-                }
-            }));
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.5,
+                        opacityTo: 0.05,
+                        stops: [0, 100]
+                    }
+                },
+                colors: ['#3b82f6'] // Primary Blue
+            };
+
+            var chart = new ApexCharts(document.querySelector("#revenue-chart"), options);
+            chart.render();
         })();
     });
 </script>

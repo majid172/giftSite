@@ -1,141 +1,177 @@
+
 @extends('admin.layouts.app')
 
+@push('css')
+<style>
+    /* Specific Page Styles */
+    .form-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+    }
+    .form-layout .main-col {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .form-layout .side-col {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    @media(max-width: 992px) {
+        .form-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+    .img-upload-box {
+        border: 2px dashed var(--border-color);
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .img-upload-box:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+    }
+    .img-upload-box img {
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+    .upload-hint {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="kartly-settings-container">
-    <div class="kartly-title justify-between">
-        <div class="flex items-center gap-2">
-            <span class="icon-[tabler--box] size-6"></span>
-            Create New Product
-        </div>
-        <a href="{{ route('admin.products.index') }}" class="back-btn">
-            <span class="icon-[tabler--arrow-left] size-4"></span>
-            Back to List
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Create New Product</h2>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Add a new product to your catalog</div>
+    </div>
+    <div class="header-right">
+        <a href="{{ route('admin.products.index') }}" class="btn btn-outline">
+            <i class="ti ti-arrow-left"></i> Back to List
         </a>
     </div>
 
     <form method="post" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
         @csrf
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Left Column: Product Information -->
-            <div class="w-full lg:w-2/3 space-y-6">
-                <!-- General Info Card -->
-                <div class="section-card">
-                    <div class="card-header">General Information</div>
-                    <div class="card-body">
-                        <div class="space-y-4">
-                            <div class="form-group">
-                                <label class="form-label" for="name">Product Name <span class="text-red-500">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" placeholder="e.g. Luxury Gift Box" required>
-                                @error('name') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                            </div>
+        <div class="form-layout">
+            <div class="main-col">
+                <!-- General Info -->
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">General Information</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="e.g. Luxury Gift Box" required>
+                        @error('name') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                    </div>
 
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="category_id">Category <span class="text-red-500">*</span></label>
-                                    <select name="category_id" id="category_id" class="form-control" required>
-                                        <option value="" disabled selected>Select Category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="stock">Stock Quantity <span class="text-red-500">*</span></label>
-                                    <input type="number" name="stock" id="stock" class="form-control" value="{{ old('stock') }}" placeholder="0" required>
-                                    @error('stock') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="price">Price ($) <span class="text-red-500">*</span></label>
-                                    <input type="number" step="0.01" name="price" id="price" class="form-control" value="{{ old('price') }}" placeholder="0.00" required>
-                                    @error('price') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="old_price">Old Price ($) <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                    <input type="number" step="0.01" name="old_price" id="old_price" class="form-control" value="{{ old('old_price') }}" placeholder="0.00">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Description</label>
-                                <div id="editor" style="height: 200px; background: white;" class="rounded-md border border-slate-200"></div>
-                                <input type="hidden" name="description" id="description">
-                            </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Category <span class="text-danger">*</span></label>
+                            <select name="category_id" class="form-control" required>
+                                <option value="" disabled selected>Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Stock Quantity <span class="text-danger">*</span></label>
+                            <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" placeholder="0" required>
+                             @error('stock') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Price ($) <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price') }}" placeholder="0.00" required>
+                            @error('price') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Old Price ($)</label>
+                            <input type="number" step="0.01" name="old_price" class="form-control" value="{{ old('old_price') }}" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <div id="editor" style="height: 200px; background: white; border-radius: var(--radius); border: 1px solid var(--border-color);"></div>
+                        <input type="hidden" name="description" id="description">
                     </div>
                 </div>
 
-                <!-- Badges Card -->
-                <div class="section-card">
-                    <div class="card-header">Product Badge</div>
-                    <div class="card-body">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="form-group flex-1">
-                                <label class="form-label" for="badge">Badge Text <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                <input type="text" name="badge" id="badge" class="form-control" value="{{ old('badge') }}" placeholder="e.g. NEW">
-                            </div>
-                            <div class="form-group flex-1">
-                                <label class="form-label" for="badge_color">Badge Color Class <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                <input type="text" name="badge_color" id="badge_color" class="form-control" value="{{ old('badge_color') }}" placeholder="e.g. bg-blue-500">
-                                <div class="text-xs text-gray-400 mt-1">Accepts Tailwind color classes</div>
-                            </div>
+                <!-- Badges -->
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">Product Badge</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Badge Text</label>
+                            <input type="text" name="badge" class="form-control" value="{{ old('badge') }}" placeholder="e.g. NEW">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Badge Color</label>
+                             <input type="text" name="badge_color" class="form-control" value="{{ old('badge_color') }}" placeholder="e.g. bg-blue-500">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Images & Publish -->
-            <div class="w-full lg:w-1/3 space-y-6">
-               
-
-                <div class="flex gap-4">
-                    <div class="section-card flex-1">
-                        <div class="card-header">Primary Image <span class="text-red-500">*</span></div>
-                        <div class="card-body">
-                            <div class="image-preview-box" onclick="document.getElementById('image').click()">
-                                <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)" required>
-                                <div id="upload-placeholder" class="upload-placeholder">
-                                    <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
-                                    <p class="text-xs text-slate-500 font-medium">Click to upload</p>
-                                </div>
-                                <img id="primary-preview" src="#" alt="Preview" class="image-preview hidden">
-                            </div>
-                            @error('image') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+            <div class="side-col">
+                <!-- Main Image -->
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 15px;">Primary Image <span class="text-danger">*</span></h3>
+                    <div class="img-upload-box" onclick="document.getElementById('image').click()">
+                        <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)" required>
+                        <div id="upload-placeholder">
+                            <i class="ti ti-photo-plus" style="font-size: 2rem; color: var(--text-muted);"></i>
+                            <p class="upload-hint">Click to upload</p>
                         </div>
+                        <img id="primary-preview" src="#" alt="Preview" class="hidden">
                     </div>
+                    @error('image') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                    <p class="upload-hint" style="margin-top: 10px; text-align: center;">Click box to try again</p>
+                </div>
 
-                    <div class="section-card flex-1 h-full"> <! -- Added h-full to match height if needed -->
-                        <div class="card-header">Gallery Images</div>
-                        <div class="card-body">
-                             <div class="form-group">
-                                <label class="form-label text-xs mb-2">Upload multiple images</label>
-                                <input type="file" name="others[]" class="form-control text-sm" multiple accept="image/*">
-                                <div class="text-xs text-slate-400 mt-2 italic">Hold Ctrl/Cmd to select multiple files</div>
-                            </div>
-                        </div>
+                <!-- Gallery -->
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 15px;">Gallery Images</h3>
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 0.8rem;">Upload multiple images</label>
+                        <input type="file" name="others[]" class="form-control" multiple accept="image/*" style="font-size: 0.85rem;">
                     </div>
                 </div>
 
-                 <div class="section-card">
-                    <div class="card-header">Publish</div>
-                    <div class="card-body">
-                        <button type="submit" class="save-btn w-full justify-center">
-                            <span class="icon-[tabler--check] size-5"></span>
-                            Create Product
-                        </button>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;">
+                    <i class="ti ti-check"></i> Create Product
+                </button>
             </div>
         </div>
     </form>
-</div>
 
 @push('plugins')
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <style>
+        .ql-toolbar { border-radius: var(--radius) var(--radius) 0 0; border-color: var(--border-color) !important; }
+        .ql-container { border-radius: 0 0 var(--radius) var(--radius); border-color: var(--border-color) !important; }
+    </style>
 @endpush
 
 @push('js')
@@ -148,7 +184,7 @@
                 [{ 'header': [1, 2, 3, false] }],
                 ['bold', 'italic', 'underline'],
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['link', 'clean']
+                ['clean']
             ]
         }
     });

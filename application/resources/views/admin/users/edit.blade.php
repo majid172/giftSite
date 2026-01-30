@@ -1,67 +1,59 @@
 @extends('admin.layouts.app')
 
-
-
 @section('content')
-<div class="kartly-settings-container">
-    {{-- Breadcrumb --}}
-    <div class="kartly-breadcrumb">
-        <span class="main-title">Edit User</span>
-        
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Edit User</h2>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Manage user details and status</div>
+    </div>
+    <a href="{{ route('admin.users.index') }}" class="btn btn-outline">
+        <i class="ti ti-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div class="card max-w-3xl">
+    <div class="card-header">
+        <span class="card-title">User Profile: {{ $user->name }}</span>
     </div>
 
-    <div class="kartly-main-wrapper">
-        {{-- Content Area --}}
-        <div class="kartly-content">
-            <div class="kartly-content-header">Edit Profile: {{ $user->name }}</div>
+    <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-            <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
-                @csrf
-                @method('PUT')
+        <div class="grid grid-cols-1 gap-5 pb-5 border-b border-gray-200 mb-5">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" value="{{ old('name', $user->name) }}" class="form-control" style="background-color: #f8fafc; color: #64748b; cursor: not-allowed;" readonly>
+            </div>
 
-                <div class="kartly-form-group">
-                    <label class="kartly-label">Full Name</label>
-                    <div class="kartly-input-wrapper">
-                        <input type="text" name="name" value="{{ old('name', $user->name) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
-                    </div>
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" value="{{ old('email', $user->email) }}" class="form-control" style="background-color: #f8fafc; color: #64748b; cursor: not-allowed;" readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="text" value="{{ old('phone', $user->phone) }}" class="form-control" style="background-color: #f8fafc; color: #64748b; cursor: not-allowed;" readonly>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Account Status</label>
+                <select name="status" class="form-control">
+                    <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Active</option>
+                    <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Inactive</option>
+                </select>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px;">
+                    <i class="ti ti-info-circle"></i> Setting status to "Inactive" will prevent the user from logging in.
                 </div>
-
-                <div class="kartly-form-group">
-                    <label class="kartly-label">Email Address</label>
-                    <div class="kartly-input-wrapper">
-                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
-                    </div>
-                </div>
-
-                <div class="kartly-form-group">
-                    <label class="kartly-label">Phone Number</label>
-                    <div class="kartly-input-wrapper">
-                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="kartly-input bg-slate-100 text-slate-500 cursor-not-allowed" readonly>
-                    </div>
-                </div>
-
-             
-                <div class="kartly-form-group">
-                    <label class="kartly-label">Status</label>
-                    <div class="kartly-input-wrapper">
-                        <select name="status" class="kartly-input">
-                            <option value="1" {{ $user->status == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ $user->status == 0 ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                        <div class="text-xs text-slate-400 mt-2">
-                            <span class="icon-[tabler--info-circle] size-3 relative top-0.5"></span>
-                            Setting status to "Inactive" will prevent login.
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 50px; display: flex; align-items: center;">
-                    <a href="{{ route('admin.users.index') }}" class="cancel-link">Cancel</a>
-                    <button type="submit" class="save-button">Update Status</button>
-                </div>
-
-            </form>
+            </div>
         </div>
-    </div>
+
+        <div style="text-align: right;">
+            <a href="{{ route('admin.users.index') }}" class="btn btn-outline" style="margin-right: 10px;">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <i class="ti ti-device-floppy"></i> Update Status
+            </button>
+        </div>
+    </form>
 </div>
 @endsection

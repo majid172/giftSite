@@ -1,180 +1,244 @@
+
 @extends('admin.layouts.app')
 
+@push('css')
+<style>
+    /* Specific Page Styles */
+    .form-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+    }
+    .form-layout .main-col {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .form-layout .side-col {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    @media(max-width: 992px) {
+        .form-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+    .img-upload-box {
+        border: 2px dashed var(--border-color);
+        border-radius: var(--radius);
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .img-upload-box:hover {
+        border-color: var(--primary);
+        background: #f8fafc;
+    }
+    .img-upload-box img {
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
+    .upload-hint {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+    }
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+    .gallery-item {
+        position: relative;
+        border-radius: var(--radius);
+        overflow: hidden;
+        aspect-ratio: 1;
+        border: 1px solid var(--border-color);
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .gallery-item .delete-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(255,255,255,0.9);
+        color: var(--danger);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="kartly-settings-container">
-    <div class="kartly-title justify-between">
-        <div class="flex items-center gap-2">
-            <span class="icon-[tabler--pencil] size-6"></span>
-            Edit Product
-        </div>
-        <a href="{{ route('admin.products.index') }}" class="back-btn">
-            <span class="icon-[tabler--arrow-left] size-4"></span>
-            Back to List
-        </a>
+<div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Edit Product</h2>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Editing: {{ $product->name }}</div>
     </div>
+    <a href="{{ route('admin.products.index') }}" class="btn btn-outline">
+        <i class="ti ti-arrow-left"></i> Back to List
+    </a>
+</div>
 
-    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Left Column: Product Information -->
-            <div class="w-full lg:w-2/3 space-y-6">
-                <!-- General Info Card -->
-                <div class="section-card">
-                    <div class="card-header">General Information</div>
-                    <div class="card-body">
-                        <div class="space-y-4">
-                            <div class="form-group">
-                                <label class="form-label" for="name">Product Name <span class="text-red-500">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}" required>
-                                @error('name') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                            </div>
+<form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    
+    <div class="form-layout">
+        <div class="main-col">
+            <!-- General Info -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">General Information</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
+                    @error('name') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                </div>
 
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="category_id">Category <span class="text-red-500">*</span></label>
-                                    <select name="category_id" id="category_id" class="form-control" required>
-                                        <option value="" disabled>Select Category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="stock">Stock Quantity <span class="text-red-500">*</span></label>
-                                    <input type="number" name="stock" id="stock" class="form-control" value="{{ old('stock', $product->stock) }}" required>
-                                    @error('stock') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="price">Price ($) <span class="text-red-500">*</span></label>
-                                    <input type="number" step="0.01" name="price" id="price" class="form-control" value="{{ old('price', $product->price) }}" required>
-                                    @error('price') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                                </div>
-                                <div class="form-group flex-1">
-                                    <label class="form-label" for="old_price">Old Price ($) <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                    <input type="number" step="0.01" name="old_price" id="old_price" class="form-control" value="{{ old('old_price', $product->old_price) }}">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Description</label>
-                                <div id="editor" style="height: 200px; background: white;" class="rounded-md border border-slate-200">{!! old('description', $product->description) !!}</div>
-                                <input type="hidden" name="description" id="description" value="{{ old('description', $product->description) }}">
-                            </div>
-                        </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Category <span class="text-danger">*</span></label>
+                        <select name="category_id" class="form-control" required>
+                            <option value="" disabled>Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category_id') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock Quantity <span class="text-danger">*</span></label>
+                        <input type="number" name="stock" class="form-control" value="{{ old('stock', $product->stock) }}" required>
+                         @error('stock') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                     </div>
                 </div>
 
-                 <!-- Gallery Management Card -->
-                 <div class="section-card">
-                    <div class="card-header">Existing Gallery Images</div>
-                    <div class="card-body">
-                        @if($product->images && $product->images->count() > 0)
-                            <div class="flex flex-wrap gap-4">
-                                @foreach($product->images as $galleryImg)
-                                    <div class="relative group w-32 h-32 rounded-lg overflow-hidden border border-slate-200 shadow-sm transition-all hover:shadow-md hover:border-blue-400" id="gallery-img-{{ $galleryImg->id }}">
-                                        <img src="{{ asset($galleryImg->image_path) }}" class="h-full w-full object-cover">
-                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
-                                            <button type="button" onclick="deleteGalleryImage({{ $galleryImg->id }})" class="bg-white text-red-500 hover:text-red-600 hover:bg-red-50 p-2 rounded-full transition-all transform scale-90 group-hover:scale-100 shadow-lg" title="Delete Image">
-                                                <span class="icon-[tabler--trash] size-5"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-8 text-slate-400 text-sm">
-                                No gallery images uploaded.
-                            </div>
-                        @endif
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Price ($) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price', $product->price) }}" required>
+                        @error('price') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Old Price ($)</label>
+                        <input type="number" step="0.01" name="old_price" class="form-control" value="{{ old('old_price', $product->old_price) }}">
                     </div>
                 </div>
 
-                <!-- Badges Card -->
-                <div class="section-card">
-                    <div class="card-header">Product Badge</div>
-                    <div class="card-body">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="form-group flex-1">
-                                <label class="form-label" for="badge">Badge Text <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                <input type="text" name="badge" id="badge" class="form-control" value="{{ old('badge', $product->badge) }}" placeholder="e.g. NEW">
-                            </div>
-                            <div class="form-group flex-1">
-                                <label class="form-label" for="badge_color">Badge Color Class <span class="text-gray-400 font-normal text-xs ml-1">(Optional)</span></label>
-                                <input type="text" name="badge_color" id="badge_color" class="form-control" value="{{ old('badge_color', $product->badge_color) }}" placeholder="e.g. bg-blue-500">
-                                <div class="text-xs text-gray-400 mt-1">Accepts Tailwind color classes</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div id="editor" style="height: 200px; background: white; border-radius: var(--radius); border: 1px solid var(--border-color);">{!! old('description', $product->description) !!}</div>
+                    <input type="hidden" name="description" id="description" value="{{ old('description', $product->description) }}">
                 </div>
             </div>
 
-            <!-- Right Column: Images & Publish -->
-            <div class="w-full lg:w-1/3 space-y-6">
-                <div class="flex gap-4">
-                    <div class="section-card flex-1">
-                        <div class="card-header">Primary Image</div>
-                        <div class="card-body">
-                            <div class="image-preview-box" onclick="document.getElementById('image').click()">
-                                <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)">
-                                @if($product->image)
-                                    <img id="primary-preview" src="{{ asset($product->image) }}" alt="Preview" class="image-preview">
-                                    <div id="upload-placeholder" class="upload-placeholder hidden">
-                                        <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
-                                        <p class="text-xs text-slate-500 font-medium">Click to replace</p>
-                                    </div>
-                                @else
-                                    <div id="upload-placeholder" class="upload-placeholder">
-                                        <span class="icon-[tabler--photo-plus] size-8 text-slate-400 mb-1"></span>
-                                        <p class="text-xs text-slate-500 font-medium">Click to upload</p>
-                                    </div>
-                                    <img id="primary-preview" src="#" alt="Preview" class="image-preview hidden">
-                                @endif
-                                
+            <!-- Existing Gallery -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 20px;">Existing Gallery Images</h3>
+                 @if($product->images && $product->images->count() > 0)
+                    <div class="gallery-grid">
+                        @foreach($product->images as $galleryImg)
+                            <div class="gallery-item" id="gallery-img-{{ $galleryImg->id }}">
+                                <img src="{{ asset($galleryImg->image_path) }}" alt="Gallery Image">
+                                <button type="button" class="delete-btn" onclick="deleteGalleryImage({{ $galleryImg->id }})" title="Delete">
+                                    <i class="ti ti-trash"></i>
+                                </button>
                             </div>
-                            <div class="text-xs text-center text-slate-400 mt-2">Click image to replace</div>
-                            @error('image') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
-                        </div>
+                        @endforeach
                     </div>
+                @else
+                    <div style="text-align: center; color: var(--text-muted); padding: 20px;">No gallery images found.</div>
+                @endif
+            </div>
 
-                    <div class="section-card flex-1 h-full"> 
-                        <div class="card-header">Add Gallery Images</div>
-                        <div class="card-body">
-                             <div class="form-group">
-                                <label class="form-label text-xs mb-2">Upload new images</label>
-                                <input type="file" name="others[]" class="form-control text-sm" multiple accept="image/*">
-                                <div class="text-xs text-slate-400 mt-2 italic">Hold Ctrl/Cmd to select multiple files</div>
-                            </div>
-                        </div>
+            <!-- Badges -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">Product Badge</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Badge Text</label>
+                        <input type="text" name="badge" class="form-control" value="{{ old('badge', $product->badge) }}" placeholder="e.g. NEW">
                     </div>
-                </div>
-
-                <div class="section-card">
-                    <div class="card-header">Publish Changes</div>
-                    <div class="card-body">
-                        <button type="submit" class="save-btn w-full justify-center">
-                            <span class="icon-[tabler--device-floppy] size-5"></span>
-                            Update Product
-                        </button>
-                        <a href="{{ route('admin.products.index') }}" class="action-btn w-full mt-3 justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 no-underline py-2">
-                            Cancel
-                        </a>
+                    <div class="form-group">
+                        <label class="form-label">Badge Color</label>
+                         <input type="text" name="badge_color" class="form-control" value="{{ old('badge_color', $product->badge_color) }}" placeholder="e.g. bg-blue-500">
                     </div>
                 </div>
             </div>
         </div>
-    </form>
-</div>
+
+        <div class="side-col">
+            <!-- Main Image -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 15px;">Primary Image</h3>
+                <div class="img-upload-box" onclick="document.getElementById('image').click()">
+                    <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)">
+                    
+                    @if($product->image)
+                        <div id="upload-placeholder" class="hidden">
+                             <i class="ti ti-photo-plus" style="font-size: 2rem; color: var(--text-muted);"></i>
+                             <p class="upload-hint">Click to replace</p>
+                        </div>
+                        <img id="primary-preview" src="{{ asset($product->image) }}" alt="Preview">
+                    @else
+                        <div id="upload-placeholder">
+                             <i class="ti ti-photo-plus" style="font-size: 2rem; color: var(--text-muted);"></i>
+                             <p class="upload-hint">Click to upload</p>
+                        </div>
+                        <img id="primary-preview" src="#" alt="Preview" class="hidden">
+                    @endif
+                </div>
+                @error('image') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
+                <p class="upload-hint" style="margin-top: 10px; text-align: center;">Click box to replace</p>
+            </div>
+
+            <!-- Gallery -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 15px;">Add Gallery Images</h3>
+                <div class="form-group">
+                    <label class="form-label" style="font-size: 0.8rem;">Upload new images</label>
+                    <input type="file" name="others[]" class="form-control" multiple accept="image/*" style="font-size: 0.85rem;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-bottom: 10px;">
+                <i class="ti ti-device-floppy"></i> Update Product
+            </button>
+            <a href="{{ route('admin.products.index') }}" class="btn btn-outline" style="width: 100%; justify-content: center; padding: 12px; border: 1px solid var(--border-color); color: var(--text-muted);">
+                Cancel
+            </a>
+        </div>
+    </div>
+</form>
 
 @push('plugins')
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .ql-toolbar { border-radius: var(--radius) var(--radius) 0 0; border-color: var(--border-color) !important; }
+        .ql-container { border-radius: 0 0 var(--radius) var(--radius); border-color: var(--border-color) !important; }
+    </style>
 @endpush
 
 @push('js')
@@ -187,7 +251,7 @@
                 [{ 'header': [1, 2, 3, false] }],
                 ['bold', 'italic', 'underline'],
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['link', 'clean']
+                ['clean']
             ]
         }
     });

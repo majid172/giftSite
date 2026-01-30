@@ -30,7 +30,7 @@
         </script>
     @endif
 
-    @if(get_setting('seo_pixel_id'))
+    @if(env('META_PIXEL_ID') || get_setting('seo_pixel_id'))
         <!-- Facebook Pixel -->
         <script>
             !function(f,b,e,v,n,t,s)
@@ -41,11 +41,11 @@
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '{{ get_setting('seo_pixel_id') }}');
+            fbq('init', '{{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}');
             fbq('track', 'PageView');
         </script>
         <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
+        src="https://www.facebook.com/tr?id={{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
         /></noscript>
     @endif
 

@@ -22,7 +22,12 @@ class SettingsController extends Controller
      */
     public function update(Request $request)
     {
+        // Handle checkboxes that might not be sent if unchecked
         $data = $request->except(['_token', '_method']);
+        
+        // Explicitly handle boolean toggles
+        $data['maintenance_mode'] = $request->has('maintenance_mode') ? '1' : '0';
+        $data['enable_pixel'] = $request->has('enable_pixel') ? '1' : '0';
 
         foreach ($data as $key => $value) {
             // Check if specifically handled as file
@@ -72,6 +77,53 @@ class SettingsController extends Controller
             );
         }
 
+        // Sync Mail Settings to .env
+        $this->updateEnv([
+            'MAIL_HOST' => $request->input('mail_host'),
+            'MAIL_PORT' => $request->input('mail_port'),
+            'MAIL_USERNAME' => $request->input('mail_username'),
+            'MAIL_PASSWORD' => $request->input('mail_password'),
+            'MAIL_ENCRYPTION' => $request->input('mail_encryption'),
+            'MAIL_FROM_ADDRESS' => $request->input('mail_from_address'),
+            'MAIL_FROM_NAME' => $request->input('mail_from_name'),
+            'META_PIXEL_ID' => $request->input('seo_pixel_id'),
+        ]);
+
         return redirect()->back()->with('success', 'Global settings updated with heritage precision.');
+    }
+
+    /**
+     * Update .env file with given key-value pairs.
+     *
+     * @param array $data
+     * @return void
+     */
+    private function updateEnv(array $data)
+    {
+        $path = base_path('.env');
+
+        if (file_exists($path)) {
+            $env = file_get_contents($path);
+
+            foreach ($data as $key => $value) {
+                if ($value !== null) {
+                    // Wrap strings with spaces in quotes
+                    if (strpos($value, ' ') !== false && strpos($value, '"') === false) {
+                        $value = '"' . $value . '"';
+                    }
+
+                    // Check if key exists
+                    if (strpos($env, $key . '=') !== false) {
+                        // Replace existing key
+                        $env = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $env);
+                    } else {
+                        // Append new key
+                        $env .= "\n{$key}={$value}";
+                    }
+                }
+            }
+
+            file_put_contents($path, $env);
+        }
     }
 }

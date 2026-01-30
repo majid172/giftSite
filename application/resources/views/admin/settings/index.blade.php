@@ -2,535 +2,264 @@
 
 @push('css')
 <style>
-    .kartly-settings-container {
-        font-family: 'Inter', sans-serif;
-        color: #334155;
-    }
-    .kartly-breadcrumb {
-        margin-bottom: 24px;
-        font-size: 14px;
-    }
-    .kartly-breadcrumb .main-title {
-        font-weight: 700;
-        font-size: 18px;
-        color: #1e293b;
-    }
-    .kartly-breadcrumb .divider {
-        margin: 0 8px;
-        color: #94a3b8;
-    }
-    .kartly-breadcrumb .active-tab {
-        color: #3b82f6;
-        font-weight: 500;
-    }
-    .kartly-main-wrapper {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        display: flex;
-        min-height: 700px;
-        overflow: hidden;
-    }
-    .kartly-sidebar {
-        width: 260px;
-        background: #f8fafc;
-        border-right: 1px solid #f1f5f9;
-        padding: 20px 0;
-    }
-    .kartly-nav-item {
-        display: flex;
-        align-items: center;
-        padding: 12px 24px;
-        cursor: pointer;
-        transition: all 0.2s;
-        border-right: 3px solid transparent;
-        color: #64748b;
-        font-weight: 500;
-        gap: 12px;
-        width: 100%;
-        border-radius: 0;
-    }
-    .kartly-nav-item:hover {
-        background: #f1f5f9;
-        color: #334155;
-    }
-    .kartly-nav-item.active {
-        background: #ffffff;
-        color: #3b82f6;
-        border-right: 3px solid #3b82f6;
-    }
-    .kartly-nav-item i {
-        font-size: 18px;
-    }
-    .kartly-nav-item.active i {
-        color: #3b82f6;
-    }
-    .kartly-content {
-        flex: 1;
-        padding: 30px 40px;
-    }
-    .kartly-content-header {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1e293b;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    .kartly-form-group {
-        display: flex;
-        margin-bottom: 30px;
-        align-items: flex-start;
-    }
-    .kartly-label {
-        width: 250px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #475569;
-        padding-top: 10px;
-    }
-    .kartly-input-wrapper {
-        flex: 1;
-        max-width: 600px;
-    }
-    .kartly-input {
-        width: 100% !important;
-        background: #f1f5f9 !important;
-        border: none !important;
-        border-radius: 6px !important;
-        padding: 10px 16px !important;
-        font-size: 14px !important;
-        color: #334155 !important;
-        transition: ring 0.2s;
-    }
-    .kartly-input:focus {
-        box-shadow: 0 0 0 2px #3b82f6 !important;
-        outline: none !important;
-    }
-    .image-preview-box {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        border: 1px solid #e2e8f0;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        margin-bottom: 10px;
-    }
-    .image-preview-box.rect {
-        border-radius: 4px;
-        width: 120px;
-        height: 80px;
-    }
-    .image-preview-box img {
-        max-width: 80%;
-        max-height: 80%;
-        object-fit: contain;
-    }
-    .remove-image-btn {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        color: #94a3b8;
-        font-size: 12px;
-    }
-    .choose-file-link {
-        color: #3b82f6;
-        font-weight: 500;
-        text-decoration: underline;
-        cursor: pointer;
-        font-size: 14px;
-    }
-    .logo-grid-header {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 10px 20px;
-        font-weight: 700;
-        font-size: 14px;
-        color: #334155;
-        border-radius: 4px 4px 0 0;
-        margin-top: 40px;
-    }
-    .logo-grid-content {
-        border: 1px solid #e2e8f0;
-        border-top: none;
-        padding: 30px;
-        border-radius: 0 0 4px 4px;
-    }
-    .logo-grid {
-        display: grid;
-        grid-template-cols: 1fr 1fr;
-        gap: 40px;
-    }
-    .logo-column-title {
-        font-weight: 700;
-        font-size: 14px;
-        color: #334155;
-        margin-bottom: 20px;
-    }
-    .logo-item {
-        display: flex;
-        margin-bottom: 30px;
-        gap: 30px;
-    }
-    .logo-item-label {
-        width: 150px;
-        font-weight: 600;
-        font-size: 13px;
-        color: #475569;
-        padding-top: 10px;
-    }
-    .tab-content {
+    /* Minimal custom overrides if needed, mostly Tailwind now */
+    .tab-pane {
         display: none;
     }
-    .tab-content.active {
+    .tab-pane.active {
         display: block;
     }
-    .save-button {
-        background: #3b82f6;
-        color: #fff;
-        border: none;
-        padding: 12px 35px;
-        border-radius: 4px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .save-button:hover {
-        background: #2563eb;
+    .img-preview {
+        @apply w-24 h-24 border border-dashed border-slate-300 rounded flex items-center justify-center overflow-hidden mb-2;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="kartly-settings-container">
-    {{-- Breadcrumb --}}
-    <div class="kartly-breadcrumb">
-        <span class="main-title">Business Settings</span>
-        <span class="divider">/</span>
-        <span id="active-tab-breadcrumb" class="active-tab">General</span>
+<div class="mb-6">
+    <h2 class="text-2xl font-bold text-slate-800">System Settings</h2>
+    <div class="text-sm text-slate-500">Manage global configurations</div>
+</div>
+
+<div class="flex flex-col lg:flex-row gap-6">
+    <!-- Sidebar Navigation -->
+    <div class="w-full lg:w-64 flex-shrink-0 bg-white border border-slate-200 rounded-lg overflow-hidden h-fit">
+        <button class="w-full flex items-center gap-3 px-5 py-3 text-left font-medium text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 active" onclick="openTab(event, 'general')">
+            <i class="ti ti-settings text-lg"></i> General
+        </button>
+        <button class="w-full flex items-center gap-3 px-5 py-3 text-left font-medium text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0" onclick="openTab(event, 'media')">
+            <i class="ti ti-photo text-lg"></i> Media
+        </button>
+        <button class="w-full flex items-center gap-3 px-5 py-3 text-left font-medium text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0" onclick="openTab(event, 'seo')">
+            <i class="ti ti-world text-lg"></i> SEO
+        </button>
+        <button class="w-full flex items-center gap-3 px-5 py-3 text-left font-medium text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0" onclick="openTab(event, 'email')">
+            <i class="ti ti-mail text-lg"></i> Email
+        </button>
     </div>
 
-    <div class="kartly-main-wrapper">
-        {{-- Sidebar --}}
-        <div class="kartly-sidebar">
-            <button class="kartly-nav-item active" data-tab="general" onclick="showTab('general', this)">
-                <i class="icon-[tabler--settings]"></i>
-                General
-            </button>
-           
-            <button class="kartly-nav-item" data-tab="media" onclick="showTab('media', this)">
-                <i class="icon-[tabler--photo-edit]"></i>
-                Media settings
-            </button>
-            <button class="kartly-nav-item" data-tab="seo" onclick="showTab('seo', this)">
-                <i class="icon-[tabler--file-description]"></i>
-                SEO settings
-            </button>
-        </div>
-
-        {{-- Content Area --}}
-        <div class="kartly-content">
-            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+    <!-- Content Area -->
+    <div class="flex-1 bg-white border border-slate-200 rounded-lg p-6">
+        <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            
+            <!-- General Tab -->
+            <div id="general" class="tab-pane active">
+                <h3 class="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-4 mb-6">General Settings</h3>
                 
-                {{-- General Tab --}}
-                <div id="tab-general" class="tab-content active">
-                    <div class="kartly-content-header">General Settings</div>
-                    
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Site Title</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="site_name" class="kartly-input" value="{{ get_setting('site_name', 'Kartly') }}">
+                <!-- System Status Section -->
+                <div class="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-base font-semibold text-slate-800">Maintenance Mode</h4>
+                            <p class="text-sm text-slate-500">Put your site into maintenance mode. Only admins can access the frontend.</p>
                         </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Site Motto</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="site_motto" class="kartly-input" value="{{ get_setting('site_motto', 'Buy more, Earn more') }}">
-                        </div>
-                    </div>
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Site Timezone</label>
-                        <div class="kartly-input-wrapper">
-                            <select name="site_timezone" class="kartly-input">
-                                @foreach(timezone_identifiers_list() as $timezone)
-                                    <option value="{{ $timezone }}" {{ get_setting('site_timezone', 'UTC') == $timezone ? 'selected' : '' }}>{{ $timezone }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Site Description</label>
-                        <div class="kartly-input-wrapper">
-                            <textarea name="site_description" class="kartly-input" rows="3">{{ get_setting('site_description') }}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Copyright Text</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="site_copyright" class="kartly-input" value="{{ get_setting('site_copyright') }}">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Maintenance Mode</label>
-                        <div class="kartly-input-wrapper">
-                            <label class="flex items-center gap-3 cursor-pointer">
-                                <input type="hidden" name="maintenance_mode" value="0">
-                                <input type="checkbox" name="maintenance_mode" class="toggle toggle-primary" value="1" {{ get_setting('maintenance_mode') ? 'checked' : '' }}>
-                                <span class="text-sm font-medium text-slate-600">Enable Maintenance Mode</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    {{-- Contact Information --}}
-                    <div class="kartly-content-header mt-10">Contact Information</div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Contact Email</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="email" name="contact_email" class="kartly-input" value="{{ get_setting('contact_email') }}" placeholder="support@example.com">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Contact Phone</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="contact_phone" class="kartly-input" value="{{ get_setting('contact_phone') }}" placeholder="+1 234 567 890">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Offset Address</label>
-                        <div class="kartly-input-wrapper">
-                            <textarea name="contact_address" class="kartly-input" rows="3" placeholder="123 Street Name, City, Country">{{ get_setting('contact_address') }}</textarea>
-                        </div>
-                    </div>
-
-                    {{-- Localization --}}
-                    <div class="kartly-content-header mt-10">Localization</div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Currency Code</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="currency_code" class="kartly-input" value="{{ get_setting('currency_code', 'USD') }}" placeholder="USD">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Currency Symbol</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="currency_symbol" class="kartly-input" value="{{ get_setting('currency_symbol', '৳') }}" placeholder="৳">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Order Prefix</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="order_prefix" class="kartly-input" value="{{ get_setting('order_prefix', 'ORD-') }}" placeholder="ORD-">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Tax Percentage (%)</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="number" step="0.01" name="tax_percentage" class="kartly-input" value="{{ get_setting('tax_percentage', '0') }}" placeholder="0">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Favicon</label>
-                        <div class="kartly-input-wrapper">
-                            <div class="image-preview-box">
-                                @if(get_setting('site_favicon'))
-                                    <img src="{{ asset(get_setting('site_favicon')) }}" alt="Favicon">
-                                @else
-                                    <img src="{{ asset('assets/images/default-favicon.png') }}" class="opacity-20" alt="Default">
-                                @endif
-                                <div class="remove-image-btn" onclick="removeImage('site_favicon')">
-                                    <i class="icon-[tabler--x]"></i>
-                                </div>
-                            </div>
-                            <label for="site_favicon" class="choose-file-link">Choose File</label>
-                            <input type="file" id="site_favicon" name="site_favicon" class="hidden" onchange="previewSelectedImage(this)">
-                        </div>
-                    </div>
-
-                    {{-- Logo Section --}}
-                    
-                    
-
-                    <div style="margin-top: 50px;">
-                        <button type="submit" class="save-button">Save Changes</button>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="maintenance_mode" value="1" class="sr-only peer" {{ get_setting('maintenance_mode') == '1' ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
                     </div>
                 </div>
 
-                {{-- Other Tabs Placeholders --}}
-                <div id="tab-media" class="tab-content">
-                    <div class="kartly-content-header">Media Settings</div>
-                    
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Max Upload Size (KB)</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="number" name="media_max_size" class="kartly-input" value="{{ get_setting('media_max_size', '2048') }}" placeholder="2048">
-                            <div class="text-xs text-slate-400 mt-2">Maximum file size allowed for uploads in Kilobytes.</div>
+                <!-- Meta Pixel Toggle -->
+                <div class="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-base font-semibold text-slate-800">Meta Pixel</h4>
+                            <p class="text-sm text-slate-500">Enable or disable the Meta Pixel script on the frontend.</p>
                         </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Allowed File Types</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="media_allowed_types" class="kartly-input" value="{{ get_setting('media_allowed_types', 'jpg,jpeg,png,gif,webp,pdf') }}" placeholder="jpg,jpeg,png">
-                            <div class="text-xs text-slate-400 mt-2">Comma separated list of allowed file extensions.</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 50px;">
-                        <button type="submit" class="save-button">Save Changes</button>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="enable_pixel" value="1" class="sr-only peer" {{ get_setting('enable_pixel') == '1' ? 'checked' : '' }}>
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
                     </div>
                 </div>
-
-                <div id="tab-seo" class="tab-content">
-                    <div class="kartly-content-header">SEO Settings</div>
-                    
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Meta Title</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="seo_meta_title" class="kartly-input" value="{{ get_setting('seo_meta_title') }}" placeholder="Global Meta Title">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Meta Keywords</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="seo_meta_keywords" class="kartly-input" value="{{ get_setting('seo_meta_keywords') }}" placeholder="keyword1, keyword2, keyword3">
-                        </div>
-                    </div>
-                    
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Meta Description</label>
-                        <div class="kartly-input-wrapper">
-                            <textarea name="seo_meta_description" class="kartly-input" rows="4" placeholder="Global meta description for search engines.">{{ get_setting('seo_meta_description') }}</textarea>
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Social Share Image</label>
-                        <div class="kartly-input-wrapper">
-                            <div class="image-preview-box rect">
-                                @if(get_setting('seo_social_image'))
-                                    <img src="{{ asset(get_setting('seo_social_image')) }}" alt="Social Image">
-                                @else
-                                    <span class="text-slate-300 font-bold">1200x630</span>
-                                @endif
-                                <div class="remove-image-btn" onclick="removeImage('seo_social_image')">
-                                    <i class="icon-[tabler--x]"></i>
-                                </div>
-                            </div>
-                            <label for="seo_social_image" class="choose-file-link">Choose File</label>
-                            <input type="file" id="seo_social_image" name="seo_social_image" class="hidden" onchange="previewSelectedImage(this)">
-                            <div class="text-xs text-slate-400 mt-2">Recommended size: 1200x630px for Facebook/Twitter.</div>
-                        </div>
-                    </div>
-
-                    <div class="kartly-content-header mt-10">Analytics & Tracking</div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Google Analytics ID</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="seo_analytics_id" class="kartly-input" value="{{ get_setting('seo_analytics_id') }}" placeholder="UA-XXXXX-Y or G-XXXXXXX">
-                        </div>
-                    </div>
-
-                    <div class="kartly-form-group">
-                        <label class="kartly-label">Facebook Pixel ID</label>
-                        <div class="kartly-input-wrapper">
-                            <input type="text" name="seo_pixel_id" class="kartly-input" value="{{ get_setting('seo_pixel_id') }}" placeholder="123456789012345">
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 50px;">
-                        <button type="submit" class="save-button">Save Changes</button>
-                    </div>
+                
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Site Name</label>
+                    <input type="text" name="site_name" class="form-control" value="{{ get_setting('site_name', config('app.name')) }}">
                 </div>
 
-            </form>
-        </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Site Motto</label>
+                    <input type="text" name="site_motto" class="form-control" value="{{ get_setting('site_motto') }}">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                    <textarea name="site_description" class="form-control" rows="3">{{ get_setting('site_description') }}</textarea>
+                </div>
+
+                 <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Favicon</label>
+                    <div class="w-24 h-24 border border-dashed border-slate-300 rounded flex items-center justify-center overflow-hidden mb-2">
+                         @if(get_setting('site_favicon'))
+                            <img src="{{ asset(get_setting('site_favicon')) }}" alt="Favicon" class="w-full h-full object-contain">
+                        @else
+                            <i class="ti ti-photo text-3xl text-slate-400"></i>
+                        @endif
+                    </div>
+                    <input type="file" name="site_favicon" class="form-control">
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-200">
+                    <h4 class="text-base font-semibold text-slate-800 mb-4">Contact Info</h4>
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Contact Email</label>
+                        <input type="email" name="contact_email" class="form-control" value="{{ get_setting('contact_email') }}">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Contact Phone</label>
+                        <input type="text" name="contact_phone" class="form-control" value="{{ get_setting('contact_phone') }}">
+                    </div>
+                     <div class="mb-5">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Address</label>
+                        <textarea name="contact_address" class="form-control" rows="2">{{ get_setting('contact_address') }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Tab -->
+            <div id="media" class="tab-pane">
+                 <h3 class="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-4 mb-6">Media Settings</h3>
+                 <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Max Upload Size (KB)</label>
+                    <input type="number" name="media_max_size" class="form-control" value="{{ get_setting('media_max_size', 2048) }}">
+                    <small class="text-slate-500 mt-1 block">Maximum file size in Kilobytes.</small>
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Allowed File Types</label>
+                    <input type="text" name="media_allowed_types" class="form-control" value="{{ get_setting('media_allowed_types', 'jpg,jpeg,png,web,pdf') }}">
+                </div>
+            </div>
+
+            <!-- SEO Tab -->
+            <div id="seo" class="tab-pane">
+                 <h3 class="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-4 mb-6">SEO Settings</h3>
+                 <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Meta Title</label>
+                    <input type="text" name="seo_meta_title" class="form-control" value="{{ get_setting('seo_meta_title') }}">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Meta Keywords</label>
+                    <input type="text" name="seo_meta_keywords" class="form-control" value="{{ get_setting('seo_meta_keywords') }}">
+                </div>
+                 <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Meta Description</label>
+                    <textarea name="seo_meta_description" class="form-control" rows="3">{{ get_setting('seo_meta_description') }}</textarea>
+                </div>
+                 <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Google Analytics ID</label>
+                    <input type="text" name="seo_analytics_id" class="form-control" value="{{ get_setting('seo_analytics_id') }}">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Facebook Pixel ID</label>
+                    <input type="text" name="seo_pixel_id" class="form-control" value="{{ get_setting('seo_pixel_id') }}">
+                </div>
+            </div>
+
+            <!-- Email Tab -->
+             <div id="email" class="tab-pane">
+                 <h3 class="text-lg font-semibold text-slate-800 border-b border-slate-200 pb-4 mb-6">Email Configuration</h3>
+                 
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">Mail Host</label>
+                         <input type="text" name="mail_host" class="form-control" value="{{ get_setting('mail_host') }}">
+                     </div>
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">Mail Port</label>
+                         <input type="text" name="mail_port" class="form-control" value="{{ get_setting('mail_port') }}">
+                     </div>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">Username</label>
+                         <input type="text" name="mail_username" class="form-control" value="{{ get_setting('mail_username') }}">
+                     </div>
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
+                         <input type="password" name="mail_password" class="form-control" value="{{ get_setting('mail_password') }}">
+                     </div>
+                 </div>
+
+                 <div class="mb-5">
+                     <label class="block text-sm font-medium text-slate-700 mb-2">Encryption</label>
+                     <select name="mail_encryption" class="form-control">
+                         <option value="tls" {{ get_setting('mail_encryption') == 'tls' ? 'selected' : '' }}>TLS</option>
+                         <option value="ssl" {{ get_setting('mail_encryption') == 'ssl' ? 'selected' : '' }}>SSL</option>
+                         <option value="null" {{ get_setting('mail_encryption') == 'null' ? 'selected' : '' }}>None</option>
+                     </select>
+                 </div>
+
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">From Address</label>
+                         <input type="email" name="mail_from_address" class="form-control" value="{{ get_setting('mail_from_address') }}">
+                     </div>
+                     <div>
+                         <label class="block text-sm font-medium text-slate-700 mb-2">From Name</label>
+                         <input type="text" name="mail_from_name" class="form-control" value="{{ get_setting('mail_from_name') }}">
+                     </div>
+                 </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-200 text-right">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> Save Changes
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
 
 @push('js')
 <script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        
+        // Hide all tab content
+        tabcontent = document.getElementsByClassName("tab-pane");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove('active');
+        }
+
+        // Remove active class from all buttons
+        // Logic updated to target generic button within the sidebar wrapper if needed, 
+        // but existing onclick matches are fine as long as we clear the styles.
+        // Tailwind active state is purely visual here, we toggle specific classes manually if we strictly needed JS,
+        // but simplest is just checking class list.
+        // Let's rely on a simpler approach: remove 'bg-slate-50' 'text-indigo-600' from all and add to current.
+        
+        tablinks = document.querySelectorAll(".w-full.flex.items-center"); // Target sidebar buttons
+        for (i = 0; i < tablinks.length; i++) {
+            // Reset to default state
+            tablinks[i].classList.remove("text-indigo-600", "bg-slate-50");
+            tablinks[i].classList.add("text-slate-500");
+        }
+
+        // Show current tab
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add('active');
+        
+        // Activate button
+        evt.currentTarget.classList.remove("text-slate-500");
+        evt.currentTarget.classList.add("text-indigo-600", "bg-slate-50");
+        
+        // Save state
+        localStorage.setItem('settings_active_tab', tabName);
+    }
+
+    // Load saved tab
     document.addEventListener("DOMContentLoaded", function() {
-        const activeTab = localStorage.getItem('activeSettingsTab') || 'general';
-        const btn = document.querySelector(`button[data-tab="${activeTab}"]`);
-        if(btn) {
-            showTab(activeTab, btn);
+        const savedTab = localStorage.getItem('settings_active_tab') || 'general';
+        const tabBtn = document.querySelector(`button[onclick*="'${savedTab}'"]`);
+        if(tabBtn) {
+            tabBtn.click();
         }
     });
-
-    function showTab(tabId, btn) {
-        // Save to localStorage
-        localStorage.setItem('activeSettingsTab', tabId);
-
-        // Update breadcrumb
-        const titles = {
-            'general': 'General',
-            'media': 'Media settings',
-            'seo': 'SEO settings'
-        };
-        const activeTabEl = document.getElementById('active-tab-breadcrumb');
-        if(activeTabEl) {
-            activeTabEl.innerText = titles[tabId];
-        }
-
-        // Toggle content
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        document.getElementById('tab-' + tabId).classList.add('active');
-
-        // Toggle button active state
-        document.querySelectorAll('.kartly-nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        btn.classList.add('active');
-    }
-
-    function removeImage(inputId) {
-        // For now just clear the input if any, or hide preview. 
-        // In a real app we might send an AJAX request to delete the file.
-        const input = document.getElementById(inputId);
-        if(input) input.value = '';
-        alert('Image removal logic would go here. For now, it will be replaced upon next upload.');
-    }
-
-    function previewSelectedImage(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewImg = input.previousElementSibling.previousElementSibling.querySelector('img');
-                if(previewImg) previewImg.src = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 </script>
 @endpush

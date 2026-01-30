@@ -22,7 +22,20 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        $key = 'login-attempt:' . $request->ip();
+
+        // Check if user is already locked out
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = \Illuminate\Support\Facades\RateLimiter::availableIn($key);
+            return back()->withErrors([
+                'phone' => 'Too many login attempts. Please try again in ' . $seconds . ' seconds.',
+            ])->onlyInput('phone');
+        }
+
         if (Auth::attempt(['phone' => $credentials['phone'], 'password' => $credentials['password']], $request->remember)) {
+            // Success: clear the rate limiter
+            \Illuminate\Support\Facades\RateLimiter::clear($key);
+
             $request->session()->regenerate();
 
             if (Auth::user()->role === 'admin') {
@@ -31,6 +44,9 @@ class AuthController extends Controller
 
             return redirect()->intended(route('home'));
         }
+
+        // Failure: increment the attempts
+        \Illuminate\Support\Facades\RateLimiter::hit($key, 60); // Decay 60 seconds
 
         return back()->withErrors([
             'phone' => 'The provided credentials do not match our records.',

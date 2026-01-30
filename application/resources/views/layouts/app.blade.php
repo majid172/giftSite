@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <!-- Meta Pixel Code -->
+    @if(get_setting('enable_pixel') == '1' && get_setting('seo_pixel_id'))
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '{{ get_setting('seo_pixel_id') }}');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
+    /></noscript>
+    @endif
+    <!-- End Meta Pixel Code -->
+
     <title>@yield('title', get_setting('seo_meta_title', get_setting('site_name', config('app.name'))))</title>
     <meta name="description" content="@yield('meta_description', get_setting('seo_meta_description'))">
     <meta name="keywords" content="@yield('meta_keywords', get_setting('seo_meta_keywords'))">
@@ -30,7 +50,7 @@
         </script>
     @endif
 
-    @if(get_setting('seo_pixel_id'))
+    @if(env('META_PIXEL_ID') || get_setting('seo_pixel_id'))
         <!-- Facebook Pixel -->
         <script>
             !function(f,b,e,v,n,t,s)
@@ -41,11 +61,11 @@
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '{{ get_setting('seo_pixel_id') }}');
+            fbq('init', '{{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}');
             fbq('track', 'PageView');
         </script>
         <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
+        src="https://www.facebook.com/tr?id={{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
         /></noscript>
     @endif
 

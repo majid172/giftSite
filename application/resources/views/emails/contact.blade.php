@@ -1,0 +1,12 @@
+@component('mail::message')
+# New Contact Message
+
+**From:** {{ $data['first_name'] }} {{ $data['last_name'] }} <{{ $data['email'] }}>  
+**Subject:** {{ $data['subject'] }}
+
+**Message:**  
+{{ $data['message'] }}
+
+Thanks,<br>
+{{ config('app.name') }}
+@endcomponent
