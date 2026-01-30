@@ -17,7 +17,30 @@ class ProductController extends Controller
             $query->where('category_id', $request->category);
         }
 
-        $products = $query->latest()->get();
+        // Sorting
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                default:
+                    $query->latest();
+                    break;
+            }
+        } else {
+             $query->latest();
+        }
+
+        $products = $query->get();
         return view('products', compact('products'));
     }
 

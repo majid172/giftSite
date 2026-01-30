@@ -113,7 +113,7 @@
                 <a href="{{ route('admin.dashboard') }}" class="text-logo-container group no-underline">
                     <div class="logo-letter transform transition-transform group-hover:scale-110 duration-300">H</div>
                     <div class="brand-text-area">
-                        <div class="brand-name">HERITAGE</div>
+                        <div class="brand-name">{{ strtoupper(get_setting('site_name', config('app.name'))) }}</div>
                         <div class="brand-subtitle">Admin Console</div>
                     </div>
                 </a>

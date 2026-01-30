@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order Details #' . $order->order_id . ' - GiftPack')
+@section('title', 'Order Details #' . $order->order_id . ' - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-12">
@@ -102,13 +102,13 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 text-center text-gray-600 font-medium">
-                                            ${{ number_format($item->price, 2) }}
+                                            {{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}
                                         </td>
                                         <td class="px-6 py-4 text-center text-gray-600 font-medium">
                                             {{ $item->quantity }}
                                         </td>
                                         <td class="px-6 py-4 text-right font-bold text-gray-900">
-                                            ${{ number_format($item->price * $item->quantity, 2) }}
+                                            {{ get_setting('currency_symbol', '$') }}{{ number_format($item->price * $item->quantity, 2) }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -117,7 +117,7 @@
                                 <tr>
                                     <td colspan="3" class="px-6 py-4 text-right text-gray-600 font-medium">Order Total</td>
                                     <td class="px-6 py-4 text-right text-2xl font-extrabold text-primary">
-                                        ${{ number_format($order->price, 2) }}
+                                        {{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -180,7 +180,7 @@
                         <div class="space-y-2 pt-4 border-t border-gray-50">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Subtotal</span>
-                                <span class="text-gray-900 font-medium">${{ number_format($order->price, 2) }}</span>
+                                <span class="text-gray-900 font-medium">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Shipping</span>
@@ -188,7 +188,7 @@
                             </div>
                             <div class="flex justify-between pt-2 border-t border-gray-50 text-lg font-bold">
                                 <span class="text-gray-900">Total</span>
-                                <span class="text-primary">${{ number_format($order->price, 2) }}</span>
+                                <span class="text-primary">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
                             </div>
                             <div class="mt-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">

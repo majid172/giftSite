@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Register - Heritage GiftPack')
+@section('title', 'Register - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="min-h-screen flex font-sans text-stone-600">
@@ -8,7 +8,7 @@
     <!-- Left Side: Image / Brand -->
     <div class="hidden lg:flex w-1/2 bg-emerald-950 relative items-center justify-center p-12 overflow-hidden">
         <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=1000&q=80" 
-             class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" alt="Heritage Register">
+             class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" alt="{{ get_setting('site_name', config('app.name')) }} Register">
         <div class="absolute inset-0 bg-gradient-to-tl from-emerald-950 via-emerald-900/80 to-transparent"></div>
         
         <div class="relative z-10 text-white max-w-lg">
@@ -25,7 +25,7 @@
             <!-- Mobile Logo -->
             <div class="lg:hidden text-center mb-8">
                 <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-xl shadow-md mx-auto mb-3">H</div>
-                <h2 class="text-2xl font-serif font-bold text-emerald-950">Heritage GiftPack</h2>
+                <h2 class="text-2xl font-serif font-bold text-emerald-950">{{ get_setting('site_name', config('app.name')) }}</h2>
             </div>
             
             <div>

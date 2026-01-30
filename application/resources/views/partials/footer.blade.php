@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="border-t border-emerald-800/50 pt-8 text-center text-emerald-100/60 text-sm">
-            &copy; {{ date('Y') }} GiftPack. All rights reserved.
+            &copy; {{ date('Y') }} {{ get_setting('site_name', config('app.name')) }}. All rights reserved.
         </div>
     </div>
 </footer>

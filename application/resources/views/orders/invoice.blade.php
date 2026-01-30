@@ -181,7 +181,7 @@
     <div class="invoice-wrapper">
         <header class="header">
             <div class="brand">
-                <h1>GiftPack</h1>
+                <h1>{{ get_setting('site_name', config('app.name')) }}</h1>
                 <p>Premium Gift Solutions</p>
             </div>
             <div class="invoice-meta">
@@ -224,9 +224,9 @@
                                 <br><small style="color: #6b7280">{{ collect($item->attributes)->map(fn($v, $k) => ucfirst($k) . ': ' . $v)->implode(', ') }}</small>
                             @endif
                         </td>
-                        <td class="text-center">${{ number_format($item->price, 2) }}</td>
+                        <td class="text-center">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</td>
                         <td class="text-center">{{ $item->quantity }}</td>
-                        <td class="text-right">${{ number_format($item->price * $item->quantity, 2) }}</td>
+                        <td class="text-right">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price * $item->quantity, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -236,22 +236,22 @@
             <div class="summary-box">
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span>${{ number_format($order->price, 2) }}</span>
+                    <span>{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
-                    <span>$0.00</span>
+                    <span>{{ get_setting('currency_symbol', '$') }}0.00</span>
                 </div>
                 <div class="summary-row total">
                     <span>Total Amount</span>
-                    <span>${{ number_format($order->price, 2) }}</span>
+                    <span>{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
                 </div>
             </div>
         </div>
 
         <footer class="footer">
-            <p>Thank you for choosing GiftPack for your premium gifting needs.</p>
-            <p style="margin-top: 8px; font-weight: 600">giftpack.com &bull; support@giftpack.com</p>
+            <p>Thank you for choosing {{ get_setting('site_name', config('app.name')) }} for your premium gifting needs.</p>
+            <p style="margin-top: 8px; font-weight: 600">{{ request()->getHost() }} &bull; support@giftpack.com</p>
         </footer>
     </div>
 

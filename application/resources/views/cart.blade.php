@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Shopping Cart - Heritage Gifts')
+@section('title', 'Shopping Cart - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="bg-stone-50 min-h-screen py-8 md:py-12">
@@ -18,7 +18,7 @@
         <!-- Header -->
         <div class="mb-12 text-center md:text-left">
             <h1 class="text-4xl md:text-5xl font-serif font-bold text-emerald-950 mb-4">Your Shopping Cart</h1>
-            <p class="text-stone-500 text-lg max-w-2xl">A curated selection of heritage gifts, prepared for your special moments.</p>
+            <p class="text-stone-500 text-lg max-w-2xl">A curated selection of {{ strtolower(get_setting('site_name', config('app.name'))) }} gifts, prepared for your special moments.</p>
         </div>
 
         <div id="alert-container">
@@ -58,7 +58,7 @@
                                                 <!-- Product Info -->
                                                 <div class="space-y-1">
                                                     <h3 class="text-xl font-serif font-bold text-emerald-950 group-hover:text-amber-600 transition-colors">{{ $details['name'] }}</h3>
-                                                    <p class="text-stone-500 text-sm font-medium">Unit Price: ${{ number_format($details['price'], 2) }}</p>
+                                                    <p class="text-stone-500 text-sm font-medium">Unit Price: {{ get_setting('currency_symbol', '$') }}{{ number_format($details['price'], 2) }}</p>
                                                     
                                                     <!-- Remove Button -->
                                                     <form action="{{ route('cart.destroy', $id) }}" method="POST" class="pt-2">
@@ -90,7 +90,7 @@
                                         
                                         <td class="px-8 py-8 text-right">
                                             <div class="text-xl font-bold text-emerald-700" id="item-subtotal-{{ $id }}">
-                                                ${{ number_format($details['price'] * $details['quantity'], 2) }}
+                                                {{ get_setting('currency_symbol', '$') }}{{ number_format($details['price'] * $details['quantity'], 2) }}
                                             </div>
                                         </td>
                                     </tr>
@@ -121,12 +121,12 @@
                         <div class="space-y-4 mb-8">
                             <div class="flex justify-between items-center text-stone-600">
                                 <span class="text-sm font-medium">Subtotal</span>
-                                <span class="text-base font-bold text-emerald-950" id="cart-subtotal">${{ number_format($total, 2) }}</span>
+                                <span class="text-base font-bold text-emerald-950" id="cart-subtotal">{{ get_setting('currency_symbol', '$') }}{{ number_format($total, 2) }}</span>
                             </div>
                             <div class="flex justify-between items-center text-stone-600">
                                 <div class="flex flex-col">
                                     <span class="text-sm font-medium">Shipping Estimate</span>
-                                    <span class="text-[10px] text-emerald-600 font-bold mt-0.5">Heritage Member Benefit</span>
+                                    <span class="text-[10px] text-emerald-600 font-bold mt-0.5">Member Benefit</span>
                                 </div>
                                 <span class="text-base font-bold text-emerald-600">Free</span>
                             </div>
@@ -139,7 +139,7 @@
                         <div class="border-t border-dashed border-stone-200 pt-6 mb-8">
                             <div class="flex justify-between items-end">
                                 <span class="text-lg font-bold text-emerald-950">Total</span>
-                                <span class="text-3xl font-serif font-bold text-emerald-800" id="cart-total">${{ number_format($total, 2) }}</span>
+                                <span class="text-3xl font-serif font-bold text-emerald-800" id="cart-total">{{ get_setting('currency_symbol', '$') }}{{ number_format($total, 2) }}</span>
                             </div>
                             <p class="text-right text-xs text-stone-400 mt-2">Inclusive of all applicable taxes</p>
                         </div>
@@ -175,7 +175,7 @@
                     <div class="absolute inset-0 bg-emerald-50 scale-0 group-hover:scale-100 transition-transform duration-700 rounded-full"></div>
                     <svg class="w-12 h-12 text-stone-300 group-hover:text-emerald-600 transition-colors duration-500 relative" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                 </div>
-                <h2 class="text-3xl font-serif font-bold text-emerald-950 mb-4">Your heritage collection is empty</h2>
+                <h2 class="text-3xl font-serif font-bold text-emerald-950 mb-4">Your collection is empty</h2>
                 <p class="text-stone-500 mb-10 text-lg">It looks like you haven't selected any curated gifts yet. Start your journey through our exclusive collections.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ route('products.index') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white px-10 py-4 rounded-full font-bold shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-1 tracking-widest uppercase text-sm">
@@ -205,9 +205,9 @@
                 },
                 success: function (response) {
                     if (response.success) {
-                        $("#item-subtotal-" + id).text('$' + response.item_subtotal);
-                        $("#cart-subtotal").text('$' + response.total);
-                        $("#cart-total").text('$' + response.total);
+                        $("#item-subtotal-" + id).text('{{ get_setting('currency_symbol', '$') }}' + response.item_subtotal);
+                        $("#cart-subtotal").text('{{ get_setting('currency_symbol', '$') }}' + response.total);
+                        $("#cart-total").text('{{ get_setting('currency_symbol', '$') }}' + response.total);
                         
                         // Also update the input if this came from a button click
                          $("#quantity-" + id).val(quantity);

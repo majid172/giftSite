@@ -8,7 +8,7 @@
         <!-- Desktop Image (Absolute Right Half) -->
         <div class="hidden lg:block absolute inset-y-0 right-0 w-1/2">
             <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80"
-                class="w-full h-full object-cover" alt="Heritage Packaging">
+                class="w-full h-full object-cover" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
             <div class="absolute inset-0 bg-emerald-950/20 mix-blend-multiply"></div>
         </div>
 
@@ -52,7 +52,7 @@
                 <!-- Mobile Image (Visible only on lg-) -->
                 <div class="lg:hidden h-[400px] w-full order-1 relative">
                     <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80"
-                        class="absolute inset-0 w-full h-full object-cover" alt="Heritage Packaging">
+                        class="absolute inset-0 w-full h-full object-cover" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
                     <div class="absolute inset-0 bg-emerald-950/20 mix-blend-multiply"></div>
                 </div>
 
@@ -86,9 +86,10 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                         <div class="absolute bottom-6 left-6 text-white">
                             <h3 class="text-xl font-serif font-bold">{{ $category->name }}</h3>
-                            <p class="text-sm text-stone-300 mt-1 group-hover:text-white transition-colors">
-                                {{ Str::limit($category->description, 30) }}
-                            </p>
+                           <span class="inline-flex items-center text-amber-400 font-bold text-xs uppercase tracking-widest gap-2">
+                    Explore Collection
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </span>
                         </div>
                     </a>
                     @endforeach
@@ -132,7 +133,7 @@
                             <!-- Title -->
                             <div class="mb-4 align-middle">
                                 <h3 class="text-3xl lg:text-4xl font-serif font-bold text-white leading-tight align-middle">
-                                    Heritage Grand <br> <span class="text-emerald-400 italic">Edition Box</span>
+                                    {{ get_setting('site_name', config('app.name')) }} Grand <br> <span class="text-emerald-400 italic">Edition Box</span>
                                 </h3>
                                 <p class="text-emerald-200/60 text-sm mt-2 max-w-[80%]">Curated luxury for the ultimate
                                     gifting
@@ -176,7 +177,7 @@
                                         'https://images.unsplash.com/photo-1497700003451-e1df943a194b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                                 ],
                                 [
-                                    'name' => 'Technaxx Heritage Gift Sampler Pack',
+                                    'name' => 'Technaxx ' . get_setting('site_name', config('app.name')) . ' Gift Sampler Pack',
                                     'price' => 40.5,
                                     'old_price' => 45.0,
                                     'rating' => 5,
@@ -237,10 +238,10 @@
                                     <!-- Price -->
                                     <div class="flex items-baseline gap-2 mb-5">
                                         <span
-                                            class="text-xl font-bold text-emerald-950">${{ number_format($product['price'], 2) }}</span>
+                                            class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['price'], 2) }}</span>
                                         @if (isset($product['old_price']))
                                             <span
-                                                class="text-xs text-stone-400 line-through">${{ number_format($product['old_price'], 2) }}</span>
+                                                class="text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['old_price'], 2) }}</span>
                                         @endif
                                     </div>
 
@@ -343,10 +344,10 @@
                             <!-- Price -->
                             <div class="mb-5 flex items-baseline gap-2">
                                 <span
-                                    class="text-lg font-bold text-emerald-950">${{ number_format($item->price, 2) }}</span>
+                                    class="text-lg font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</span>
                                 @if ($item->old_price)
                                     <span
-                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">${{ number_format($item->old_price, 2) }}</span>
+                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->old_price, 2) }}</span>
                                 @endif
                             </div>
 
@@ -384,7 +385,7 @@
             @php
                 $featuredProducts = [
                     [
-                        'name' => 'Heritage Grand Leaf Edition Box',
+                        'name' => get_setting('site_name', config('app.name')) . ' Grand Leaf Edition Box',
                         'price' => 119.0,
                         'rating' => 5,
                         'reviews' => 3,
@@ -438,7 +439,7 @@
                         'action' => 'ADD TO CART',
                     ],
                     [
-                        'name' => 'Corporate Heritage Gifting Bundle',
+                        'name' => 'Corporate ' . get_setting('site_name', config('app.name')) . ' Gifting Bundle',
                         'price' => 59.0,
                         'rating' => 4,
                         'reviews' => 4,
@@ -492,10 +493,10 @@
                         <!-- Price -->
                         <div class="flex items-baseline gap-2 mb-3">
                             <span
-                                class="text-base font-black text-emerald-950">${{ number_format($product['price'], 2) }}</span>
+                                class="text-base font-black text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['price'], 2) }}</span>
                             @if (isset($product['old_price']))
                                 <span
-                                    class="text-[11px] text-stone-400 line-through">${{ number_format($product['old_price'], 2) }}</span>
+                                    class="text-[11px] text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product['old_price'], 2) }}</span>
                             @endif
                         </div>
 

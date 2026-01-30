@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Orders - GiftPack')
+@section('title', 'My Orders - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-12">
@@ -47,7 +47,7 @@
                             </div>
                             <div class="md:col-span-1">
                                 <p class="text-sm text-gray-500 mb-1">Total Amount</p>
-                                <p class="font-bold text-gray-900 text-xl">${{ number_format($order->price, 2) }}</p>
+                                <p class="font-bold text-gray-900 text-xl">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</p>
                             </div>
                             <div class="md:col-span-2 flex flex-wrap gap-3 justify-end">
                                 <a href="{{ route('orders.show', $order->id) }}" 

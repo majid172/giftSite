@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', get_setting('seo_meta_title', config('app.name', 'GiftPack')))</title>
+    <title>@yield('title', get_setting('seo_meta_title', get_setting('site_name', config('app.name'))))</title>
     <meta name="description" content="@yield('meta_description', get_setting('seo_meta_description'))">
     <meta name="keywords" content="@yield('meta_keywords', get_setting('seo_meta_keywords'))">
 
     {{-- Open Graph / Social --}}
-    <meta property="og:title" content="@yield('title', get_setting('seo_meta_title', config('app.name')))">
+    <meta property="og:title" content="@yield('title', get_setting('seo_meta_title', get_setting('site_name', config('app.name'))))">
     <meta property="og:description" content="@yield('meta_description', get_setting('seo_meta_description'))">
     @if(get_setting('seo_social_image'))
         <meta property="og:image" content="{{ asset(get_setting('seo_social_image')) }}">

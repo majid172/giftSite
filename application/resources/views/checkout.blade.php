@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Secure Checkout - Heritage Gifts')
+@section('title', 'Secure Checkout - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="bg-stone-50 min-h-screen py-10 md:py-16">
@@ -159,7 +159,7 @@
                                 <h4 class="font-bold text-emerald-900 line-clamp-2 leading-snug">{{ $details['name'] }}</h4>
                                 <div class="flex justify-between items-end mt-2">
                                     <p class="text-sm text-stone-500">Qty: {{ $details['quantity'] }}</p>
-                                    <p class="font-bold text-emerald-700 font-serif">${{ number_format($details['price'] * $details['quantity'], 2) }}</p>
+                                    <p class="font-bold text-emerald-700 font-serif">{{ get_setting('currency_symbol', '$') }}{{ number_format($details['price'] * $details['quantity'], 2) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -170,12 +170,12 @@
                     <div class="p-8 bg-stone-50 border-t border-stone-100 space-y-4">
                         <div class="flex justify-between items-center text-sm text-stone-600">
                             <span>Subtotal</span>
-                            <span class="font-bold text-emerald-950">${{ number_format($subtotal, 2) }}</span>
+                            <span class="font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between items-center text-sm text-stone-600">
                             <span>Shipping</span>
                             @if($shippingCost > 0)
-                                <span class="font-bold text-emerald-950">${{ number_format($shippingCost, 2) }}</span>
+                                <span class="font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingCost, 2) }}</span>
                             @else
                                 <span class="font-bold text-amber-600">Free</span>
                             @endif
@@ -183,7 +183,7 @@
                         
                         <div class="pt-4 mt-4 border-t border-stone-200 flex justify-between items-end">
                             <span class="text-lg font-bold text-emerald-950 font-serif">Total</span>
-                            <span class="text-3xl font-bold text-emerald-800 font-serif mb-1">${{ number_format($total, 2) }}</span>
+                            <span class="text-3xl font-bold text-emerald-800 font-serif mb-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($total, 2) }}</span>
                         </div>
 
                         <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-600/30 transition-all transform hover:-translate-y-0.5 active:scale-[0.99] mt-6 flex items-center justify-center gap-2 group">

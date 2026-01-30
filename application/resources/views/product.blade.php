@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', $product->name . ' - Heritage Gifts')
+@section('title', $product->name . ' - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="bg-stone-50 min-h-screen py-8">
@@ -94,9 +94,9 @@
 
                 <!-- Price -->
                 <div class="flex items-baseline gap-4">
-                    <span class="text-4xl font-black text-emerald-700">${{ number_format($product->price, 2) }}</span>
+                    <span class="text-4xl font-black text-emerald-700">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
                     @if($product->old_price)
-                        <span class="text-2xl text-stone-400 line-through">${{ number_format($product->old_price, 2) }}</span>
+                        <span class="text-2xl text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->old_price, 2) }}</span>
                         @php
                             $discount = (($product->old_price - $product->price) / $product->old_price) * 100;
                         @endphp

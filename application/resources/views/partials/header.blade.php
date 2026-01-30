@@ -5,8 +5,8 @@
         
         <!-- Logo -->
         <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0">
-            <div class="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-lg shadow-md">H</div>
-            <span class="text-2xl font-serif font-bold text-emerald-950 tracking-tight">HERITAGE</span>
+            <div class="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-lg shadow-md">{{ substr(get_setting('site_name', config('app.name')), 0, 1) }}</div>
+            <span class="text-2xl font-serif font-bold text-emerald-950 tracking-tight">{{ get_setting('site_name', config('app.name')) }}</span>
         </a>
 
         <!-- Search Bar (Center) -->

@@ -56,9 +56,9 @@
 
                     <!-- Price -->
                     <div class="mb-5 flex items-baseline gap-2">
-                        <span class="text-lg font-bold text-emerald-950">${{ number_format($product->price, 2) }}</span>
+                        <span class="text-lg font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
                         @if($product->old_price)
-                            <span class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">${{ number_format($product->old_price, 2) }}</span>
+                            <span class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->old_price, 2) }}</span>
                         @endif
                     </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Login - Heritage GiftPack')
+@section('title', 'Login - ' . get_setting('site_name', config('app.name')))
 
 @section('content')
 <div class="min-h-screen flex font-sans text-stone-600">
@@ -8,12 +8,12 @@
     <!-- Left Side: Image / Brand -->
     <div class="hidden lg:flex w-1/2 bg-emerald-950 relative items-center justify-center p-12 overflow-hidden">
         <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1000&q=80" 
-             class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" alt="Heritage Packaging">
+             class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
         <div class="absolute inset-0 bg-gradient-to-tr from-emerald-950 via-emerald-900/80 to-transparent"></div>
         
         <div class="relative z-10 text-white max-w-lg">
             <div class="mb-6 w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-3xl shadow-lg">H</div>
-            <h1 class="text-5xl font-serif font-bold mb-6 leading-tight">Welcome Back to <br> <span class="text-amber-400 italic">Heritage</span></h1>
+            <h1 class="text-5xl font-serif font-bold mb-6 leading-tight">Welcome Back to <br> <span class="text-amber-400 italic">{{ get_setting('site_name', config('app.name')) }}</span></h1>
             <p class="text-emerald-100 text-lg leading-relaxed">Sign in to access your curated wishlist, track exclusive orders, and discover new limited-edition artisan boxes.</p>
         </div>
     </div>
@@ -25,7 +25,7 @@
             <!-- Mobile Logo (Visible only on small screens) -->
             <div class="lg:hidden text-center mb-8">
                 <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-xl shadow-md mx-auto mb-3">H</div>
-                <h2 class="text-2xl font-serif font-bold text-emerald-950">Heritage GiftPack</h2>
+                <h2 class="text-2xl font-serif font-bold text-emerald-950">{{ get_setting('site_name', config('app.name')) }}</h2>
             </div>
             
             <div>

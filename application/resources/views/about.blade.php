@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Our Story - Heritage Premium Gifts')
+@section('title', 'Our Story - ' . get_setting('site_name', config('app.name')) . ' Premium Gifts')
 
 @section('hero')
     <!-- Hero Section -->
@@ -8,7 +8,7 @@
         <!-- Desktop Image Overlay -->
         <div class="hidden lg:block absolute inset-y-0 right-0 w-1/2">
             <img src="https://images.unsplash.com/photo-1704134932084-e0dc05c8808b?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                class="w-full h-full object-cover" alt="Heritage Craftsmanship">
+                class="w-full h-full object-cover" alt="{{ get_setting('site_name', config('app.name')) }} Craftsmanship">
             <div class="absolute inset-0 bg-emerald-950/40 mix-blend-multiply"></div>
         </div>
 
@@ -17,7 +17,7 @@
                 <div class="py-20 lg:py-0">
                     <div class="inline-flex items-center gap-3 mb-6">
                         <span class="w-12 h-[1px] bg-amber-500"></span>
-                        <span class="text-amber-400 font-bold tracking-[0.2em] text-xs uppercase">The Heritage Way</span>
+                        <span class="text-amber-400 font-bold tracking-[0.2em] text-xs uppercase">The {{ get_setting('site_name', config('app.name')) }} Way</span>
                     </div>
 
                     <h1 class="text-5xl md:text-6xl lg:text-8xl font-serif font-bold text-white leading-tight mb-8">
@@ -32,7 +32,7 @@
                 <!-- Mobile Image -->
                 <div class="lg:hidden h-[300px] w-full relative mb-12 rounded-2xl overflow-hidden shadow-2xl">
                     <img src="https://images.unsplash.com/photo-1704134932084-e0dc05c8808b?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        class="absolute inset-0 w-full h-full object-cover" alt="Heritage Craftmanship">
+                        class="absolute inset-0 w-full h-full object-cover" alt="{{ get_setting('site_name', config('app.name')) }} Craftmanship">
                 </div>
             </div>
         </div>
@@ -60,10 +60,10 @@
                     <h3 class="text-4xl font-serif font-bold text-emerald-950 mb-8 lowercase italic">the genesis...</h3>
                     <div class="space-y-6 text-stone-600 leading-loose text-lg">
                         <p>
-                            Founded in the heart of artisanal traditions, Heritage was born from a simple observation: in a world of instant gratification, the soul of gifting was being lost. We wanted to bring back the "Grandeur" of the unboxing experience.
+                            Founded in the heart of artisanal traditions, {{ get_setting('site_name', config('app.name')) }} was born from a simple observation: in a world of instant gratification, the soul of gifting was being lost. We wanted to bring back the "Grandeur" of the unboxing experience.
                         </p>
                         <p>
-                            What started as a small workshop curating local tea leaves and hand-blown glass has evolved into a global destination for those who seek more than just a product—they seek a moment of genuine heritage.
+                            What started as a small workshop curating local tea leaves and hand-blown glass has evolved into a global destination for those who seek more than just a product—they seek a moment of genuine {{ strtolower(get_setting('site_name', config('app.name'))) }}.
                         </p>
                         <p>
                             Every material we use, from the sustainable silk ribbons to the hand-carved wooden chests, is selected with a singular focus: to create a tactile legacy that honors both the giver and the receiver.
@@ -78,7 +78,7 @@
                              alt="Artisanal Process">
                         <div class="absolute bottom-8 -left-8 bg-white p-8 rounded-2xl shadow-xl max-w-xs border border-stone-100 hidden md:block">
                             <p class="text-emerald-900 font-serif font-bold text-xl mb-2">100% Handcrafted</p>
-                            <p class="text-stone-500 text-sm leading-relaxed">Each heritage box undergoes 12 stages of quality curation before it leaves our workshop.</p>
+                            <p class="text-stone-500 text-sm leading-relaxed">Each {{ strtolower(get_setting('site_name', config('app.name'))) }} box undergoes 12 stages of quality curation before it leaves our workshop.</p>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
         <section class="bg-emerald-900 py-32 -mx-4 sm:-mx-6 lg:-mx-8">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-20 text-white">
-                    <h2 class="text-4xl font-serif font-bold mb-4">The Pillars of Heritage</h2>
+                    <h2 class="text-4xl font-serif font-bold mb-4">The Pillars of {{ get_setting('site_name', config('app.name')) }}</h2>
                     <p class="text-emerald-100/60 max-w-xl mx-auto">Commitments that guide our every selection and partnership.</p>
                 </div>
 
