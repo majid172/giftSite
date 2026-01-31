@@ -12,7 +12,7 @@ class CheckoutController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-        
+
         if (empty($cart)) {
             return redirect()->route('products.index')->with('error', 'Your cart is empty.');
         }
@@ -45,6 +45,7 @@ class CheckoutController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email',
+            'phone' => 'required',
             'address' => 'required',
             'city' => 'required',
             'zip' => 'required',
@@ -52,7 +53,7 @@ class CheckoutController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if(empty($cart)) {
+        if (empty($cart)) {
             return redirect()->route('products.index')->with('error', 'Your cart is empty.');
         }
 
@@ -72,7 +73,7 @@ class CheckoutController extends Controller
 
         // Process Order
         $order = \App\Models\Order::create([
-            'user_id' => auth()->id(),
+            'user_id' => auth()->id(), // This will be null if guest
             'order_id' => 'ORD-' . strtoupper(uniqid()),
             'status' => 'Pending',
             'price' => $total, // Total now includes shipping
@@ -85,7 +86,7 @@ class CheckoutController extends Controller
                 'address' => $request->address,
                 'city' => $request->city,
                 'zip' => $request->zip,
-                'phone' => $request->phone ?? null,
+                'phone' => $request->phone,
             ],
             'payment_method' => 'cod', // Defaulting to COD as per migration default
         ]);

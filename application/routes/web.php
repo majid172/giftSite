@@ -24,12 +24,24 @@ use App\Http\Controllers\AuthController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-// Authentication Routes
+
+
+// Admin Login Route
+Route::get('/admin', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');
+
+// Authentication Routes - Restricted
 Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    // Only Admin Login should be accessible via specific path if needed, 
+    // but standard login routes are removed for public.
+    // We map 'login' to admin login implementation or redirect.
+    Route::get('/login', function () {
+        return redirect()->route('admin.login'); })->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+
+    // Disable registration
+    Route::get('/register', function () {
+        return redirect()->route('home'); })->name('register');
+    // Route::post('/register', [AuthController::class, 'register']); // Disabled
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -62,10 +74,15 @@ Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::patch('/cart', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
+
+// Checkout Routes (Accessible by guests)
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    // Other auth routes...
 });
+
 
 // Static Pages
 Route::get('/about', function () {
@@ -87,7 +104,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::resource('categories', \App\Http\Controllers\Admin\Category\CategoryController::class, ['as' => 'admin']);
     Route::resource('products', \App\Http\Controllers\Admin\Product\ProductController::class, ['as' => 'admin']);
     Route::delete('products/image/{id}', [\App\Http\Controllers\Admin\Product\ProductController::class, 'destroyImage'])->name('admin.products.image.destroy');
-    
+
     // Settings Routes
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
@@ -95,28 +112,28 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Shipping Routes
     Route::get('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'index'])->name('admin.shipping.index');
     Route::post('/shipping', [\App\Http\Controllers\Admin\ShippingController::class, 'update'])->name('admin.shipping.update');
-    
+
     // User Management
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 });
 
 
 
-    // Order Routes
-    Route::get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/my-orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
-    Route::get('/my-orders/{id}/invoice', [\App\Http\Controllers\OrderController::class, 'invoice'])->name('orders.invoice');
+// Order Routes
+Route::get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+Route::get('/my-orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+Route::get('/my-orders/{id}/invoice', [\App\Http\Controllers\OrderController::class, 'invoice'])->name('orders.invoice');
 
-    Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
-    Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
-    
-    // Admin Routes extended
-    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-        // ... existing routes ...
-        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'edit', 'update']);
-        Route::get('orders/{id}/invoice', [\App\Http\Controllers\Admin\OrderController::class, 'invoice'])->name('admin.orders.invoice');
-    });
-    
+Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
+Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
+
+// Admin Routes extended
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // ... existing routes ...
+    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'edit', 'update']);
+    Route::get('orders/{id}/invoice', [\App\Http\Controllers\Admin\OrderController::class, 'invoice'])->name('admin.orders.invoice');
+});
+
 
 
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,21 +8,23 @@
 
     <!-- Meta Pixel Code -->
     @if(get_setting('enable_pixel') == '1' && get_setting('seo_pixel_id'))
-    <script>
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '{{ get_setting('seo_pixel_id') }}');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
-    /></noscript>
+        <script>
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+                n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window, document, 'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '{{ get_setting('seo_pixel_id') }}');
+            fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none"
+                src="https://www.facebook.com/tr?id={{ get_setting('seo_pixel_id') }}&ev=PageView&noscript=1" /></noscript>
     @endif
     <!-- End Meta Pixel Code -->
 
@@ -30,7 +33,8 @@
     <meta name="keywords" content="@yield('meta_keywords', get_setting('seo_meta_keywords'))">
 
     {{-- Open Graph / Social --}}
-    <meta property="og:title" content="@yield('title', get_setting('seo_meta_title', get_setting('site_name', config('app.name'))))">
+    <meta property="og:title"
+        content="@yield('title', get_setting('seo_meta_title', get_setting('site_name', config('app.name'))))">
     <meta property="og:description" content="@yield('meta_description', get_setting('seo_meta_description'))">
     @if(get_setting('seo_social_image'))
         <meta property="og:image" content="{{ asset(get_setting('seo_social_image')) }}">
@@ -44,7 +48,7 @@
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ get_setting('seo_analytics_id') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
             gtag('config', '{{ get_setting('seo_analytics_id') }}');
         </script>
@@ -53,38 +57,51 @@
     @if(env('META_PIXEL_ID') || get_setting('seo_pixel_id'))
         <!-- Facebook Pixel -->
         <script>
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+                n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s)
+            }(window, document, 'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '{{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}');
             fbq('track', 'PageView');
         </script>
         <noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id={{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}&ev=PageView&noscript=1"
-        /></noscript>
+                src="https://www.facebook.com/tr?id={{ env('META_PIXEL_ID') ?: get_setting('seo_pixel_id') }}&ev=PageView&noscript=1" /></noscript>
     @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
-    <!-- Styles / Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        h1, h2, h3, h4, h5, h6, .font-serif {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .font-serif {
             font-family: 'Playfair Display', serif;
         }
-        [x-cloak] { display: none !important; }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
         :root {
             --color-primary-dark: #064E3B;
             --color-primary: #059669;
@@ -95,6 +112,7 @@
     @stack('styles')
     @stack('scripts')
 </head>
+
 <body class="font-sans text-gray-900 antialiased h-full bg-stone-50">
     <div class="flex flex-col min-h-screen">
         @include('partials.topbar')
@@ -109,4 +127,5 @@
 
     @include('partials.cart-drawer')
 </body>
+
 </html>

@@ -14,6 +14,15 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    // Show Admin Login Form
+    public function showAdminLoginForm()
+    {
+        // We can reuse the same login view, or use a specific one.
+        // For now, reusing 'auth.login' is fine, but maybe passing a flag?
+        // Actually the requirement is just to show login page.
+        return view('auth.login', ['url' => 'admin']);
+    }
+
     // Handle Login
     public function login(Request $request)
     {
