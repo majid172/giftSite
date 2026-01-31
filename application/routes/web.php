@@ -45,6 +45,7 @@ Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.s
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/product/{id}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
+    Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 Route::get('/occasions', function () {

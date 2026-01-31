@@ -41,10 +41,33 @@ class OrderController extends Controller
             'status' => 'required',
         ]);
 
-        $order = Order::findOrFail($id);
+        $order = Order::with('items')->findOrFail($id);
+        $originalStatus = strtolower($order->status);
+        $newStatus = strtolower($request->status);
+
+        // Update status
         $order->update([
             'status' => $request->status,
         ]);
+
+        // Logic for stock management
+        if ($originalStatus !== 'delivered' && $newStatus === 'delivered') {
+            // Deduct stock
+            foreach ($order->items as $item) {
+                $product = \App\Models\Product::find($item->product_id);
+                if ($product) {
+                    $product->decrement('stock', $item->quantity);
+                }
+            }
+        } elseif ($originalStatus === 'delivered' && $newStatus !== 'delivered') {
+            // Restore stock (if accidentally marked as delivered)
+            foreach ($order->items as $item) {
+                $product = \App\Models\Product::find($item->product_id);
+                if ($product) {
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+        }
 
         return redirect()->route('admin.orders.index')->with('success', 'Order status updated successfully.');
     }

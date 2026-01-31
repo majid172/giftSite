@@ -46,8 +46,16 @@
                         </div>
 
                         <!-- Wishlist Button -->
-                        <button class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center text-stone-400 hover:text-rose-500 hover:bg-rose-50 transition-all">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        @php
+                            $isInWishlist = false;
+                            if(auth()->check()) {
+                                $isInWishlist = auth()->user()->wishlist()->where('product_id', $product->id)->exists();
+                            }
+                        @endphp
+                        <button onclick="toggleWishlist({{ $product->id }})" 
+                                id="wishlist-btn-{{ $product->id }}"
+                                class="absolute top-4 right-4 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all hover:bg-rose-50 {{ $isInWishlist ? 'text-rose-500' : 'text-stone-400 hover:text-rose-500' }}">
+                            <svg class="w-6 h-6 {{ $isInWishlist ? 'fill-current' : '' }}" id="wishlist-icon-{{ $product->id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                         </button>
                     </div>
                 </div>
@@ -379,6 +387,45 @@
 </div>
 
 <script>
+    function toggleWishlist(productId) {
+        @guest
+            window.location.href = "{{ route('login') }}";
+            return;
+        @endguest
+
+        fetch("{{ route('wishlist.toggle') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                product_id: productId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const btn = document.getElementById(`wishlist-btn-${productId}`);
+            const icon = document.getElementById(`wishlist-icon-${productId}`);
+            
+            if (data.status === 'added') {
+                btn.classList.remove('text-stone-400');
+                btn.classList.add('text-rose-500');
+                icon.classList.add('fill-current');
+            } else {
+                btn.classList.add('text-stone-400');
+                btn.classList.remove('text-rose-500');
+                icon.classList.remove('fill-current');
+            }
+            
+            // Optional: Show a toast or notification
+            // alert(data.message); 
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
     function updateMainImage(src, btn) {
         // Update main image
         const mainImage = document.getElementById('mainImage');
