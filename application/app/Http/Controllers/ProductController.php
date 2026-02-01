@@ -46,7 +46,9 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['images', 'category'])->findOrFail($id);
+        $product = Product::with(['images', 'category', 'reviews.user' => function($query) {
+             $query->select('id', 'name'); // Select only necessary columns
+        }])->findOrFail($id);
         
         // Products from same category (More from this collection)
         $relatedProducts = Product::where('status', 1)

@@ -40,8 +40,13 @@ if (!function_exists('get_setting')) {
      * @return mixed
      */
     function get_setting($key, $default = null) {
-        $setting = \App\Models\Setting::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        static $settings;
+
+        if (is_null($settings)) {
+            $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+        }
+
+        return $settings[$key] ?? $default;
     }
 }
 
