@@ -243,9 +243,8 @@
     </div>
 </form>
 
-@push('plugins')
+@push('css')
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .ql-toolbar { border-radius: var(--radius) var(--radius) 0 0; border-color: var(--border-color) !important; }
@@ -254,6 +253,7 @@
 @endpush
 
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <script>
     // Initialize Quill
     const quill = new Quill('#editor', {

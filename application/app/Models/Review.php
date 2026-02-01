@@ -14,6 +14,7 @@ class Review extends Model
         'rating',
         'review',
         'status',
+        'guest_name',
     ];
 
     public function user()

@@ -18,12 +18,9 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Today's Orders -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <i class="ti ti-shopping-cart text-xl"></i>
-                </div>
-                <!-- <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span> -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                <i class="ti ti-shopping-cart text-2xl"></i>
             </div>
             <div>
                 <p class="text-stone-500 text-sm font-medium uppercase tracking-wide">Orders Today</p>
@@ -32,11 +29,9 @@
         </div>
 
         <!-- Pending Orders -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <i class="ti ti-clock text-xl"></i>
-                </div>
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                <i class="ti ti-clock text-2xl"></i>
             </div>
             <div>
                 <p class="text-stone-500 text-sm font-medium uppercase tracking-wide">Pending</p>
@@ -45,11 +40,9 @@
         </div>
 
         <!-- Total Orders -->
-        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <i class="ti ti-package text-xl"></i>
-                </div>
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-stone-100 hover:shadow-lg transition-all group flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                <i class="ti ti-package text-2xl"></i>
             </div>
             <div>
                 <p class="text-stone-500 text-sm font-medium uppercase tracking-wide">Total Orders</p>
@@ -58,11 +51,9 @@
         </div>
 
         <!-- Earned Revenue (Delivered) -->
-        <div class="bg-gradient-to-br from-purple-800 to-purple-950 rounded-3xl p-6 shadow-lg text-white group hover:shadow-purple-900/30 transition-all">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform">
-                    <i class="ti ti-wallet text-xl"></i>
-                </div>
+        <div class="bg-gradient-to-br from-purple-800 to-purple-950 rounded-3xl p-6 shadow-lg text-white group hover:shadow-purple-900/30 transition-all flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform flex-shrink-0">
+                <i class="ti ti-wallet text-2xl"></i>
             </div>
             <div>
                 <p class="text-purple-200 text-sm font-medium uppercase tracking-wide">Earned Revenue</p>
@@ -249,44 +240,63 @@
 @push('js')
 <script>
     window.addEventListener('load', () => {
-        // --- Order Status Chart (Donut) ---
+        // --- Order Status Chart (Bar) ---
         (function() {
+            if (typeof ApexCharts === 'undefined') {
+                console.error('ApexCharts is not loaded');
+                return;
+            }
+
             const statusLabels = @json($statusLabels ?? []);
             const statusValues = @json($statusValues ?? []);
             
             if(statusValues.length > 0) {
-                 const totalOrders = statusValues.reduce((a, b) => a + b, 0);
                  var options = {
-                    series: statusValues,
-                    labels: statusLabels,
+                    series: [{
+                        name: 'Orders',
+                        data: statusValues
+                    }],
                     chart: {
-                        type: 'donut',
+                        type: 'bar',
                         height: 300,
-                        fontFamily: 'Inter, sans-serif'
+                        fontFamily: 'Inter, sans-serif',
+                        toolbar: { show: false }
                     },
-                    colors: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'],
+                    colors: ['#f59e0b', '#10b981', '#3b82f6', '#06b6d4', '#ef4444', '#64748b'],
                     plotOptions: {
-                        pie: {
-                            donut: {
-                                size: '70%',
-                                labels: {
-                                    show: true,
-                                    total: {
-                                        show: true,
-                                        label: 'Total',
-                                        formatter: function (w) {
-                                            return totalOrders;
-                                        }
-                                    }
-                                }
-                            }
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: false,
+                            columnWidth: '45%',
+                            distributed: true // This allows different colors for each bar
                         }
-                    },
-                    legend: {
-                        position: 'bottom'
                     },
                     dataLabels: {
                         enabled: false
+                    },
+                    legend: {
+                        show: false // Hide legend as x-axis labels are sufficient
+                    },
+                    xaxis: {
+                        categories: statusLabels,
+                        axisBorder: { show: false },
+                        axisTicks: { show: false },
+                        labels: {
+                            style: { colors: '#64748b', fontSize: '12px' }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            style: { colors: '#64748b', fontSize: '12px' },
+                            formatter: (val) => { return Math.floor(val) }
+                        }
+                    },
+                    grid: {
+                        borderColor: '#f1f5f9',
+                        strokeDashArray: 4,
+                        yaxis: {
+                            lines: { show: true }
+                        }
                     }
                 };
 
@@ -297,6 +307,7 @@
 
         // --- Revenue Chart (Area) ---
         (function() {
+            if (typeof ApexCharts === 'undefined') return;
             const revenueData = @json($revenueData ?? []);
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

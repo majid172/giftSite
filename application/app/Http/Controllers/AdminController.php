@@ -18,16 +18,19 @@ class AdminController extends Controller
         $total_orders_count = Order::count();
       
         // 3. Chart Data (Status)
-        $statusCounts = Order::selectRaw('status, count(*) as count')
+        $targetStatuses = ['Pending', 'Approved', 'Shipped', 'Delivered', 'Cancelled', 'Returned'];
+        
+        $dbStatusCounts = Order::selectRaw('status, count(*) as count')
+            ->whereIn('status', $targetStatuses)
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
-        $statusLabels = array_keys($statusCounts);
-        $statusValues = array_values($statusCounts);
-        if(empty($statusLabels)) {
-            $statusLabels = ['No Data'];
-            $statusValues = [0];
+        $statusLabels = $targetStatuses;
+        $statusValues = [];
+
+        foreach ($targetStatuses as $status) {
+            $statusValues[] = $dbStatusCounts[$status] ?? 0;
         }
 
         // 4. Revenue Chart Data (Monthly Sales)
