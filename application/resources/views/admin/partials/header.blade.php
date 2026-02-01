@@ -40,6 +40,11 @@
                 class="block px-4 py-2 text-sm hover:bg-slate-50">
                 <i class="ti ti-settings mr-2"></i> Settings
             </a>
+            
+            <a href="{{ route('password') }}"
+                class="block px-4 py-2 text-sm hover:bg-slate-50">
+                <i class="ti ti-lock mr-2"></i> Change Password
+            </a>
 
             <form action="{{ route('logout') }}" method="POST">
                 @csrf

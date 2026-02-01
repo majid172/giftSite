@@ -74,7 +74,7 @@
                         </a>
                     </td>
                     <td>
-                        <div style="font-weight: 600;">{{ $order->user ? $order->user->name : 'Guest' }}</div>
+                        <div style="font-weight: 600;">{{ $order->user ? $order->user->name : (($order->shipping_address['first_name'] ?? '') . ' ' . ($order->shipping_address['last_name'] ?? 'Guest')) }}</div>
                         <div style="font-size: 0.75rem; color: var(--text-muted);">{{ $order->shipping_address['email'] ?? 'N/A' }}</div>
                     </td>
                     <td style="color: var(--text-muted);">

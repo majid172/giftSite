@@ -260,8 +260,7 @@
                         <div class="bg-stone-50 p-8 rounded-3xl border border-stone-200 h-fit">
                             <h3 class="text-2xl font-serif font-bold text-emerald-950 mb-6">Write a Review</h3>
                             
-                            @auth
-                                @if(auth()->user()->role === 'admin')
+                            @if(auth()->check() && auth()->user()->role === 'admin')
                                     <div class="text-center py-8">
                                         <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                         <p class="text-stone-600">Administrators cannot submit reviews.</p>
@@ -269,6 +268,7 @@
                                 @else
                                     <form action="{{ route('review.store', $product->id) }}" method="POST">
                                         @csrf
+                                        
                                         <div class="mb-6">
                                             <label class="block text-sm font-bold text-stone-700 mb-2">Rating</label>
                                             <div class="flex items-center gap-2 rating-input">
@@ -291,13 +291,6 @@
                                         <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1">Submit Review</button>
                                     </form>
                                 @endif
-                            @else
-                            <div class="text-center py-8">
-                                <svg class="w-16 h-16 text-stone-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                <p class="text-stone-600 mb-4">Please log in to write a review.</p>
-                                <a href="{{ route('login') }}" class="inline-block bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl hover:bg-emerald-800 transition">Log In</a>
-                            </div>
-                            @endauth
                         </div>
                     </div>
                 </div>

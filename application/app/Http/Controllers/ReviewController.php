@@ -11,7 +11,7 @@ class ReviewController extends Controller
 {
     public function store(Request $request, $productId)
     {
-        if (auth()->user()->role === 'admin') {
+        if (auth()->check() && auth()->user()->role === 'admin') {
             return redirect()->back()->with('error', 'Administrators cannot submit reviews.');
         }
 

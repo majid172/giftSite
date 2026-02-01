@@ -54,9 +54,9 @@ use App\Http\Controllers\ProductController;
 // Shop & Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+Route::post('/product/{id}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('/product/{id}/review', [App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
     Route::post('/wishlist/toggle', [App\Http\Controllers\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
@@ -81,6 +81,15 @@ Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.s
 
 Route::middleware(['auth'])->group(function () {
     // Other auth routes...
+
+    // Order Routes
+    Route::get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/my-orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/my-orders/{id}/invoice', [\App\Http\Controllers\OrderController::class, 'invoice'])->name('orders.invoice');
+
+    // Profile Routes
+    Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
+    Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
 });
 
 
@@ -119,13 +128,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
 
 
-// Order Routes
-Route::get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-Route::get('/my-orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
-Route::get('/my-orders/{id}/invoice', [\App\Http\Controllers\OrderController::class, 'invoice'])->name('orders.invoice');
-
-Route::get('/password', [UserProfileController::class, 'showPasswordForm'])->name('password');
-Route::post('/password', [UserProfileController::class, 'updatePassword'])->name('password.update');
 
 // Admin Routes extended
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
