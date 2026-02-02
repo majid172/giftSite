@@ -127,10 +127,19 @@
             <form action="{{ route('admin.shipping.update') }}" method="POST">
                 @csrf
                 <div class="section-card h-full">
-                    <div class="card-header">Flat Rate Shipping Cost</div>
+                    <div class="card-header">Shipping Rates</div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <input type="number" step="0.01" name="shipping_flat_rate" class="flat-rate-input" value="{{ get_setting('shipping_flat_rate', '0') }}" placeholder="Amount">
+                            <label class="block text-sm font-bold mb-1">Inside Dhaka</label>
+                            <input type="number" step="0.01" name="shipping_inside_dhaka" class="flat-rate-input" value="{{ get_setting('shipping_inside_dhaka', '0') }}" placeholder="Amount">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-1">Dhaka Sub District</label>
+                            <input type="number" step="0.01" name="shipping_sub_inside_dhaka" class="flat-rate-input" value="{{ get_setting('shipping_sub_inside_dhaka', '0') }}" placeholder="Amount">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold mb-1">Outside Dhaka</label>
+                            <input type="number" step="0.01" name="shipping_outside_dhaka" class="flat-rate-input" value="{{ get_setting('shipping_outside_dhaka', '0') }}" placeholder="Amount">
                         </div>
                         <button type="submit" class="save-btn">Save Changes</button>
                     </div>
@@ -144,7 +153,7 @@
                 <div class="card-header">Note</div>
                 <div class="card-body">
                     <div class="note-text">
-                        Flat rate shipping cost is applicable if Flat Rate Shipping Cost is enabled.
+                        Set specific shipping rates for different zones. These rates will be applied during checkout based on customer selection.
                     </div>
                 </div>
             </div>

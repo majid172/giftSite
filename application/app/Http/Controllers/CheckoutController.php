@@ -21,12 +21,19 @@ class CheckoutController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // Calculate Shipping Cost (Simple Flat Rate)
-        $shippingCost = (float) get_setting('shipping_flat_rate', 0);
+        // Calculate Shipping Cost (Default to 0 or first option)
+        $shippingRates = [
+            'inside_dhaka' => (float) get_setting('shipping_inside_dhaka', 60),
+            'outside_dhaka' => (float) get_setting('shipping_outside_dhaka', 120),
+            'sub_inside_dhaka' => (float) get_setting('shipping_sub_inside_dhaka', 80),
+        ];
+
+        // Default to inside dhaka for initial view calculation if needed, or 0
+        $shippingCost = 0; 
 
         $total = $subtotal + $shippingCost;
 
-        return view('checkout', compact('cart', 'subtotal', 'shippingCost', 'total'));
+        return view('checkout', compact('cart', 'subtotal', 'shippingCost', 'total', 'shippingRates'));
     }
 
     /**
@@ -37,12 +44,13 @@ class CheckoutController extends Controller
         // Validate shipping info
         $request->validate([
             'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
+            'last_name' => 'nullable',
+            'email' => 'nullable|email',
             'phone' => 'required',
             'address' => 'required',
             'city' => 'required',
             'zip' => 'required',
+            'shipping_method' => 'required|in:inside_dhaka,outside_dhaka,sub_inside_dhaka',
         ]);
 
         $cart = session()->get('cart', []);
@@ -55,8 +63,15 @@ class CheckoutController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // Calculate Shipping Cost (Simple Flat Rate)
-        $shippingCost = (float) get_setting('shipping_flat_rate', 0);
+        // Calculate Shipping Cost based on selection
+        $shippingRates = [
+            'inside_dhaka' => (float) get_setting('shipping_inside_dhaka', 60),
+            'outside_dhaka' => (float) get_setting('shipping_outside_dhaka', 120),
+            'sub_inside_dhaka' => (float) get_setting('shipping_sub_inside_dhaka', 80),
+        ];
+
+        $shippingMethod = $request->shipping_method;
+        $shippingCost = $shippingRates[$shippingMethod] ?? 0;
 
         $total = $subtotal + $shippingCost;
 
