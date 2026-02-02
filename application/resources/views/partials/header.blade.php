@@ -75,7 +75,8 @@
                 </form>
             @endauth
 
-
+            <!-- Wishlist (Static) -->
+           
 
             <!-- Cart -->
             <button onclick="openCart()" class="relative group">

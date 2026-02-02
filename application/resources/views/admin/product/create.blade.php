@@ -99,7 +99,7 @@
     </a>
 </div>
 
-<form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+<form id="product-form" action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     
     <div class="form-layout">
@@ -247,7 +247,7 @@
     });
 
     // Sync Quill to hidden input on submit
-    const form = document.querySelector('form');
+    const form = document.getElementById('product-form');
     form.addEventListener('submit', function() {
         document.querySelector('#description').value = quill.root.innerHTML;
     });

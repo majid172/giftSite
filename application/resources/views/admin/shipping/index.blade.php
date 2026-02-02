@@ -118,58 +118,7 @@
         Shipping & Delivery
     </div>
 
-    <!-- Row 1: Shipping Options and Helper Note -->
-    <div class="flex flex-row gap-6 mb-6">
-        <!-- Left: Shipping Options -->
-        <form action="{{ route('admin.shipping.update') }}" method="POST" class="flex-1">
-            @csrf
-            <div class="section-card h-full">
-                <div class="card-header">Shipping Options</div>
-                <div class="card-body">
-                    <div class="custom-radio-group">
-                        <label class="radio-label">
-                            <input type="radio" name="shipping_type" value="flat_rate" class="radio-input" {{ get_setting('shipping_type', 'flat_rate') == 'flat_rate' ? 'checked' : '' }}>
-                            Flat Rate Shipping Cost
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="shipping_type" value="product_wise" class="radio-input" {{ get_setting('shipping_type') == 'product_wise' ? 'checked' : '' }}>
-                            Product Wise Shipping Cost
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="shipping_type" value="profile_based" class="radio-input" {{ get_setting('shipping_type') == 'profile_based' ? 'checked' : '' }}>
-                            Based on Shipping Profiles
-                        </label>
-                        <label class="radio-label">
-                            <input type="radio" name="shipping_type" value="location_based" class="radio-input" {{ get_setting('shipping_type') == 'location_based' ? 'checked' : '' }}>
-                            Location Based Shipping Cost
-                        </label>
-                    </div>
-                    <button type="submit" class="save-btn">Save Changes</button>
-                </div>
-            </div>
-        </form>
 
-        <!-- Right: Options Note -->
-        <div class="section-card h-full flex-1">
-            <div class="card-header">Note</div>
-            <div class="card-body">
-                <div class="note-text">
-                    <div class="note-item">
-                        <span class="note-label">Flat Rate Shipping Cost Calculation:</span> How many products a customer purchase, doesn't matter. Shipping cost is fixed.
-                    </div>
-                    <div class="note-item">
-                        <span class="note-label">Product Wise Shipping Cost Calculation:</span> Shipping cost is calculate by addition of each product shipping cost.
-                    </div>
-                    <div class="note-item">
-                        <span class="note-label">Profile Wise Shipping Cost Calculation:</span> Shipping cost is calculate by selection of each product shipping profile.
-                    </div>
-                    <div class="note-item">
-                        <span class="note-label">Location Based Shipping Cost Calculation:</span> How many products a customer purchase, doesn't matter. Shipping cost is based on shipping location.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Row 2: Flat Rate and Helper Note -->
     <div class="flex flex-row gap-6">

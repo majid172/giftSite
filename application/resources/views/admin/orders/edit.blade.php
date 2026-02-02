@@ -75,20 +75,26 @@
             <!-- Order Status & Totals -->
             <div style="padding: 24px 0 0 0; margin-top: 24px; border-top: 1px solid var(--border-color); display: flex; gap: 30px; flex-wrap: wrap;">
                 
-                <!-- Status Update -->
+                <!-- Status & Shipping Update -->
                 <div style="flex: 1; min-width: 250px;">
-                    <label class="form-label">Update Status</label>
-                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="display: flex; gap: 10px;">
+                    <label class="form-label">Update Order Details</label>
+                    <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" style="display: flex; flex-direction: column; gap: 12px;">
                         @csrf
                         @method('PUT')
-                        <div style="flex: 1;">
-                            <select name="status" class="form-control">
-                                @foreach(['Pending', 'Approved', 'Ready to Ship', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refund Processing'] as $status)
-                                    <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ $status }}</option>
-                                @endforeach
-                            </select>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <div style="flex: 1;">
+                                <label style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; display: block;">Status</label>
+                                <select name="status" class="form-control">
+                                    @foreach(['Pending', 'Approved', 'Ready to Ship', 'Shipped', 'Delivered', 'Cancelled', 'Returned', 'Refund Processing'] as $status)
+                                        <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ $status }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                          
                         </div>
-                        <button type="submit" class="btn btn-primary">Update</button>
+
+                        <button type="submit" class="btn btn-primary" style="align-self: flex-start;">Update Order</button>
                     </form>
                 </div>
 
@@ -98,10 +104,7 @@
                         <span style="color: var(--text-muted);">Subtotal</span>
                         <span style="font-weight: 600;">${{ number_format($order->price - $order->shipping_cost, 2) }}</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
-                        <span style="color: var(--text-muted);">Shipping</span>
-                        <span style="font-weight: 600;">${{ number_format($order->shipping_cost, 2) }}</span>
-                    </div>
+                   
                     <div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border-color);">
                         <span style="font-weight: 600; font-size: 1rem;">Total</span>
                         <span style="font-weight: 700; font-size: 1.25rem; color: var(--success);">${{ number_format($order->price, 2) }}</span>

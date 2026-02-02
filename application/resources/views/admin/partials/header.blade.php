@@ -1,22 +1,22 @@
-<header class="bg-white border-b border-slate-200 h-16 flex items-center px-4 lg:px-6 sticky top-0 z-40 bg-opacity-90 backdrop-blur-sm">
+<!-- Admin Header Content - Uses full width of app-header container -->
+<div class="flex items-center justify-end w-full gap-4">
+    
+    <!-- Mobile Menu Toggle (Left) -->
+    <button type="button"
+        class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg mr-auto"
+        onclick="toggleSidebar()">
+        <i class="ti ti-menu-2 text-xl"></i>
+    </button>
 
-    <!-- LEFT: Logo + View Shop -->
-    <div class="flex items-center gap-4">
-        <button type="button"
-            class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
-            onclick="toggleSidebar()">
-            <i class="ti ti-menu-2 text-xl"></i>
-        </button>
+    <!-- View Shop -->
+    <a href="{{ route('home') }}" target="_blank"
+        class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">
+        <i class="ti ti-external-link text-lg"></i>
+        <span class="hidden sm:inline">View Shop</span>
+    </a>
 
-        <a href="{{ route('home') }}" target="_blank"
-            class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">
-            <i class="ti ti-external-link text-lg"></i>
-            <span class="hidden sm:inline">View Shop</span>
-        </a>
-    </div>
-
-    <!-- RIGHT: User Profile (KEY LINE: ml-auto) -->
-    <div class="relative group ml-auto">
+    <!-- User Profile -->
+    <div class="relative group">
         <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer">
             <div
                 class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold text-sm">
@@ -55,5 +55,4 @@
             </form>
         </div>
     </div>
-
-</header>
+</div>

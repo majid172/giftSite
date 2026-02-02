@@ -21,14 +21,8 @@ class CheckoutController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // Calculate Shipping Cost
-        $shippingType = get_setting('shipping_type', 'flat_rate');
-        $shippingCost = 0;
-
-        if ($shippingType === 'flat_rate') {
-            $shippingCost = (float) get_setting('shipping_flat_rate', 0);
-        }
-        // Add logic for other shipping types here if needed
+        // Calculate Shipping Cost (Simple Flat Rate)
+        $shippingCost = (float) get_setting('shipping_flat_rate', 0);
 
         $total = $subtotal + $shippingCost;
 
@@ -61,13 +55,8 @@ class CheckoutController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // Calculate Shipping Cost
-        $shippingType = get_setting('shipping_type', 'flat_rate');
-        $shippingCost = 0;
-
-        if ($shippingType === 'flat_rate') {
-            $shippingCost = (float) get_setting('shipping_flat_rate', 0);
-        }
+        // Calculate Shipping Cost (Simple Flat Rate)
+        $shippingCost = (float) get_setting('shipping_flat_rate', 0);
 
         $total = $subtotal + $shippingCost;
 
