@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -57,7 +58,7 @@ class ProductController extends Controller
             ->get();
 
         // Other Categories with products (Explore more)
-        $otherCategories = \App\Models\Category::where('id', '!=', $product->category_id)
+        $otherCategories = Category::where('id', '!=', $product->category_id)
             ->whereHas('products')
             ->inRandomOrder()
             ->limit(2)
