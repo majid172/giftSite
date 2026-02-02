@@ -205,15 +205,20 @@
                                     </div>
 
                                     <!-- Button -->
-                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto">
+                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto flex gap-2">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $product->id }}">
                                         <input type="hidden" name="name" value="{{ $product->name }}">
                                         <input type="hidden" name="price" value="{{ $product->price }}">
                                         <input type="hidden" name="image" value="{{ $product->image }}">
-                                        <button type="submit"
-                                            class="w-full bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-xs uppercase py-3 rounded-full transition-all">
-                                            Add To Cart
+                                        
+                                        <button type="submit" name="action" value="add_to_cart"
+                                            class="flex-1 bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-[10px] uppercase py-3 rounded-full transition-all truncate">
+                                            Add
+                                        </button>
+                                        <button type="submit" name="action" value="buy_now"
+                                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase py-3 rounded-full transition-all shadow-lg shadow-amber-500/20 truncate">
+                                            Order Now
                                         </button>
                                     </form>
                                 </div>
@@ -302,15 +307,20 @@
                             </div>
 
                             <!-- Add to Cart Button -->
-                            <form action="{{ route('cart.store') }}" method="POST">
+                            <form action="{{ route('cart.store') }}" method="POST" class="flex gap-2">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $item->id }}">
                                 <input type="hidden" name="name" value="{{ $item->name }}">
                                 <input type="hidden" name="price" value="{{ $item->price }}">
                                 <input type="hidden" name="image" value="{{ $item->image }}">
-                                <button type="submit"
-                                    class="w-full bg-stone-100 hover:bg-emerald-900 text-stone-800 hover:text-white font-bold text-xs uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
-                                    Add To Cart
+                                
+                                <button type="submit" name="action" value="add_to_cart"
+                                    class="flex-1 bg-stone-100 hover:bg-emerald-900 text-stone-800 hover:text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md truncate">
+                                    Add
+                                </button>
+                                <button type="submit" name="action" value="buy_now"
+                                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-lg shadow-amber-500/20 truncate">
+                                    Order Now
                                 </button>
                             </form>
                         </div>
@@ -379,15 +389,21 @@
                         </div>
 
                          <!-- Add to Cart Button -->
-                        <form action="{{ route('cart.store') }}" method="POST">
+                        <form action="{{ route('cart.store') }}" method="POST" class="flex gap-2 mt-2">
                             @csrf
                             <input type="hidden" name="id" value="{{ $product->id }}">
                             <input type="hidden" name="name" value="{{ $product->name }}">
                             <input type="hidden" name="price" value="{{ $product->price }}">
                             <input type="hidden" name="image" value="{{ $product->image }}">
-                               <button type="submit"
-                                class="text-[11px] font-black uppercase tracking-widest text-stone-500 hover:text-emerald-700 transition-colors border-b-2 border-transparent hover:border-emerald-700 pb-0.5">
-                                ADD TO CART
+                            
+                            <button type="submit" name="action" value="add_to_cart"
+                                class="text-[10px] font-black uppercase tracking-widest text-stone-500 hover:text-emerald-700 transition-colors border-b-2 border-transparent hover:border-emerald-700 pb-0.5 whitespace-nowrap">
+                                Add
+                            </button>
+                            <span class="text-stone-300">|</span>
+                            <button type="submit" name="action" value="buy_now"
+                                class="text-[10px] font-black uppercase tracking-widest text-amber-500 hover:text-amber-600 transition-colors border-b-2 border-transparent hover:border-amber-600 pb-0.5 whitespace-nowrap">
+                                Order Now
                             </button>
                         </form>
                     </div>
