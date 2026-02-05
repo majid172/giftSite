@@ -1,4 +1,4 @@
-<div class="bg-white text-stone-600 text-xs py-2.5 font-medium border-b border-stone-100">
+<div class="hidden lg:block bg-white text-stone-600 text-xs py-2.5 font-medium border-b border-stone-100">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
         <div class="flex items-center gap-6">
             <a href="tel:{{ get_setting('contact_phone', '01312617206') }}" class="flex items-center gap-2 hover:text-emerald-700 transition-colors">
@@ -13,7 +13,7 @@
         <div class="flex items-center gap-4">
             <a href="{{ route('contact') }}" class="hover:text-emerald-700 transition-colors">Contact Support</a>
             <span class="text-stone-300">|</span>
-            <span class="text-emerald-600 font-semibold">Free Shipping on Orders Over $100</span>
+            <!-- <span class="text-emerald-600 font-semibold">Free Shipping on Orders Over $100</span> -->
         </div>
     </div>
 </div>

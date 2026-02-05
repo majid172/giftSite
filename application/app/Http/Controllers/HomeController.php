@@ -21,13 +21,13 @@ class HomeController extends Controller
         $categories = Category::take(3)->get();
 
         // Fetch latest 4 products for the "Latest Arrivals" section
-        $latestProds = Product::latest()->take(4)->get();
+        $latestProds = Product::withAvg('reviews', 'rating')->withCount('reviews')->latest()->take(4)->get();
 
         // Fetch 3 random products for "Bestselling Products"
-        $bestSellingProducts = Product::inRandomOrder()->take(3)->get();
+        $bestSellingProducts = Product::withAvg('reviews', 'rating')->withCount('reviews')->inRandomOrder()->take(3)->get();
 
         // Fetch 6 featured products
-        $featuredProducts = Product::where('is_featured', 1)->take(6)->get();
+        $featuredProducts = Product::withAvg('reviews', 'rating')->withCount('reviews')->where('is_featured', 1)->take(6)->get();
         
         return view('welcome', compact('latestProds', 'categories', 'bestSellingProducts', 'featuredProducts'));
     }

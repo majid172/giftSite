@@ -51,13 +51,6 @@ if (!function_exists('get_setting')) {
 }
 
 if (!function_exists('calculate_discount')) {
-    /**
-     * Calculate discount percentage.
-     *
-     * @param float $price
-     * @param float $old_price
-     * @return int
-     */
     function calculate_discount($price, $old_price) {
         if ($old_price > 0 && $price < $old_price) {
             return round((($old_price - $price) / $old_price) * 100);
