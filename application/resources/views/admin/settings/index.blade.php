@@ -23,7 +23,7 @@
 
 <div class="flex flex-col lg:flex-row gap-6">
     <!-- Sidebar Navigation -->
-    <div class="w-full lg:w-64 flex-shrink-0 bg-white border border-slate-200 rounded-lg overflow-hidden h-fit">
+    <div class="w-full lg:w-64 flex-shrink-0 bg-white border border-slate-200 rounded-lg overflow-hidden h-fit lg:sticky lg:top-6">
         <button class="w-full flex items-center gap-3 px-5 py-3 text-left font-medium text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors border-b border-slate-100 last:border-0 active" onclick="openTab(event, 'general')">
             <i class="ti ti-settings text-lg"></i> General
         </button>
@@ -54,7 +54,14 @@
                 <div class="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-base font-semibold text-slate-800">Maintenance Mode</h4>
+                            <h4 class="text-base font-semibold text-slate-800">
+                                Maintenance Mode 
+                                @if(get_setting('maintenance_mode') == '1')
+                                    <span class="ml-2 px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-700 rounded-full uppercase">Active</span>
+                                @else
+                                    <span class="ml-2 px-2 py-0.5 text-[10px] font-bold bg-slate-100 text-slate-400 rounded-full uppercase">Inactive</span>
+                                @endif
+                            </h4>
                             <p class="text-sm text-slate-500">Put your site into maintenance mode. Only admins can access the frontend.</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
