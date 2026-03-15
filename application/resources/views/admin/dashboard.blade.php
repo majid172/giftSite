@@ -111,7 +111,9 @@
                             </td>
                              <td class="px-6 py-4">
                                 <div class="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 flex items-center justify-center border border-stone-200">
-                                    @if($product->images->first())
+                                    @if($product->image)
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @elseif($product->images->first())
                                         <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="ti ti-photo text-stone-400"></i>

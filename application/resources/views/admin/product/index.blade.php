@@ -23,7 +23,7 @@
                     <th width="80">Image</th>
                     <th>Product Name</th>
                     <th>Category</th>
-                    <th>Price</th>
+                    <th>Price (BDT)</th>
                     <th>Stock</th>
                     <th class="text-right">Actions</th>
                 </tr>
@@ -50,7 +50,7 @@
                         </span>
                     </td>
                     <td>
-                        <div style="font-weight: 500;">${{ number_format($product->price, 2) }}</div>
+                        <div style="font-weight: 500;">{{ number_format($product->price, 2) }}</div>
                     </td>
                     <td>
                         <span style="background: {{ $product->stock > 0 ? '#dcfce7' : '#fee2e2' }}; color: {{ $product->stock > 0 ? '#166534' : '#991b1b' }}; padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 500;">

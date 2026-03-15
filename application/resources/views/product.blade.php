@@ -47,7 +47,7 @@
                 <!-- Right: Information -->
                 <div>
                     <!-- Title -->
-                    <h1 class="text-3xl lg:text-4xl font-bold text-stone-900 mb-3 leading-tight">{{ $product->name }}</h1>
+                    <h3 class="text-3xl lg:text-4xl font-semibold text-stone-900 mb-3 leading-tight">{{ $product->name }}</h3>
 
                     <!-- Rating & Meta -->
                     <div class="flex items-center gap-4 mb-6 text-sm">
@@ -69,9 +69,9 @@
 
                     <!-- Price -->
                     <div class="flex items-center gap-3 mb-6">
-                        <span class="text-3xl font-bold text-stone-900">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
-                         @if($product->old_price)
-                        <span class="text-lg text-stone-400 line-through decoration-stone-400">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->old_price, 2) }}</span>
+                        <span class="text-xl font-bold text-stone-900">{{ get_setting('currency_symbol', '$') }}{{ number_format($product->price, 2) }}</span>
+                         @if($product->old_price > 0)
+                        <span class="text-lg text-stone-400 line-through decoration-stone-400">{{ get_setting('currency_symbol', '৳') }}{{ number_format($product->old_price, 2) }}</span>
                         <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded border border-amber-200">
                              {{ round((($product->old_price - $product->price) / $product->old_price) * 100) }}% OFF
                         </span>
@@ -113,13 +113,13 @@
 
                         <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                             <!-- Order Now (Amber/Orange) -->
-                            <button type="submit" name="action" value="buy_now" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 sm:py-4 rounded-full shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-base sm:text-lg" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            <button type="submit" name="action" value="buy_now" class="flex-1 bg-transparent border-[1.5px] rounded border-amber-500 text-amber-600 hover:bg-amber-50 hover:border-amber-600 font-medium py-2 sm:py-2 transition-all flex items-center justify-center gap-2 text-base sm:text-sm" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 Order Now
                             </button>
 
                             <!-- Add to Cart (Teal/Green) -->
-                            <button type="submit" name="action" value="add_to_cart" class="flex-1 bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 sm:py-4 rounded-full shadow-lg shadow-teal-700/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-base sm:text-lg" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            <button type="submit" name="action" value="add_to_cart" class="flex-1 bg-transparent border-[1.5px] rounded border-teal-700 text-teal-700 hover:bg-teal-50 hover:border-teal-800 font-medium py-2 sm:py-2 transition-all flex items-center justify-center gap-2 text-base sm:text-sm" {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 Add to Cart
                             </button>

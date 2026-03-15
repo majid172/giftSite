@@ -200,14 +200,14 @@
                             </button>
                         </form>
                     </div>
-                <!-- @else
+                @else
                     <div class="text-center">
                         <p class="text-emerald-800 font-medium mb-3">Welcome to {{ get_setting('site_name', config('app.name')) }}</p>
                         <div class="flex gap-3">
                             <a href="{{ route('login') }}" class="flex-1 py-2 bg-emerald-600 text-white font-bold rounded-lg text-sm hover:bg-emerald-700 transition shadow-sm">Login</a>
                             <a href="{{ route('register') }}" class="flex-1 py-2 bg-white text-emerald-600 border border-emerald-200 font-bold rounded-lg text-sm hover:bg-emerald-50 transition shadow-sm">Register</a>
                         </div>
-                    </div> -->
+                    </div>
                 @endauth
             </div>
 

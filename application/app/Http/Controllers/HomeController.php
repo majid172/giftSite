@@ -28,7 +28,11 @@ class HomeController extends Controller
 
         // Fetch 6 featured products
         $featuredProducts = Product::withAvg('reviews', 'rating')->withCount('reviews')->where('is_featured', 1)->take(6)->get();
-        
-        return view('welcome', compact('latestProds', 'categories', 'bestSellingProducts', 'featuredProducts'));
+
+        // Calculate overall average rating (if there are any reviews in the system)
+        $averageRating = \App\Models\Review::avg('rating') ?? 4.9;
+        $averageRating = number_format($averageRating, 1);
+
+        return view('welcome', compact('latestProds', 'categories', 'bestSellingProducts', 'featuredProducts', 'averageRating'));
     }
 }

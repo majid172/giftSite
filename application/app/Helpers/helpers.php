@@ -43,7 +43,17 @@ if (!function_exists('get_setting')) {
         static $settings;
 
         if (is_null($settings)) {
+            // Load DB settings
             $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+
+            // Merge JSON frontend settings if file exists
+            $jsonPath = storage_path('app/frontend_settings.json');
+            if (file_exists($jsonPath)) {
+                $jsonSettings = json_decode(file_get_contents($jsonPath), true);
+                if (is_array($jsonSettings)) {
+                    $settings = array_merge($settings, $jsonSettings);
+                }
+            }
         }
 
         return $settings[$key] ?? $default;

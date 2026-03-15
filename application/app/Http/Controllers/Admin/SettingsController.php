@@ -29,53 +29,58 @@ class SettingsController extends Controller
         $data['maintenance_mode'] = $request->has('maintenance_mode') ? '1' : '0';
         $data['enable_pixel'] = $request->has('enable_pixel') ? '1' : '0';
 
+        // JSON storage for frontend content
+        $frontendData = [];
+        $jsonPath = storage_path('app/frontend_settings.json');
+        if (file_exists($jsonPath)) {
+            $frontendData = json_decode(file_get_contents($jsonPath), true) ?? [];
+        }
+
         foreach ($data as $key => $value) {
             // Check if specifically handled as file
             if ($request->hasFile($key)) {
                 $file = $request->file($key);
                 
                 // Determine folder based on key prefix (typename)
-                // e.g., site_favicon -> site, seo_social_image -> seo
                 $parts = explode('_', $key);
                 $folderName = count($parts) > 1 ? $parts[0] : 'others';
                 
-                // Construct target path: ../assets/images/{typename}
-                // User requested to use root directory assets, which is one level up from application
+                // Construct target path
                 $destinationPath = base_path('../assets/images/' . $folderName);
                 
-                // Ensure directory exists
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
 
-                // Generate unique filename
                 $filename = time() . '_' . $file->getClientOriginalName();
                 
                 // Remove old file if exists
                 $oldValue = get_setting($key);
-                // Check if old value is not empty and file exists in root assets path
                 $oldFilePath = base_path('../' . $oldValue);
                 if ($oldValue && file_exists($oldFilePath) && is_file($oldFilePath)) {
                     try {
                         unlink($oldFilePath);
-                    } catch (\Exception $e) {
-                         // Ignore deletion errors or log them
-                    }
+                    } catch (\Exception $e) {}
                 }
 
-                // Move new file to root assets directory
                 $file->move($destinationPath, $filename);
-                
-                // Store relative path (same as before, assuming webserver serves root assets)
                 $value = 'assets/images/' . $folderName . '/' . $filename;
             }
 
-            // Optimization: Only update if value changed (optional but cleaner)
+            // Intercept frontend keys to save in JSON instead of DB
+            if (strpos($key, 'about_') === 0) {
+                $frontendData[$key] = $value;
+                continue;
+            }
+
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]
             );
         }
+
+        // Save updated frontend data to JSON
+        file_put_contents($jsonPath, json_encode($frontendData, JSON_PRETTY_PRINT));
 
         // Sync Mail Settings to .env
         $this->updateEnv([
@@ -89,7 +94,7 @@ class SettingsController extends Controller
             'META_PIXEL_ID' => $request->input('seo_pixel_id'),
         ]);
 
-        return redirect()->back()->with('success', 'Global settings updated with heritage precision.');
+        return redirect()->back()->with('success', 'Global settings updated with JSON precision.');
     }
 
     /**
