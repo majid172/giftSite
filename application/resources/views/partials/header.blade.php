@@ -1,19 +1,28 @@
-<header class="bg-white sticky top-0 z-40 shadow-sm font-sans" x-data="{ mobileMenuOpen: false }">
+<header class="bg-white sticky top-0 z-40 shadow-sm font-sans" x-data="{ mobileMenuOpen: false, searchOverlayOpen: false }" x-on:toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen">
 
     <!-- ROW 1: Main Header (Logo, Search, Icons) -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-8">
+    <div class="container mx-auto px-4 lg:px-8 py-3 lg:py-4 flex items-center justify-between gap-4">
 
-        <!-- Logo -->
-        <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0">
+        <!-- Mobile Search Trigger (Left) -->
+        <div class="lg:hidden flex-1 flex justify-start">
+            <button @click="searchOverlayOpen = true" class="p-2 text-stone-600 hover:text-emerald-700 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Logo (Centered on mobile, Left on desktop) -->
+        <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0 absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
             <div
-                class="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-lg shadow-md">
+                class="w-9 h-9 lg:w-10 lg:h-10 bg-amber-500 rounded-full flex items-center justify-center font-serif font-bold text-emerald-900 text-base lg:text-lg shadow-md">
                 {{ substr(get_setting('site_name', config('app.name')), 0, 1) }}</div>
             <span
-                class="text-2xl font-serif font-bold text-emerald-950 tracking-tight">{{ get_setting('site_name', config('app.name')) }}</span>
+                class="text-xl lg:text-2xl font-serif font-bold text-emerald-950 tracking-tight hidden sm:block">{{ get_setting('site_name', config('app.name')) }}</span>
         </a>
 
-        <!-- Search Bar (Center) -->
-        <div class="hidden lg:flex flex-1 max-w-2xl">
+        <!-- Desktop Search Bar (Center) -->
+        <div class="hidden lg:flex flex-1 max-w-2xl mx-12">
             <div
                 class="flex w-full bg-stone-100 rounded-full border border-stone-200 focus-within:ring-2 focus-within:ring-amber-500/20 focus-within:border-amber-500 transition-all overflow-hidden">
                 <!-- Category Select -->
@@ -21,9 +30,9 @@
                     <select
                         class="appearance-none bg-transparent pl-4 pr-8 py-3 text-sm font-medium text-stone-600 focus:outline-none cursor-pointer h-full hover:text-emerald-700">
                         <option>All Categories</option>
-                        <option>Gift Boxes</option>
-                        <option>Tea Sets</option>
-                        <option>Packaging</option>
+                        @foreach(\App\Models\Category::all() as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-500">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,37 +59,22 @@
         </div>
 
         <!-- Right Actions -->
-        <div class="flex items-center gap-6 flex-shrink-0">
-
-            <!-- User -->
+        <div class="flex-1 flex justify-end items-center gap-1 lg:gap-6 flex-shrink-0 z-10">
             @auth
                 <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('orders.index') }}"
-                    class="group flex flex-col items-center" title="Dashboard">
-                    <svg class="w-7 h-7 text-stone-600 group-hover:text-emerald-700 transition" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
+                    class="p-2 text-stone-600 hover:text-emerald-700 transition" title="Dashboard">
+                    <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 4h6v8h-6zM4 16h6v4h-6zM14 12h6v8h-6zM14 4h6v4h-6z"></path>
                     </svg>
                 </a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="group flex flex-col items-center" title="Logout">
-                        <svg class="w-7 h-7 text-stone-600 group-hover:text-emerald-700 transition" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                            </path>
-                        </svg>
-                    </button>
-                </form>
+            @else
+                <a href="{{ route('login') }}" class="hidden lg:block text-sm font-bold text-stone-600 hover:text-emerald-700 transition uppercase tracking-wider">Login</a>
             @endauth
 
-            <!-- Wishlist (Static) -->
-           
-
-            <!-- Cart -->
-            <button onclick="openCart()" class="relative group">
-                <svg class="w-7 h-7 text-stone-600 group-hover:text-emerald-700 transition" fill="none"
+            <!-- Cart button -->
+            <button onclick="openCart()" class="relative p-2 text-stone-600 hover:text-emerald-700 transition">
+                <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
@@ -88,19 +82,11 @@
                 </svg>
                 @if(session('cart') && count(session('cart')) > 0)
                     <span
-                        class="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                        class="absolute top-1 right-1 bg-amber-500 text-white text-[9px] lg:text-[10px] w-3.5 h-3.5 lg:w-4 lg:h-4 rounded-full flex items-center justify-center font-bold">
                         {{ count(session('cart')) }}
                     </span>
                 @endif
             </button> 
-            
-            <!-- Mobile Menu Button -->
-            <button class="lg:hidden text-stone-600" @click="mobileMenuOpen = !mobileMenuOpen">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
-                    </path>
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -286,4 +272,40 @@
         </div>
     </div>
 
+    <!-- Mobile Search Overlay -->
+    <div x-show="searchOverlayOpen" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         class="fixed inset-0 z-[60] bg-white lg:hidden flex flex-col"
+         style="display: none;">
+        
+        <div class="px-4 py-4 border-b border-stone-100 flex items-center gap-4">
+            <button @click="searchOverlayOpen = false" class="text-stone-400 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </button>
+            <div class="flex-1 relative">
+                <input type="text" 
+                       x-ref="searchInput"
+                       @keydown.window.escape="searchOverlayOpen = false"
+                       class="w-full bg-stone-50 rounded-full px-5 py-3 text-base text-stone-900 border-none focus:ring-2 focus:ring-amber-500/20 placeholder:text-stone-400" 
+                       placeholder="Search for products..." autofocus>
+                <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-500 text-white p-2 rounded-full shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <h4 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Popular Searches</h4>
+            <div class="flex flex-wrap gap-2">
+                <button class="px-4 py-2 bg-stone-50 rounded-full text-sm text-stone-600 hover:bg-emerald-50 hover:text-emerald-700 transition">Gift Boxes</button>
+                <button class="px-4 py-2 bg-stone-50 rounded-full text-sm text-stone-600 hover:bg-emerald-50 hover:text-emerald-700 transition">Teas</button>
+                <button class="px-4 py-2 bg-stone-50 rounded-full text-sm text-stone-600 hover:bg-emerald-50 hover:text-emerald-700 transition">Curated</button>
+            </div>
+        </div>
+    </div>
 </header>

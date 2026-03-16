@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -27,7 +28,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
+
         $categories = Category::all();
         return view('admin.product.create', compact('categories'));
     }
@@ -40,7 +41,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
@@ -51,14 +52,13 @@ class ProductController extends Controller
             'badge_color' => 'nullable|string|max:50',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
             'others' => 'nullable|array',
-            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
+            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
         ]);
-        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
-        }   
+        }
         // Slug
         $slug = Str::slug($request->name);
         $count = Product::where('slug', 'LIKE', "{$slug}%")->count();
@@ -112,7 +112,9 @@ class ProductController extends Controller
         return view('admin.product.show', compact('product'));
     }
 
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit(Product $product)
     {
         $categories = Category::all();
@@ -124,7 +126,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
@@ -137,7 +139,6 @@ class ProductController extends Controller
             'others' => 'nullable|array',
             'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
         ]);
-
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -145,15 +146,15 @@ class ProductController extends Controller
         }
         $data = $request->except(['image', 'others']);
         $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
-        
+
         // Update slug if name changes
         if ($request->name !== $product->name) {
-             $slug = Str::slug($request->name);
-             $count = Product::where('slug', 'LIKE', "{$slug}%")->where('id', '!=', $product->id)->count();
-             if ($count > 0) {
-                  $slug .= '-' . ($count + 1);
-             }
-             $data['slug'] = $slug;
+            $slug = Str::slug($request->name);
+            $count = Product::where('slug', 'LIKE', "{$slug}%")->where('id', '!=', $product->id)->count();
+            if ($count > 0) {
+                $slug .= '-' . ($count + 1);
+            }
+            $data['slug'] = $slug;
         }
 
         $destinationPath = base_path('../assets/images/product');
@@ -200,13 +201,13 @@ class ProductController extends Controller
     public function destroyImage($id)
     {
         $image = \App\Models\ProductImage::findOrFail($id);
-        
+
         // Delete file
         $filePath = base_path('../' . $image->image_path);
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
-        
+
         $image->delete();
 
         return response()->json(['success' => true, 'message' => 'Image removed successfully.']);
@@ -226,13 +227,13 @@ class ProductController extends Controller
         }
 
         // Delete gallery images
-        foreach($product->images as $image) {
+        foreach ($product->images as $image) {
             $galleryPath = base_path('../' . $image->image_path);
             if (file_exists($galleryPath)) {
                 @unlink($galleryPath);
             }
         }
-        
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');

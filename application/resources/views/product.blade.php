@@ -126,7 +126,7 @@
                         </div>
                     </form>
 
-                    <div class="border-t border-dashed border-stone-200 mt-6 pt-6 space-y-2 text-xs text-stone-500">
+                    <div class="border-t border-dashed border-stone-200 mt-6 pt-6 space-y-2 text-xs text-stone-500 pb-20 lg:pb-0">
                         <div class="flex">
                             <span class="font-bold text-stone-800 w-24">SKU:</span>
                             <span>{{ 'SKU-' . str_pad($product->id, 5, '0', STR_PAD_LEFT) }}</span>
@@ -140,6 +140,28 @@
                             @endif
                         </div>
                     </div>
+
+                    <!-- Mobile Fixed Bottom Action Bar -->
+                    <div class="lg:hidden fixed bottom-[64px] left-0 right-0 bg-white border-t border-stone-200 p-3 z-40 flex gap-3 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+                        <button type="submit" form="productFormMobile" name="action" value="add_to_cart" class="flex-1 bg-white border border-stone-300 text-stone-700 font-bold py-3 rounded-lg flex items-center justify-center gap-2 text-sm shadow-sm" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            Add
+                        </button>
+                        <button type="submit" form="productFormMobile" name="action" value="buy_now" class="flex-[2] bg-amber-500 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 text-sm shadow-lg shadow-amber-500/20" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            Order Now
+                        </button>
+                    </div>
+
+                    <!-- Hidden Form for Mobile Fixed Buttons -->
+                    <form action="{{ route('cart.store') }}" method="POST" id="productFormMobile" class="hidden">
+                         @csrf
+                        <input type="hidden" name="id" value="{{ $product->id }}">
+                        <input type="hidden" name="name" value="{{ $product->name }}">
+                        <input type="hidden" name="price" value="{{ $product->price }}">
+                        <input type="hidden" name="image" value="{{ $product->image }}">
+                        <input type="hidden" name="quantity" class="mobile-quantity-hidden" value="1">
+                    </form>
                 </div>
             </div>
         </div>
@@ -260,7 +282,7 @@
                 <h2 class="text-2xl font-bold text-stone-900">Related Products</h2>
                 <a href="#" class="text-teal-700 font-bold text-sm hover:underline">View All</a>
             </div>
-             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 @foreach($relatedProducts as $related)
                 <div class="bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-lg transition-all group">
                     <div class="aspect-[4/5] bg-stone-50 relative p-4 flex items-center justify-center overflow-hidden">
@@ -346,6 +368,7 @@
                 if(val > max) val = max;
                 qtyInput.value = val;
                 selQty.value = val;
+                document.querySelectorAll('.mobile-quantity-hidden').forEach(el => el.value = val);
             });
         }
     });

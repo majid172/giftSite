@@ -3,7 +3,7 @@
 @section('title', 'Our Story - ' . get_setting('site_name', config('app.name')) . ' Premium Gifts')
 
 @section('hero')
-    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans min-h-[60vh] flex items-center pt-20">
+    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans min-h-[35vh] flex items-center justify-center pt-20 pb-10">
         <!-- Static Background pattern/color -->
         <div class="absolute inset-0 bg-emerald-900/40"></div>
         <div class="absolute top-0 left-0 w-[40%] h-full bg-emerald-800/40 clip-diagonal-left hidden md:block"></div>

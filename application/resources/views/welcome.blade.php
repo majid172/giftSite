@@ -3,71 +3,74 @@
 @section('content')
 
 @section('hero')
-    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans min-h-[85vh] flex items-center pt-20">
-        <!-- Background Overlay -->
+    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans lg:min-h-[85vh] flex items-center pt-4 lg:pt-20 px-4 md:px-0">
+        <!-- Background Overlay (Desktop Only for Clip) -->
         <div class="absolute inset-0 bg-emerald-900/30"></div>
-        <div class="absolute top-0 right-0 w-[60%] h-full bg-emerald-800/40 clip-diagonal"></div>
+        <div class="hidden lg:block absolute top-0 right-0 w-[60%] h-full bg-emerald-800/40 clip-diagonal"></div>
 
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full">
-            <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
+        <div class="container mx-auto px-0 sm:px-6 lg:px-8 relative z-10 w-full h-full">
+            <!-- Mobile App-like Banner Container -->
+            <div class="bg-emerald-900/40 lg:bg-transparent rounded-[2rem] lg:rounded-none overflow-hidden relative border border-white/5 lg:border-none shadow-2xl lg:shadow-none">
+                <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
 
-                <!-- Left Content -->
-                <div class="flex flex-col justify-center order-2 lg:order-1 lg:pr-10">
-                    
-                    <div class="inline-flex items-center gap-4 mb-6">
-                        <span class="flex h-px w-12 bg-amber-500"></span>
-                        <span class="text-amber-400 font-medium tracking-widest text-xs uppercase">Premium Gifting</span>
-                    </div>
-
-                    <h1 class="text-4xl md:text-5xl lg:text-[4rem] font-serif font-bold text-white leading-tight mb-6">
-                        The Art of <br>
-                        <span class="text-amber-300 italic">Thoughtful</span> Giving
-                    </h1>
-
-                    <p class="text-emerald-50/90 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-light">
-                        Discover exclusive, beautifully curated collections that turn ordinary moments into unforgettable memories. Experience the joy of giving.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row gap-4 mb-10">
-                        <a href="{{ route('products.index') }}"
-                            class="inline-flex items-center justify-center px-8 py-2 bg-amber-500 text-emerald-950 font-bold text-base rounded shadow-lg hover:bg-amber-400 transition-colors">
-                            Shop Collection
-                        </a>
+                    <!-- Right Image (Shows First on Mobile) -->
+                    <div class="order-1 lg:order-2 relative w-full h-[300px] lg:h-[600px] flex items-center justify-center p-4 lg:p-0">
                         
-                        <a href="{{ route('about') }}"
-                            class="inline-flex items-center justify-center px-8 py-4 bg-white/5 border border-white/20 text-white font-semibold rounded hover:bg-white/10 transition-colors">
-                            Our Story
-                        </a>
-                    </div>
-                </div>
+                        <!-- Decorative background behind image (Desktop) -->
+                        <div class="hidden lg:block absolute inset-y-10 inset-x-0 bg-emerald-900/50 rounded-[3rem] -rotate-3 border border-emerald-800/50"></div>
 
-                <!-- Right Image -->
-                <div class="order-1 lg:order-2 relative w-full h-[400px] lg:h-[600px] flex items-center justify-center">
-                    
-                    <!-- Decorative background behind image -->
-                    <div class="absolute inset-y-10 inset-x-0 bg-emerald-900/50 rounded-[3rem] -rotate-3 border border-emerald-800/50"></div>
-
-                    <div class="relative w-[85%] h-[90%] z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                        <img src="{{ get_setting('hero_image') ? asset(get_setting('hero_image')) : 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80' }}"
-                            class="w-full h-full object-cover object-center" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
-                        <div class="absolute inset-0 bg-emerald-900/10 mix-blend-multiply"></div>
-                    </div>
-
-                    <!-- Floating Badge (Static) -->
-                    <div class="absolute bottom-10 left-0 bg-white p-4 rounded-xl shadow-xl flex items-center gap-4 z-20">
-                        <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <div class="relative w-full lg:w-[85%] h-full lg:h-[90%] z-10 rounded-3xl lg:rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                            <img src="{{ get_setting('hero_image') ? asset(get_setting('hero_image')) : 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80' }}"
+                                class="w-full h-full object-cover object-center" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
+                            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent lg:hidden"></div>
                         </div>
-                        <div>
-                            <p class="text-emerald-950 font-bold leading-tight">{{ $averageRating ?? 5.0 }}/5</p>
-                            <p class="text-stone-500 text-xs">{{ get_setting('hero_customer_text', 'Customer Reviews') }}</p>
+
+                        <!-- Floating Badge (Simplified for mobile) -->
+                        <div class="absolute bottom-6 left-6 lg:bottom-10 lg:left-0 bg-white/95 backdrop-blur-sm p-3 lg:p-4 rounded-xl shadow-xl flex items-center gap-3 lg:gap-4 z-20">
+                            <div class="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                                <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-emerald-950 font-bold text-xs lg:text-sm leading-tight">4.9/5 Rating</p>
+                                <p class="text-stone-500 text-[10px] lg:text-xs">Premium Quality</p>
+                            </div>
                         </div>
                     </div>
 
-                </div>
+                    <!-- Left Content -->
+                    <div class="flex flex-col justify-center order-2 lg:order-1 px-8 lg:px-0 pb-10 lg:pb-0 lg:pr-10">
+                        <h1 class="text-3xl md:text-5xl lg:text-[4rem] font-serif font-bold text-white leading-tight mb-4 lg:mb-6">
+                            The Art of <br>
+                            <span class="text-amber-300 italic">Thoughtful</span> Giving
+                        </h1>
 
+                        <p class="text-emerald-50/80 text-sm lg:text-xl mb-6 lg:mb-10 max-w-lg leading-relaxed font-light">
+                            Discover exclusive, beautifully curated collections that turn ordinary moments into unforgettable memories.
+                        </p>
+
+                        <div class="flex gap-3 lg:gap-4 mb-2 lg:mb-10">
+                            <a href="{{ route('products.index') }}"
+                                class="inline-flex items-center justify-center px-6 lg:px-8 py-3 bg-amber-500 text-emerald-950 font-bold text-sm lg:text-base rounded shadow-lg hover:bg-amber-400 transition-colors">
+                                Shop Now
+                            </a>
+                            
+                            <a href="{{ route('about') }}"
+                                class="inline-flex items-center justify-center px-6 lg:px-8 py-3 bg-white/5 border border-white/20 text-white font-semibold rounded text-sm lg:text-base hover:bg-white/10 transition-colors">
+                                Our Story
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
+        
+        <style>
+            .clip-diagonal {
+                clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
+            }
+        </style>
+    </section>
         
         <style>
             .clip-diagonal {
@@ -93,19 +96,19 @@
                         </svg>
                     </a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="flex overflow-x-auto lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-4 pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                     @foreach($categories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="flex-shrink-0 w-[240px] md:w-auto group relative rounded-2xl overflow-hidden h-48 md:h-64 shadow-md">
                         <img src="{{ asset('assets/images/'.$category->image) }}"
                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             alt="{{ $category->name }}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 text-white">
-                            <h3 class="text-xl font-serif font-bold">{{ $category->name }}</h3>
-                           <span class="inline-flex items-center text-amber-400 font-bold text-xs uppercase tracking-widest gap-2">
-                    Explore Collection
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </span>
+                        <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white">
+                            <h3 class="text-lg md:text-xl font-serif font-bold">{{ $category->name }}</h3>
+                           <span class="inline-flex items-center text-amber-400 font-bold text-[10px] uppercase tracking-widest gap-2">
+                                Explore
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </span>
                         </div>
                     </a>
                     @endforeach
@@ -179,9 +182,9 @@
 
                 <!-- Right Product Grid -->
                 <div class="lg:col-span-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 h-full">
                         @foreach ($bestSellingProducts as $product)
-                            <div class="bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                            <div class="bg-white border border-stone-200 rounded-2xl p-3 md:p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
 
                                 <!-- Product Image Container -->
                                 <div class="relative h-48 mb-6 flex items-center justify-center overflow-hidden">
@@ -258,11 +261,11 @@
 
         <div class="border border-stone-200 rounded-lg overflow-hidden">
             <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 bg-white">
+                class="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-stone-200 bg-white">
 
                 @foreach ($latestProds as $item)
                     <div
-                        class="group relative p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
+                        class="group relative p-3 md:p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
 
                         <!-- Badges -->
                         <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">

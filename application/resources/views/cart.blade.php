@@ -36,7 +36,8 @@
                 <!-- Cart Items List (8 Columns) -->
                 <div class="lg:col-span-8 space-y-6">
                     <div class="bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-200/60 overflow-hidden transition-all duration-300">
-                        <div class="overflow-x-auto">
+                        <!-- Desktop Table View -->
+                        <div class="hidden lg:block overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead class="bg-stone-50 border-b border-stone-100">
                                     <tr>
@@ -72,7 +73,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-8 py-8">
+                                        <td class="px-8 py-8 text-center">
                                             <div class="flex flex-col items-center gap-2">
                                                 <div class="flex items-center border-2 border-stone-200 rounded-xl overflow-hidden bg-white">
                                                     <button type="button" class="px-3 py-2 text-stone-500 hover:text-emerald-700 hover:bg-stone-50 transition-colors font-bold quantity-btn" data-id="{{ $id }}" data-action="decrease">-</button>
@@ -97,6 +98,51 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Mobile Card List View -->
+                        <div class="lg:hidden divide-y divide-stone-100">
+                            @foreach($cart as $id => $details)
+                            <div class="p-4 sm:p-6 flex flex-col gap-4">
+                                <div class="flex gap-4">
+                                    <!-- Product Image -->
+                                    <div class="relative w-20 h-20 flex-shrink-0 bg-stone-100 rounded-xl overflow-hidden border border-stone-200">
+                                        <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}" class="w-full h-full object-cover">
+                                    </div>
+                                    
+                                    <!-- Product Info -->
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-start gap-2">
+                                            <h3 class="text-base font-serif font-bold text-emerald-950 truncate">{{ $details['name'] }}</h3>
+                                            <form action="{{ route('cart.destroy', $id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-rose-400 hover:text-rose-600 transition-colors">
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <p class="text-stone-500 text-xs font-medium mt-1">Unit: {{ get_setting('currency_symbol', '$') }}{{ number_format($details['price'], 2) }}</p>
+                                        <div class="mt-3 flex items-center justify-between">
+                                            <!-- Quantity -->
+                                            <div class="flex items-center border border-stone-200 rounded-lg overflow-hidden bg-white scale-90 origin-left">
+                                                <button type="button" class="px-2 py-1 text-stone-500 hover:text-emerald-700 transition font-bold quantity-btn" data-id="{{ $id }}" data-action="decrease">-</button>
+                                                <input type="number" 
+                                                       value="{{ $details['quantity'] }}" 
+                                                       class="w-10 text-center border-none py-1 text-emerald-950 font-bold focus:ring-0 p-0 text-sm quantity-input-mobile" 
+                                                       id="quantity-mobile-{{ $id }}"
+                                                       data-id="{{ $id }}">
+                                                <button type="button" class="px-2 py-1 text-stone-500 hover:text-emerald-700 transition font-bold quantity-btn" data-id="{{ $id }}" data-action="increase">+</button>
+                                            </div>
+                                            <!-- Subtotal -->
+                                            <div class="text-lg font-bold text-emerald-700" id="item-subtotal-mobile-{{ $id }}">
+                                                {{ get_setting('currency_symbol', '$') }}{{ number_format($details['price'] * $details['quantity'], 2) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -206,11 +252,13 @@
                 success: function (response) {
                     if (response.success) {
                         $("#item-subtotal-" + id).text('{{ get_setting('currency_symbol', '$') }}' + response.item_subtotal);
+                        $("#item-subtotal-mobile-" + id).text('{{ get_setting('currency_symbol', '$') }}' + response.item_subtotal);
                         $("#cart-subtotal").text('{{ get_setting('currency_symbol', '$') }}' + response.total);
                         $("#cart-total").text('{{ get_setting('currency_symbol', '$') }}' + response.total);
                         
                         // Also update the input if this came from a button click
                          $("#quantity-" + id).val(quantity);
+                         $("#quantity-mobile-" + id).val(quantity);
                     } else {
                         // Revert if failed? or alert
                     }

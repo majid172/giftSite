@@ -108,12 +108,23 @@
             --color-accent: #D97706;
             --color-bg: #F5F5F4;
         }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
     </style>
     @stack('styles')
     @stack('scripts')
 </head>
 
-<body class="font-sans text-gray-900 antialiased h-full bg-stone-50">
+<body class="font-sans text-gray-900 antialiased h-full bg-stone-50 pb-20 lg:pb-0">
     <div class="flex flex-col min-h-screen">
         @include('partials.topbar')
         @include('partials.header')
@@ -126,6 +137,7 @@
     </div>
 
     @include('partials.cart-drawer')
+    @include('partials.mobile-nav')
 </body>
 
 </html>
