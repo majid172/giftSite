@@ -2,6 +2,27 @@
 
 @section('title', $product->name . ' - ' . get_setting('site_name', config('app.name')))
 
+@push('styles')
+<style>
+    .magnifier-lens {
+        position: absolute;
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        display: none;
+        background-repeat: no-repeat;
+        z-index: 50;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.1);
+        pointer-events: none;
+        border: 4px solid white;
+    }
+    #imageContainer {
+        cursor: crosshair;
+    }
+</style>
+@endpush
+
+
 @section('content')
 <div class="bg-stone-50 min-h-screen py-10">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,11 +41,12 @@
                 <!-- Left: Visuals -->
                 <div class="space-y-6">
                     <!-- Main Image Frame -->
-                    <div class="bg-stone-50 rounded-2xl p-8 aspect-square flex items-center justify-center relative group overflow-hidden border border-stone-100">
+                    <div id="imageContainer" class="bg-stone-50 rounded-2xl p-8 aspect-square flex items-center justify-center relative group overflow-hidden border border-stone-100">
                          <img src="{{ asset($product->image) }}" 
                              alt="{{ $product->name }}" 
                              id="mainImage"
                              class="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500">
+                         <div id="magnifierLens" class="magnifier-lens"></div>
                     </div>
 
                     <!-- Thumbnails -->
@@ -323,7 +345,15 @@
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <script>
     function updateMainImage(src, btn) {
-        document.getElementById('mainImage').src = src;
+        const mainImg = document.getElementById('mainImage');
+        mainImg.src = src;
+        
+        // Update magnifier background
+        const magnifier = document.getElementById('magnifierLens');
+        if (magnifier) {
+            magnifier.style.backgroundImage = `url('${src}')`;
+        }
+
         document.querySelectorAll('.thumbnail-btn').forEach(b => {
             b.classList.remove('border-amber-500');
             b.classList.add('border-stone-100');
@@ -333,6 +363,44 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Magnifier Logic
+        const container = document.getElementById('imageContainer');
+        const img = document.getElementById('mainImage');
+        const lens = document.getElementById('magnifierLens');
+        const zoom = 2.5;
+
+        if (container && img && lens) {
+            container.addEventListener('mousemove', moveLens);
+            container.addEventListener('mouseenter', () => {
+                lens.style.display = 'block';
+                lens.style.backgroundImage = `url('${img.src}')`;
+            });
+            container.addEventListener('mouseleave', () => {
+                lens.style.display = 'none';
+            });
+
+            function moveLens(e) {
+                const rect = container.getBoundingClientRect();
+                
+                // Get mouse position relative to container
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+
+                // Position lens
+                lens.style.left = (x - lens.offsetWidth / 2) + 'px';
+                lens.style.top = (y - lens.offsetHeight / 2) + 'px';
+
+                // Background scaling and positioning
+                // The background size should be container size * zoom
+                lens.style.backgroundSize = (rect.width * zoom) + 'px ' + (rect.height * zoom) + 'px';
+                
+                // The background position should offset based on zoom and lens center
+                const bgX = (x * zoom) - (lens.offsetWidth / 2);
+                const bgY = (y * zoom) - (lens.offsetHeight / 2);
+                lens.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+            }
+        }
+
         // Quantity Logic
         const qtyInput = document.getElementById('quantityInput');
         const selQty = document.getElementById('selectedQuantity');
