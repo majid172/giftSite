@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Meta Pixel Code -->
@@ -84,6 +87,10 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -113,7 +120,7 @@
     @stack('scripts')
 </head>
 
-<body class="font-sans text-gray-900 antialiased h-full bg-stone-50">
+<body class="font-sans text-gray-900 antialiased h-full bg-stone-50 pb-28 lg:pb-0" x-data="{ mobileMenuOpen: false }">
     <div class="flex flex-col min-h-screen">
         @include('partials.topbar')
         @include('partials.header')
@@ -126,6 +133,7 @@
     </div>
 
     @include('partials.cart-drawer')
+    @include('partials.bottom-nav')
 </body>
 
 </html>

@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display settings page
      */
     public function index()
     {
@@ -18,66 +18,137 @@ class SettingsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update global settings
      */
     public function update(Request $request)
     {
-        // Handle checkboxes that might not be sent if unchecked
+        // Validation
+
+        $validator = Validator::make($request->all(), [
+
+            // General
+            'site_name' => ['nullable', 'string', 'max:255'],
+            'site_motto' => ['nullable', 'string', 'max:255'],
+            'site_description' => ['nullable', 'string'],
+
+            // Contact
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'contact_address' => ['nullable', 'string', 'max:500'],
+
+            // Files
+            'site_favicon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,ico,webp', 'max:2048'],
+            'hero_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'about_banner_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+
+            // Media
+            'media_max_size' => ['nullable', 'numeric', 'min:100', 'max:10240'],
+            'media_allowed_types' => ['nullable', 'string', 'max:255'],
+
+            // SEO
+            'seo_meta_title' => ['nullable', 'string', 'max:255'],
+            'seo_meta_keywords' => ['nullable', 'string', 'max:500'],
+            'seo_meta_description' => ['nullable', 'string', 'max:500'],
+            'seo_analytics_id' => ['nullable', 'string', 'max:255'],
+            'seo_pixel_id' => ['nullable', 'regex:/^[0-9]+$/'],
+
+            // Email
+            'mail_host' => ['nullable', 'string', 'max:255'],
+            'mail_port' => ['nullable', 'numeric'],
+            'mail_username' => ['nullable', 'string', 'max:255'],
+            'mail_password' => ['nullable', 'string', 'max:255'],
+            'mail_encryption' => ['nullable', 'in:tls,ssl,null'],
+            'mail_from_address' => ['nullable', 'email', 'max:255'],
+            'mail_from_name' => ['nullable', 'string', 'max:255'],
+        ], [
+
+            // Custom messages
+            'seo_pixel_id.regex' => 'Meta Pixel ID must contain digits only.',
+            'contact_email.email' => 'Please enter a valid contact email.',
+            'mail_from_address.email' => 'Mail from address must be a valid email.',
+            'site_favicon.image' => 'Favicon must be an image.',
+            'hero_image.image' => 'Hero image must be an image file.',
+            'about_banner_image.image' => 'About banner must be an image file.',
+            'media_max_size.numeric' => 'Max upload size must be a number.',
+            'mail_port.numeric' => 'Mail port must be numeric.',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();        }
+
+
+
+        // Handle checkboxes (unchecked checkbox not sent in request)
         $data = $request->except(['_token', '_method']);
-        
-        // Explicitly handle boolean toggles
+
         $data['maintenance_mode'] = $request->has('maintenance_mode') ? '1' : '0';
         $data['enable_pixel'] = $request->has('enable_pixel') ? '1' : '0';
 
+        // JSON storage for frontend content
+        $frontendData = [];
+        $jsonPath = storage_path('app/frontend_settings.json');
+        if (file_exists($jsonPath)) {
+            $frontendData = json_decode(file_get_contents($jsonPath), true) ?? [];
+        }
+
         foreach ($data as $key => $value) {
-            // Check if specifically handled as file
+
+            // File Upload Handling
             if ($request->hasFile($key)) {
                 $file = $request->file($key);
-                
-                // Determine folder based on key prefix (typename)
-                // e.g., site_favicon -> site, seo_social_image -> seo
+
+                // Folder based on key prefix
                 $parts = explode('_', $key);
                 $folderName = count($parts) > 1 ? $parts[0] : 'others';
-                
-                // Construct target path: ../assets/images/{typename}
-                // User requested to use root directory assets, which is one level up from application
+
                 $destinationPath = base_path('../assets/images/' . $folderName);
-                
-                // Ensure directory exists
+
+                // Create folder if not exists
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
 
-                // Generate unique filename
+                // Unique filename
                 $filename = time() . '_' . $file->getClientOriginalName();
-                
-                // Remove old file if exists
+
+                // Delete old file
                 $oldValue = get_setting($key);
-                // Check if old value is not empty and file exists in root assets path
                 $oldFilePath = base_path('../' . $oldValue);
+
                 if ($oldValue && file_exists($oldFilePath) && is_file($oldFilePath)) {
                     try {
                         unlink($oldFilePath);
-                    } catch (\Exception $e) {
-                         // Ignore deletion errors or log them
+                    }
+                    catch (\Exception $e) {
+                    // Optional: log error
                     }
                 }
 
-                // Move new file to root assets directory
+                // Move new file
                 $file->move($destinationPath, $filename);
-                
-                // Store relative path (same as before, assuming webserver serves root assets)
+
+                // Save relative path
                 $value = 'assets/images/' . $folderName . '/' . $filename;
             }
 
-            // Optimization: Only update if value changed (optional but cleaner)
+            // Intercept frontend keys to save in JSON instead of DB
+            if (strpos($key, 'about_') === 0) {
+                $frontendData[$key] = $value;
+                continue;
+            }
+
+            // Save setting
             Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]
             );
         }
 
-        // Sync Mail Settings to .env
+        // Save updated frontend data to JSON
+        file_put_contents($jsonPath, json_encode($frontendData, JSON_PRETTY_PRINT));
+
+        // Sync Mail + Pixel settings to .env
         $this->updateEnv([
             'MAIL_HOST' => $request->input('mail_host'),
             'MAIL_PORT' => $request->input('mail_port'),
@@ -89,41 +160,42 @@ class SettingsController extends Controller
             'META_PIXEL_ID' => $request->input('seo_pixel_id'),
         ]);
 
-        return redirect()->back()->with('success', 'Global settings updated with heritage precision.');
+        return redirect()->back()->with('success', 'Global settings updated successfully.');
     }
 
     /**
-     * Update .env file with given key-value pairs.
-     *
-     * @param array $data
-     * @return void
+     * Update values in .env file
      */
     private function updateEnv(array $data)
     {
         $path = base_path('.env');
 
-        if (file_exists($path)) {
-            $env = file_get_contents($path);
+        if (!file_exists($path)) {
+            return;
+        }
 
-            foreach ($data as $key => $value) {
-                if ($value !== null) {
-                    // Wrap strings with spaces in quotes
-                    if (strpos($value, ' ') !== false && strpos($value, '"') === false) {
-                        $value = '"' . $value . '"';
-                    }
+        $env = file_get_contents($path);
 
-                    // Check if key exists
-                    if (strpos($env, $key . '=') !== false) {
-                        // Replace existing key
-                        $env = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $env);
-                    } else {
-                        // Append new key
-                        $env .= "\n{$key}={$value}";
-                    }
-                }
+        foreach ($data as $key => $value) {
+
+            if ($value === null) {
+                continue;
             }
 
-            file_put_contents($path, $env);
+            // Wrap value with quotes if it contains spaces
+            if (strpos($value, ' ') !== false && strpos($value, '"') === false) {
+                $value = '"' . $value . '"';
+            }
+
+            // Replace existing key
+            if (preg_match("/^{$key}=.*/m", $env)) {
+                $env = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $env);
+            }
+            else {
+                $env .= "\n{$key}={$value}";
+            }
         }
+
+        file_put_contents($path, $env);
     }
 }

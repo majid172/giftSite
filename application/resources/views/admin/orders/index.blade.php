@@ -93,7 +93,7 @@
                         </span>
                     </td>
                     <td style="font-weight: 600;">
-                        ${{ number_format($order->price, 2) }}
+                        ৳{{ number_format($order->price, 2) }}
                     </td>
                     <td style="text-align: right;">
                         <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-outline btn-icon" style="padding: 4px 8px;" title="Edit">

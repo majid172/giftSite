@@ -99,7 +99,7 @@
     </a>
 </div>
 
-<form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+<form id="product-form" action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     
     <div class="form-layout">
@@ -110,36 +110,36 @@
                 
                 <div class="form-group">
                     <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                    @error('name') <div class="text-danger" style="color: red; font-size: 0.8rem; margin-bottom: 4px;">{{ $message }}</div> @enderror
                     <input type="text" name="name" class="form-control" value="{{ old('name') }}" placeholder="e.g. Luxury Gift Box" required>
-                    @error('name') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                         <label class="form-label">Category <span class="text-danger">*</span></label>
+                        @error('category_id') <div class="text-danger" style="color: red; font-size: 0.8rem; margin-bottom: 4px;">{{ $message }}</div> @enderror
                         <select name="category_id" class="form-control" required>
                             <option value="" disabled selected>Select Category</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                             @endforeach
                         </select>
-                        @error('category_id') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label">Stock Quantity <span class="text-danger">*</span></label>
+                        @error('stock') <div class="text-danger" style="color: red; font-size: 0.8rem; margin-bottom: 4px;">{{ $message }}</div> @enderror
                         <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" placeholder="0" required>
-                         @error('stock') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
-                        <label class="form-label">Price ($) <span class="text-danger">*</span></label>
+                        <label class="form-label">Price (৳) <span class="text-danger">*</span></label>
+                        @error('price') <div class="text-danger" style="color: red; font-size: 0.8rem; margin-bottom: 4px;">{{ $message }}</div> @enderror
                         <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price') }}" placeholder="0.00" required>
-                        @error('price') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Old Price ($)</label>
+                        <label class="form-label">Old Price (৳)</label>
                         <input type="number" step="0.01" name="old_price" class="form-control" value="{{ old('old_price') }}" placeholder="0.00">
                     </div>
                 </div>
@@ -190,6 +190,7 @@
             <!-- Main Image -->
             <div class="card">
                 <h3 class="card-title" style="margin-bottom: 15px;">Primary Image <span class="text-danger">*</span></h3>
+                @error('image') <div class="text-danger" style="color: red; font-size: 0.8rem; margin-bottom: 8px;">{{ $message }}</div> @enderror
                 <div class="img-upload-box" onclick="document.getElementById('image').click()">
                     <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewPrimary(this)" required>
                     <div id="upload-placeholder">
@@ -198,7 +199,6 @@
                     </div>
                     <img id="primary-preview" src="#" alt="Preview" class="hidden">
                 </div>
-                @error('image') <div class="text-danger" style="font-size: 0.8rem; margin-top: 4px;">{{ $message }}</div> @enderror
                 <p class="upload-hint" style="margin-top: 10px; text-align: center;">Click box to replace</p>
             </div>
 
@@ -233,6 +233,14 @@
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <script>
+    @if ($errors->any())
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach ($errors->all() as $error)
+                flasher.error("{{ $error }}");
+            @endforeach
+        });
+    @endif
+
     // Initialize Quill
     const quill = new Quill('#editor', {
         theme: 'snow',
@@ -247,7 +255,7 @@
     });
 
     // Sync Quill to hidden input on submit
-    const form = document.querySelector('form');
+    const form = document.getElementById('product-form');
     form.addEventListener('submit', function() {
         document.querySelector('#description').value = quill.root.innerHTML;
     });

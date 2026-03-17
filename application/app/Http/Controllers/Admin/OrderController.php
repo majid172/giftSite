@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -39,30 +40,52 @@ class OrderController extends Controller
     {
         $request->validate([
             'status' => 'required',
+            'shipping_cost' => 'nullable|numeric|min:0',
         ]);
 
         $order = Order::with('items')->findOrFail($id);
         $originalStatus = strtolower($order->status);
         $newStatus = strtolower($request->status);
 
-        // Update status
-        $order->update([
+        $data = [
             'status' => $request->status,
-        ]);
+        ];
 
-        // Logic for stock management
-        if ($originalStatus !== 'delivered' && $newStatus === 'delivered') {
-            // Deduct stock
+        if ($request->has('shipping_cost') && $request->shipping_cost !== null) {
+            $oldShipping = $order->shipping_cost;
+            $newShipping = $request->shipping_cost;
+
+            if ($oldShipping != $newShipping) {
+                $subtotal = $order->price - $oldShipping;
+                $data['shipping_cost'] = $newShipping;
+                $data['price'] = $subtotal + $newShipping;
+            }
+        }
+
+        $order->update($data);
+
+        if ($originalStatus !== 'approved' && $newStatus === 'approved') {
             foreach ($order->items as $item) {
-                $product = \App\Models\Product::find($item->product_id);
+                $product = Product::find($item->product_id);
                 if ($product) {
                     $product->decrement('stock', $item->quantity);
                 }
             }
-        } elseif ($originalStatus === 'delivered' && $newStatus !== 'delivered') {
-            // Restore stock (if accidentally marked as delivered)
+        } 
+        $approvedStatuses = ['approved', 'ready to ship', 'shipped', 'delivered'];
+        $cancelledStatuses = ['cancelled', 'returned', 'refund processing'];
+        
+        if (in_array($originalStatus, $approvedStatuses) && in_array($newStatus, $cancelledStatuses)) {
             foreach ($order->items as $item) {
-                $product = \App\Models\Product::find($item->product_id);
+                $product = Product::find($item->product_id);
+                if ($product) {
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+        }
+        if ($originalStatus === 'approved' && $newStatus === 'pending') {
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
                 if ($product) {
                     $product->increment('stock', $item->quantity);
                 }

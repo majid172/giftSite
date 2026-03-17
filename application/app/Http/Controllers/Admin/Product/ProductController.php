@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ImageResizer;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    use ImageResizer;
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +28,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
+
         $categories = Category::all();
         return view('admin.product.create', compact('categories'));
     }
@@ -38,7 +41,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
@@ -47,11 +50,15 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'badge' => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
             'others' => 'nullable|array',
             'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
         ]);
-
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
         // Slug
         $slug = Str::slug($request->name);
         $count = Product::where('slug', 'LIKE', "{$slug}%")->count();
@@ -75,12 +82,7 @@ class ProductController extends Controller
 
         // Store main image with resizing
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            
-            // Resize and save
-            $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
-
+            $fileName = $this->resizeAndCrop($request->file('image'), $destinationPath, 800, 600);
             $data['image'] = 'assets/images/product/' . $fileName;
         }
 
@@ -89,11 +91,7 @@ class ProductController extends Controller
         // Store gallery images with resizing
         if ($request->hasFile('others')) {
             foreach ($request->file('others') as $file) {
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                
-                // Resize and save
-                $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
-
+                $fileName = $this->resizeAndCrop($file, $destinationPath, 800, 600);
                 $product->images()->create([
                     'image_path' => 'assets/images/product/' . $fileName,
                     'is_primary' => 0,
@@ -128,7 +126,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
@@ -137,22 +135,26 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'badge' => 'nullable|string|max:50',
             'badge_color' => 'nullable|string|max:50',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
             'others' => 'nullable|array',
-            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:' . config('settings.media_max_size', 2048),
+            'others.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:' . config('settings.media_max_size', 2048),
         ]);
-
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
         $data = $request->except(['image', 'others']);
         $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
-        
+
         // Update slug if name changes
         if ($request->name !== $product->name) {
-             $slug = Str::slug($request->name);
-             $count = Product::where('slug', 'LIKE', "{$slug}%")->where('id', '!=', $product->id)->count();
-             if ($count > 0) {
-                  $slug .= '-' . ($count + 1);
-             }
-             $data['slug'] = $slug;
+            $slug = Str::slug($request->name);
+            $count = Product::where('slug', 'LIKE', "{$slug}%")->where('id', '!=', $product->id)->count();
+            if ($count > 0) {
+                $slug .= '-' . ($count + 1);
+            }
+            $data['slug'] = $slug;
         }
 
         $destinationPath = base_path('../assets/images/product');
@@ -170,13 +172,8 @@ class ProductController extends Controller
                     @unlink($oldImagePath);
                 }
             }
-            
-            $file = $request->file('image');
-            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            
-            // Resize and save
-            $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
-            
+
+            $fileName = $this->resizeAndCrop($request->file('image'), $destinationPath, 800, 600);
             $data['image'] = 'assets/images/product/' . $fileName;
         }
 
@@ -185,11 +182,7 @@ class ProductController extends Controller
         // Store gallery images
         if ($request->hasFile('others')) {
             foreach ($request->file('others') as $file) {
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                
-                // Resize and save
-                $this->resizeImage($file, $destinationPath . '/' . $fileName, 800, 800);
-
+                $fileName = $this->resizeAndCrop($file, $destinationPath, 800, 600);
                 $product->images()->create([
                     'image_path' => 'assets/images/product/' . $fileName,
                     'is_primary' => 0,
@@ -200,65 +193,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
-    /**
-     * Native PHP Image Resizer
-     */
-    private function resizeImage($file, $destination, $maxWidth, $maxHeight)
-    {
-        list($width, $height, $type) = getimagesize($file->getPathname());
-        
-        $ratio = $width / $height;
-        if ($maxWidth / $maxHeight > $ratio) {
-            $maxWidth = $maxHeight * $ratio;
-        } else {
-            $maxHeight = $maxWidth / $ratio;
-        }
 
-        $newWidth = (int)$maxWidth;
-        $newHeight = (int)$maxHeight;
-
-        $thumb = imagecreatetruecolor($newWidth, $newHeight);
-        
-        // Handle transparency for PNG and GIF
-        if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_GIF) {
-            imagecolortransparent($thumb, imagecolorallocatealpha($thumb, 0, 0, 0, 127));
-            imagealphablending($thumb, false);
-            imagesavealpha($thumb, true);
-        }
-
-        switch ($type) {
-            case IMAGETYPE_JPEG:
-                $source = imagecreatefromjpeg($file->getPathname());
-                break;
-            case IMAGETYPE_PNG:
-                $source = imagecreatefrompng($file->getPathname());
-                break;
-            case IMAGETYPE_GIF:
-                $source = imagecreatefromgif($file->getPathname());
-                break;
-            default:
-                // Fallback for others or if not supported, just move file
-                 move_uploaded_file($file->getPathname(), $destination);
-                return;
-        }
-
-        imagecopyresampled($thumb, $source, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-        switch ($type) {
-            case IMAGETYPE_JPEG:
-                imagejpeg($thumb, $destination, 90);
-                break;
-            case IMAGETYPE_PNG:
-                imagepng($thumb, $destination, 9);
-                break;
-            case IMAGETYPE_GIF:
-                imagegif($thumb, $destination);
-                break;
-        }
-
-        imagedestroy($thumb);
-        imagedestroy($source);
-    }
 
     /**
      * Remove individual product image from gallery.
@@ -266,13 +201,13 @@ class ProductController extends Controller
     public function destroyImage($id)
     {
         $image = \App\Models\ProductImage::findOrFail($id);
-        
+
         // Delete file
         $filePath = base_path('../' . $image->image_path);
         if (file_exists($filePath)) {
             @unlink($filePath);
         }
-        
+
         $image->delete();
 
         return response()->json(['success' => true, 'message' => 'Image removed successfully.']);
@@ -292,13 +227,13 @@ class ProductController extends Controller
         }
 
         // Delete gallery images
-        foreach($product->images as $image) {
+        foreach ($product->images as $image) {
             $galleryPath = base_path('../' . $image->image_path);
             if (file_exists($galleryPath)) {
                 @unlink($galleryPath);
             }
         }
-        
+
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');

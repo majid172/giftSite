@@ -69,21 +69,21 @@
                                     class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                             </div>
                             <div class="space-y-2">
-                                <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Last Name</label>
-                                <input type="text" name="last_name" value="{{ old('last_name') }}" required 
+                                <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Last Name (Optional)</label>
+                                <input type="text" name="last_name" value="{{ old('last_name') }}" 
                                     class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                             </div>
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Email Address</label>
-                            <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required 
+                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Email Address (Optional)</label>
+                            <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" 
                                 class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Phone Number (Optional)</label>
-                            <input type="tel" name="phone" value="{{ old('phone') }}" 
+                            <label class="text-xs font-bold uppercase tracking-widest text-stone-500">Phone Number</label>
+                            <input type="tel" name="phone" value="{{ old('phone') }}" required 
                                 class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-emerald-950 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-stone-300">
                         </div>
 
@@ -114,6 +114,45 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Shipping Method -->
+                <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden mt-8 mb-8">
+                    <div class="px-8 py-6 border-b border-stone-100 bg-stone-50/50 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-serif font-bold text-emerald-950">Shipping Method</h2>
+                    </div>
+                    
+                    <div class="p-8 space-y-4">
+                        <label class="relative flex items-center p-4 border rounded-xl cursor-pointer transition-all hover:bg-stone-50" id="label_inside_dhaka">
+                            <input type="radio" name="shipping_method" value="inside_dhaka" class="w-5 h-5 text-emerald-600 border-stone-300 focus:ring-emerald-500 shipping-radio" data-cost="{{ $shippingRates['inside_dhaka'] }}" required>
+                            <div class="ml-4 flex-grow">
+                                <span class="block font-bold text-emerald-950">Inside Dhaka</span>
+                                <span class="block text-sm text-stone-500">Standard Delivery</span>
+                            </div>
+                            <span class="font-bold text-emerald-700">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingRates['inside_dhaka'], 2) }}</span>
+                        </label>
+
+                        <label class="relative flex items-center p-4 border rounded-xl cursor-pointer transition-all hover:bg-stone-50" id="label_sub_inside_dhaka">
+                            <input type="radio" name="shipping_method" value="sub_inside_dhaka" class="w-5 h-5 text-emerald-600 border-stone-300 focus:ring-emerald-500 shipping-radio" data-cost="{{ $shippingRates['sub_inside_dhaka'] }}">
+                            <div class="ml-4 flex-grow">
+                                <span class="block font-bold text-emerald-950">Dhaka Sub District</span>
+                                <span class="block text-sm text-stone-500">Standard Delivery</span>
+                            </div>
+                             <span class="font-bold text-emerald-700">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingRates['sub_inside_dhaka'], 2) }}</span>
+                        </label>
+
+                        <label class="relative flex items-center p-4 border rounded-xl cursor-pointer transition-all hover:bg-stone-50" id="label_outside_dhaka">
+                            <input type="radio" name="shipping_method" value="outside_dhaka" class="w-5 h-5 text-emerald-600 border-stone-300 focus:ring-emerald-500 shipping-radio" data-cost="{{ $shippingRates['outside_dhaka'] }}">
+                            <div class="ml-4 flex-grow">
+                                <span class="block font-bold text-emerald-950">Outside Dhaka</span>
+                                <span class="block text-sm text-stone-500">Standard Delivery</span>
+                            </div>
+                             <span class="font-bold text-emerald-700">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingRates['outside_dhaka'], 2) }}</span>
+                        </label>
                     </div>
                 </div>
 
@@ -174,16 +213,18 @@
                         </div>
                         <div class="flex justify-between items-center text-sm text-stone-600">
                             <span>Shipping</span>
-                            @if($shippingCost > 0)
-                                <span class="font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingCost, 2) }}</span>
-                            @else
-                                <span class="font-bold text-amber-600">Free</span>
-                            @endif
+                            <div id="shippingDisplay">
+                                @if($shippingCost > 0)
+                                    <span class="font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($shippingCost, 2) }}</span>
+                                @else
+                                    <span class="font-bold text-stone-400">Select Method</span>
+                                @endif
+                            </div>
                         </div>
                         
                         <div class="pt-4 mt-4 border-t border-stone-200 flex justify-between items-end">
                             <span class="text-lg font-bold text-emerald-950 font-serif">Total</span>
-                            <span class="text-3xl font-bold text-emerald-800 font-serif mb-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($total, 2) }}</span>
+                            <span class="text-3xl font-bold text-emerald-800 font-serif mb-1" id="totalDisplay">{{ get_setting('currency_symbol', '$') }}{{ number_format($total, 2) }}</span>
                         </div>
 
                         <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-600/30 transition-all transform hover:-translate-y-0.5 active:scale-[0.99] mt-6 flex items-center justify-center gap-2 group">
@@ -202,3 +243,46 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const shippingRadios = document.querySelectorAll('.shipping-radio');
+        const shippingDisplay = document.getElementById('shippingDisplay');
+        const totalDisplay = document.getElementById('totalDisplay');
+        const subtotal = {{ $subtotal }};
+        const currencySymbol = "{{ get_setting('currency_symbol', '$') }}";
+
+        function updateTotals() {
+            let shippingCost = 0;
+            const selectedRadio = document.querySelector('input[name="shipping_method"]:checked');
+            
+            if (selectedRadio) {
+                shippingCost = parseFloat(selectedRadio.dataset.cost);
+                
+                // Highlight selected label
+                document.querySelectorAll('label[id^="label_"]').forEach(l => l.classList.remove('border-emerald-500', 'bg-emerald-50/30'));
+                selectedRadio.closest('label').classList.add('border-emerald-500', 'bg-emerald-50/30');
+            }
+
+            // Update Shipping Display
+            if(shippingCost > 0) {
+                 shippingDisplay.innerHTML = `<span class="font-bold text-emerald-950">${currencySymbol}${shippingCost.toFixed(2)}</span>`;
+            } else {
+                 shippingDisplay.innerHTML = `<span class="font-bold text-stone-400">Select Method</span>`;
+            }
+
+            // Update Total Display
+            const total = subtotal + shippingCost;
+            totalDisplay.innerText = currencySymbol + total.toFixed(2);
+        }
+
+        shippingRadios.forEach(radio => {
+            radio.addEventListener('change', updateTotals);
+        });
+
+        // Initialize (if old input exists or just to reset)
+        updateTotals();
+    });
+</script>
+@endpush

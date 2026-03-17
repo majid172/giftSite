@@ -57,7 +57,7 @@
             </div>
             <div>
                 <p class="text-purple-200 text-sm font-medium uppercase tracking-wide">Earned Revenue</p>
-                <h3 class="text-3xl font-bold mt-1">${{ number_format($earned_profit, 2) }}</h3>
+                <h3 class="text-3xl font-bold mt-1">৳{{ number_format($earned_profit, 2) }}</h3>
                 <p class="text-xs text-purple-300 mt-1">From delivered orders</p>
             </div>
         </div>
@@ -111,7 +111,9 @@
                             </td>
                              <td class="px-6 py-4">
                                 <div class="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 flex items-center justify-center border border-stone-200">
-                                    @if($product->images->first())
+                                    @if($product->image)
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                    @elseif($product->images->first())
                                         <img src="{{ asset($product->images->first()->image_path) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="ti ti-photo text-stone-400"></i>
@@ -214,7 +216,7 @@
                                 {{ $item->status }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 font-bold text-emerald-950">${{ number_format($item->price, 2) }}</td>
+                        <td class="px-6 py-4 font-bold text-emerald-950">৳{{ number_format($item->price, 2) }}</td>
                         <td class="px-6 py-4 text-sm text-stone-500">{{ dateFormat($item->created_at) }}</td>
                         <td class="px-6 py-4 text-right">
                             <a href="{{ route('admin.orders.edit', $item->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors">
@@ -341,7 +343,7 @@
                 yaxis: {
                     labels: {
                         style: { colors: '#94a3b8', fontSize: '12px' },
-                        formatter: (val) => { return '$' + val }
+                        formatter: (val) => { return '৳' + val }
                     }
                 },
                 grid: {

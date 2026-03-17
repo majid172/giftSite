@@ -3,146 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - #{{ $order->order_id }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Invoice #{{ $order->order_id }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #e5e5e5;
+            color: #000;
+            padding: 32px 16px;
+        }
+
+        /* ── Page shell ── */
+        .invoice {
+            width: 794px;          /* A4 width at 96dpi */
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #000;
+        }
+
+        /* ── Header ── */
+        .inv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 22px 28px 18px;
+            border-bottom: 2px solid #000;
+        }
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .brand-sub {
+            font-size: 10px;
+            color: #555;
+            margin-top: 2px;
+        }
+        .brand-contact {
+            font-size: 10px;
+            color: #444;
+            margin-top: 8px;
+            line-height: 1.7;
+        }
+        .inv-meta { text-align: right; }
+        .inv-title {
+            font-size: 26px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #000;
+        }
+        .inv-meta table {
+            margin-top: 6px;
+            margin-left: auto;
+            border: none;
+        }
+        .inv-meta td {
+            font-size: 11px;
+            padding: 1px 0 1px 12px;
+            border: none;
+            text-align: left;
+        }
+        .inv-meta td:first-child {
+            color: #666;
+            font-weight: 600;
+            text-align: right;
+            padding-left: 0;
+        }
+
+        /* ── Sub-header: Bill To / Payment / QR ── */
+        .inv-sub {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 0;
+            border-bottom: 1px solid #000;
+        }
+        .sub-col {
+            padding: 14px 20px;
+        }
+        .sub-col + .sub-col {
+            border-left: 1px solid #000;
+        }
+        .sub-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .sub-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .sub-detail {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.7;
+            margin-top: 2px;
+        }
+
+        /* QR */
+        .qr-col {
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border-left: 1px solid #000;
+        }
+        .qr-col img {
+            width: 76px;
+            height: 76px;
+            display: block;
+            border: 1px solid #ccc;
+        }
+        .qr-label {
+            font-size: 9px;
+            color: #777;
+            letter-spacing: .5px;
+        }
+
+        /* ── Items table ── */
+        .items-section { padding: 0 0 0; }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .items-table thead tr {
+            background: #000;
+        }
+        .items-table thead th {
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            border: none;
+        }
+        .items-table thead th:first-child { width: 28px; text-align: center; }
+        .items-table thead th.right { text-align: right; }
+        .items-table thead th.center { text-align: center; }
+
+        .items-table tbody td {
+            font-size: 11.5px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e5e5e5;
+            vertical-align: top;
+            color: #000;
+        }
+        .items-table tbody tr:last-child td { border-bottom: none; }
+        .items-table tbody td:first-child { text-align: center; color: #888; font-size: 10px; }
+        .items-table tbody td.right { text-align: right; }
+        .items-table tbody td.center { text-align: center; }
+        .items-table tbody td.amount { text-align: right; font-weight: 700; }
+
+        .product-name { font-weight: 600; }
+        .product-attr { font-size: 10px; color: #777; margin-top: 2px; }
+
+        /* ── Totals + footer bar ── */
+        .inv-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 14px 20px 18px;
+            border-top: 2px solid #000;
+            gap: 24px;
+        }
+
+        /* Notes */
+        .inv-notes {
+            font-size: 10px;
+            color: #555;
+            line-height: 1.7;
+            max-width: 340px;
+        }
+        .inv-notes strong {
+            font-size: 10px;
+            font-weight: 700;
+            color: #000;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Summary */
+        .summary {
+            min-width: 220px;
+        }
+        .sum-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11.5px;
+            padding: 4px 0;
+            border-bottom: 1px dashed #ccc;
+            gap: 24px;
+        }
+        .sum-row:last-of-type { border-bottom: none; }
+        .sum-row span:last-child { font-weight: 600; }
+        .sum-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding: 8px 10px;
+            border: 2px solid #000;
+            gap: 24px;
+        }
+        .sum-total-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sum-total-val {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        /* ── Sig / stamp row ── */
+        .inv-sig {
+            display: flex;
+            justify-content: flex-end;
+            gap: 60px;
+            padding: 0 20px 16px;
+        }
+        .sig-block {
+            text-align: center;
+            width: 120px;
+        }
+        .sig-line {
+            border-top: 1px solid #000;
+            margin-bottom: 4px;
+        }
+        .sig-label {
+            font-size: 9px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── Very bottom bar ── */
+        .inv-foot {
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            text-align: center;
+            padding: 7px;
+            letter-spacing: .5px;
+        }
+
+        /* ── Print button ── */
+        .print-btn-wrap {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .print-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            background: #000;
+            color: #fff;
+            padding: 11px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: .5px;
+        }
+        .print-btn:hover { background: #222; }
+
+        /* ── PRINT overrides ── */
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
         @media print {
-            .no-print { display: none !important; }
-            .print-shadow-none { box-shadow: none !important; }
-            body { background: white; }
+            body {
+                background: #fff;
+                padding: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .invoice {
+                width: 100%;
+                border: none;
+                page-break-inside: avoid;
+            }
+            .print-btn-wrap { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-stone-100 py-10 print:py-0 print:bg-white text-stone-800">
+<body>
 
-    <!-- Invoice Wrapper -->
-    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden print:shadow-none print-shadow-none print:w-full print:max-w-none">
-        
-        <!-- Header -->
-        <div class="p-8 md:p-12 border-b border-stone-100">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <!-- Brand -->
-                <div>
-                    <h1 class="text-2xl font-bold text-emerald-950 uppercase tracking-wide">{{ get_setting('site_name', config('app.name')) }}</h1>
-                    <p class="text-sm text-stone-500 mt-1">{{ get_setting('site_motto', config('app.name')) }}</p>
-                    <div class="mt-4 text-xs text-stone-500 leading-relaxed">
-                        {{ request()->getHost() }}<br>
-                        support@giftpack.com
-                    </div>
-                </div>
+<div class="invoice">
 
-                <!-- Invoice Meta -->
-                <div class="text-right">
-                    <h2 class="text-4xl font-extrabold text-stone-200 uppercase tracking-widest leading-none">Invoice</h2>
-                    <div class="mt-4 space-y-1">
-                        <p class="text-sm font-medium text-stone-600">Invoice #: <span class="font-bold text-stone-900">{{ $order->order_id }}</span></p>
-                        <p class="text-sm font-medium text-stone-600">Date: <span class="font-bold text-stone-900">{{ $order->created_at->format('F d, Y') }}</span></p>
-                        <p class="text-sm font-medium text-stone-600">Status: 
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-800 uppercase">
-                                Paid
-                            </span>
-                        </p>
-                    </div>
-                </div>
+    {{-- ── Header ── --}}
+    <div class="inv-header">
+        <div>
+            <div class="brand-name">{{ get_setting('site_name', config('app.name')) }}</div>
+            <div class="brand-sub">{{ get_setting('site_motto', '') }}</div>
+            <div class="brand-contact">
+                {{ request()->getHost() }}<br>
+                {{ get_setting('contact_email', 'support@example.com') }}<br>
+                {{ get_setting('contact_phone', '') }}
+            </div>
+        </div>
+        <div class="inv-meta">
+            <div class="inv-title">Invoice</div>
+            <table>
+                <tr><td>Invoice #</td><td><strong>{{ $order->order_id }}</strong></td></tr>
+                <tr><td>Date</td><td>{{ $order->created_at->format('d M Y') }}</td></tr>
+                <tr><td>Status</td><td>{{ ucfirst($order->payment_status ?? 'Paid') }}</td></tr>
+                @if(!empty($order->transaction_id))
+                <tr><td>Txn ID</td><td>{{ $order->transaction_id }}</td></tr>
+                @endif
+            </table>
+        </div>
+    </div>
+
+    {{-- ── Sub-header: Billed To / Payment / QR ── --}}
+    <div class="inv-sub">
+        <div class="sub-col">
+            <div class="sub-label">Billed To</div>
+            <div class="sub-name">
+                {{ $order->shipping_address['first_name'] ?? '' }} {{ $order->shipping_address['last_name'] ?? '' }}
+            </div>
+            <div class="sub-detail">
+                {{ $order->shipping_address['address'] ?? '' }}<br>
+                {{ $order->shipping_address['city'] ?? '' }}@if(!empty($order->shipping_address['zip'])), {{ $order->shipping_address['zip'] }}@endif
+                @if(!empty($order->shipping_address['phone']))<br>{{ $order->shipping_address['phone'] }}@endif
             </div>
         </div>
 
-        <!-- Billing & Payment Details -->
-        <div class="p-8 md:p-12 bg-stone-50/50">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <!-- Billed To -->
-                <div>
-                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-4">Billed To</h3>
-                    <div class="text-sm text-stone-800 leading-relaxed">
-                        <p class="font-bold text-base text-stone-900">{{ $order->shipping_address['first_name'] }} {{ $order->shipping_address['last_name'] }}</p>
-                        <p>{{ $order->shipping_address['address'] }}</p>
-                        <p>{{ $order->shipping_address['city'] }}, {{ $order->shipping_address['zip'] }}</p>
-                        @if(!empty($order->shipping_address['phone']))
-                            <p class="mt-2 text-stone-500"><span class="font-medium text-stone-700">Phone:</span> {{ $order->shipping_address['phone'] }}</p>
+        <div class="sub-col">
+            <div class="sub-label">Payment Method</div>
+            <div class="sub-name" style="font-size:12px;">{{ $order->payment_method ?? 'Online Payment' }}</div>
+            <div class="sub-detail" style="margin-top:10px;">
+                <div class="sub-label">Order Status</div>
+                {{ ucfirst($order->status ?? 'Processing') }}
+            </div>
+        </div>
+
+        <div class="qr-col">
+            <div class="sub-label">Scan Invoice</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=76x76&data={{ urlencode(route('product.show', $order->items->first()->product_id)) }}&color=000000&bgcolor=ffffff&margin=3" alt="QR">
+            <div class="qr-label">#{{ $order->order_id }}</div>
+        </div>
+    </div>
+
+    {{-- ── Items ── --}}
+    <div class="items-section">
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th style="text-align:left">Description</th>
+                    <th class="right">Unit Price</th>
+                    <th class="center">Qty</th>
+                    <th class="right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($order->items as $index => $item)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>
+                        <div class="product-name">{{ $item->product_name }}</div>
+                        @if(!empty($item->attributes))
+                            <div class="product-attr">
+                                {{ collect($item->attributes)->map(fn($v,$k) => ucfirst($k).': '.$v)->implode('  ·  ') }}
+                            </div>
                         @endif
-                    </div>
-                </div>
+                    </td>
+                    <td class="right">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</td>
+                    <td class="center">{{ $item->quantity }}</td>
+                    <td class="amount">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price * $item->quantity, 2) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-                <!-- Payment Details -->
-                <div>
-                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-4">Payment Method</h3>
-                    <div class="text-sm text-stone-800">
-                        <p class="font-medium">{{ $order->payment_method ?? 'Online Payment' }}</p>
-                        <p class="text-stone-500 mt-1">Thanks for your business.</p>
-                    </div>
-                </div>
-            </div>
+    {{-- ── Bottom: Notes + Totals ── --}}
+    <div class="inv-bottom">
+
+        <div class="inv-notes">
+            <strong>Notes</strong>
+            Thank you for your purchase. Please keep this invoice for your records.
+            For any queries, contact us at {{ get_setting('contact_email', 'support@example.com') }}.
         </div>
 
-        <!-- Items Table -->
-        <div class="p-8 md:p-12">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b-2 border-stone-100">
-                            <th class="py-4 text-xs font-bold text-stone-400 uppercase tracking-wider pl-2">Description</th>
-                            <th class="py-4 text-xs font-bold text-stone-400 uppercase tracking-wider text-right">Price</th>
-                            <th class="py-4 text-xs font-bold text-stone-400 uppercase tracking-wider text-center">Qty</th>
-                            <th class="py-4 text-xs font-bold text-stone-400 uppercase tracking-wider text-right pr-2">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm">
-                        @foreach($order->items as $item)
-                        <tr class="border-b border-stone-50">
-                            <td class="py-4 pl-2">
-                                <p class="font-bold text-stone-900">{{ $item->product_name }}</p>
-                                @if(!empty($item->attributes))
-                                    <p class="text-xs text-stone-500 mt-0.5">
-                                        {{ collect($item->attributes)->map(fn($v, $k) => ucfirst($k) . ': ' . $v)->implode(', ') }}
-                                    </p>
-                                @endif
-                            </td>
-                            <td class="py-4 text-right align-top text-stone-600">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</td>
-                            <td class="py-4 text-center align-top text-stone-600">{{ $item->quantity }}</td>
-                            <td class="py-4 text-right align-top font-medium text-stone-900 pr-2">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price * $item->quantity, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        <div class="summary">
+            <div class="sum-row">
+                <span>Subtotal</span>
+                <span>{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
             </div>
-
-            <!-- Summary -->
-            <div class="mt-8 flex justify-end">
-                <div class="w-full md:w-1/3 space-y-3">
-                    <div class="flex justify-between text-sm text-stone-600">
-                        <span>Subtotal</span>
-                        <span class="font-medium">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
-                    </div>
-                    <div class="flex justify-between text-sm text-stone-600">
-                        <span>Shipping</span>
-                        <span class="font-medium">{{ get_setting('currency_symbol', '$') }}0.00</span>
-                    </div>
-                    <div class="pt-4 border-t-2 border-stone-900 flex justify-between items-center mt-4">
-                        <span class="text-base font-bold text-emerald-950">Total</span>
-                        <span class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price, 2) }}</span>
-                    </div>
-                </div>
+            <div class="sum-row">
+                <span>Shipping</span>
+                <span>{{ get_setting('currency_symbol', '$') }}{{ number_format($order->shipping_cost, 2) }}</span>
             </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="px-8 md:px-12 py-8 bg-stone-50 border-t border-stone-100 text-center">
-            <p class="text-sm font-medium text-emerald-900">Thank you for choosing {{ get_setting('site_name', config('app.name')) }}!</p>
-            <p class="text-xs text-stone-500 mt-2">If you have any questions about this invoice, please verify with us.</p>
+            @if(!empty($order->discount) && $order->discount > 0)
+            <div class="sum-row">
+                <span>Discount</span>
+                <span>- {{ get_setting('currency_symbol', '$') }}{{ number_format($order->discount, 2) }}</span>
+            </div>
+            @endif
+            <div class="sum-total">
+                <span class="sum-total-label">Grand Total</span>
+                <span class="sum-total-val">{{ get_setting('currency_symbol', '$') }}{{ number_format($order->price + $order->shipping_cost - ($order->discount ?? 0), 2) }}</span>
+            </div>
         </div>
     </div>
 
-    <!-- Print Button -->
-    <div class="fixed bottom-8 right-8 no-print">
-        <button onclick="window.print()" class="bg-emerald-900 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            Print Invoice
-        </button>
+    {{-- ── Signature row ── --}}
+    <div class="inv-sig">
+        <div class="sig-block">
+            <div class="sig-line"></div>
+            <div class="sig-label">Customer Signature</div>
+        </div>
+        <div class="sig-block">
+            <div class="sig-line"></div>
+            <div class="sig-label">Authorized Signature</div>
+        </div>
     </div>
+
+    {{-- ── Footer bar ── --}}
+    <div class="inv-foot">
+        {{ get_setting('site_name', config('app.name')) }} &nbsp;|&nbsp; {{ request()->getHost() }} &nbsp;|&nbsp; {{ get_setting('contact_email', 'support@example.com') }}
+    </div>
+
+</div>
+
+{{-- Print button (screen only) --}}
+<div class="print-btn-wrap">
+    <button class="print-btn" onclick="window.print()">
+        🖨 &nbsp;Print Invoice
+    </button>
+</div>
 
 </body>
 </html>

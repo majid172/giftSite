@@ -32,11 +32,11 @@
                                     </button>
                                 </form>
                             </div>
-                            <p class="text-xs text-stone-500 mt-1">Price: ${{ number_format($details['price'], 2) }}</p>
+                            <p class="text-xs text-stone-500 mt-1">Price: ৳{{ number_format($details['price'], 2) }}</p>
                         </div>
                         <div class="flex justify-between items-center mt-2">
                             <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-stone-100 text-xs font-bold text-stone-600">Qty: {{ $details['quantity'] }}</span>
-                            <span class="text-emerald-700 font-bold text-sm">${{ number_format($details['price'] * $details['quantity'], 2) }}</span>
+                            <span class="text-emerald-700 font-bold text-sm">৳{{ number_format($details['price'] * $details['quantity'], 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
         <div class="border-t border-stone-100 p-6 bg-stone-50/50">
             <div class="flex justify-between mb-4 text-emerald-950 font-bold text-lg">
                 <span>Subtotal</span>
-                <span>${{ number_format($total, 2) }}</span>
+                <span>৳{{ number_format($total, 2) }}</span>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <a href="{{ route('cart') }}" class="block text-center px-4 py-3 border border-stone-300 rounded-full text-stone-700 font-bold hover:bg-stone-50 transition-colors">View Cart</a>
