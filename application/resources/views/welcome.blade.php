@@ -81,10 +81,10 @@
     <section>
         <div class="space-y-16">
 
-            <!-- 1. Shop By Category -->
+            <!-- 1. Shop By Category (App Icon Style) -->
             <section>
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950">Shop by Category</h2>
+                <div class="flex items-center justify-between mb-6 md:mb-8">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold text-emerald-950">Shop by Category</h2>
                     <a href="{{ route('categories.index') }}"
                         class="text-emerald-700 font-bold text-sm hover:text-emerald-900 transition flex items-center gap-1 group">
                         View all <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
@@ -93,20 +93,26 @@
                         </svg>
                     </a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                <style>
+                    .hide-scrollbar::-webkit-scrollbar {
+                        display: none;
+                    }
+                    .hide-scrollbar {
+                        -ms-overflow-style: none;
+                        scrollbar-width: none;
+                    }
+                </style>
+
+                <div class="flex overflow-x-auto hide-scrollbar gap-4 sm:gap-6 pb-4 md:grid md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 md:overflow-visible">
                     @foreach($categories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="group relative rounded-2xl overflow-hidden h-64 shadow-md">
-                        <img src="{{ asset('assets/images/'.$category->image) }}"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="{{ $category->name }}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-6 left-6 text-white">
-                            <h3 class="text-xl font-serif font-bold">{{ $category->name }}</h3>
-                           <span class="inline-flex items-center text-amber-400 font-bold text-xs uppercase tracking-widest gap-2">
-                    Explore Collection
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                </span>
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="flex flex-col items-center gap-2 sm:gap-3 flex-shrink-0 group w-[76px] sm:w-[90px] md:w-auto md:flex-shrink">
+                        <div class="w-[76px] h-[76px] md:w-full md:aspect-square sm:w-[90px] sm:h-[90px] bg-white rounded-[1.25rem] sm:rounded-[1.5rem] shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-stone-100 flex items-center justify-center overflow-hidden group-hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] group-hover:-translate-y-1 transition-all duration-300">
+                            <img src="{{ asset('assets/images/'.$category->image) }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                alt="{{ $category->name }}">
                         </div>
+                        <span class="text-[11px] sm:text-[13px] font-medium text-emerald-950 text-center w-full leading-tight group-hover:text-amber-500 transition-colors px-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; white-space: normal;">{{ $category->name }}</span>
                     </a>
                     @endforeach
                 </div>
@@ -179,15 +185,15 @@
 
                 <!-- Right Product Grid -->
                 <div class="lg:col-span-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full">
+                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 h-full">
                         @foreach ($bestSellingProducts as $product)
-                            <div class="bg-white border border-stone-200 rounded-2xl p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                            <div class="bg-white border border-stone-200 rounded-xl sm:rounded-2xl p-2.5 sm:p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
 
                                 <!-- Product Image Container -->
-                                <div class="relative h-48 mb-6 flex items-center justify-center overflow-hidden">
+                                <div class="relative w-full aspect-[4/3] sm:h-48 mb-3 sm:mb-6 flex items-center justify-center overflow-hidden">
                                      @if ($product->old_price)
                                         <div class="absolute top-0 left-0 z-10">
-                                            <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
+                                            <span class="bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
                                         </div>
                                     @endif
 
@@ -197,48 +203,46 @@
                                 </div>
 
                                 <!-- Product Info -->
-                                <div class="flex flex-col flex-grow">
-                                    <h4 class="text-sm font-bold text-emerald-950 mb-3 h-10 overflow-hidden leading-tight">
+                                <div class="flex flex-col flex-grow text-left">
+                                    <h4 class="text-[13px] sm:text-sm font-serif font-bold text-emerald-950 mb-1.5 sm:mb-3 leading-snug line-clamp-2 h-10 overflow-hidden">
                                         <a href="{{ route('product.show', $product->id) }}" class="hover:text-amber-500 transition">{{ $product->name }}</a>
                                     </h4>
 
                                     <!-- Star Rating (Dynamic) -->
-                                    <div class="flex items-center gap-0.5 mb-3">
+                                    <div class="flex items-center gap-0.5 mb-1.5 sm:mb-3">
                                         @php
                                             $avgRating = $product->reviews_avg_rating ?: 0;
                                             $reviewsCount = $product->reviews_count ?: 0;
                                         @endphp
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
+                                            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
                                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                             </svg>
                                         @endfor
-                                        <span class="text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
+                                        <span class="text-[10px] sm:text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
                                     </div>
 
                                     <!-- Price -->
-                                    <div class="flex items-baseline gap-2 mb-5">
-                                        <span class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->price, 2) }}</span>
+                                    <div class="flex items-baseline gap-2 mb-3 sm:mb-5">
+                                        <span class="text-[15px] sm:text-xl font-bold text-emerald-950 tracking-tight">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->price, 2) }}</span>
                                         @if ($product->old_price)
-                                            <span class="text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->old_price, 2) }}</span>
+                                            <span class="text-[11px] sm:text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->old_price, 2) }}</span>
                                         @endif
                                     </div>
 
-                                    <!-- Button -->
-                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto flex gap-2">
+                                    <!-- Add to cart & Order Now Actions -->
+                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100 flex flex-col xl:flex-row gap-1.5 sm:gap-2 w-full">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $product->id }}">
                                         <input type="hidden" name="name" value="{{ $product->name }}">
                                         <input type="hidden" name="price" value="{{ $product->price }}">
                                         <input type="hidden" name="image" value="{{ $product->image }}">
                                         
-                                        <button type="submit" name="action" value="add_to_cart"
-                                            class="flex-1 bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-[10px] uppercase py-3 rounded-full transition-all truncate">
+                                        <button type="submit" name="action" value="add_to_cart" class="flex-1 border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-widest py-2 sm:py-2.5 transition-colors whitespace-nowrap">
                                             Add
                                         </button>
-                                        <button type="submit" name="action" value="buy_now"
-                                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase py-3 rounded-full transition-all shadow-lg shadow-amber-500/20 truncate">
-                                            Order Now
+                                        <button type="submit" name="action" value="buy_now" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-widest py-2 sm:py-2.5 transition-colors whitespace-nowrap">
+                                            Order
                                         </button>
                                     </form>
                                 </div>
@@ -250,108 +254,92 @@
         </div>
     </section>
 
-        <!-- 3. Latest Products (Redesigned) -->
-    <section class="my-16">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950">Latest Arrivals</h2>
+    <!-- 3. Latest Products (Minimalist Professional) -->
+    <section class="max-w-7xl mx-auto my-20 px-4 sm:px-6 lg:px-8">
+        <div class="mb-12 text-left">
+            <h2 class="text-3xl md:text-4xl font-serif text-emerald-950 mb-3">Latest Arrivals</h2>
+            <div class="h-[2px] w-12 bg-amber-500"></div>
         </div>
 
-        <div class="border border-stone-200 rounded-lg overflow-hidden">
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 bg-white">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-x-6 sm:gap-y-10">
+            @foreach ($latestProds as $item)
+                <div class="group flex flex-col relative w-full">
+                    
+                    <!-- Image Area -->
+                    <div class="relative w-full aspect-[4/3] bg-stone-50/80 flex items-center justify-center overflow-hidden mb-2 rounded-sm hover:-translate-y-1 transition-transform duration-300">
+                        <!-- Badge -->
+                        @if ($item->badge)
+                            <div class="absolute top-2 left-2 z-10">
+                                <span class="bg-emerald-950 text-white text-[9px] px-2 py-1 uppercase tracking-widest">{{ $item->badge }}</span>
+                            </div>
+                        @elseif($item->old_price)
+                            <div class="absolute top-2 left-2 z-10">
+                                <span class="bg-amber-500 text-white text-[9px] px-2 py-1 uppercase tracking-widest">Sale</span>
+                            </div>
+                        @endif
 
-                @foreach ($latestProds as $item)
-                    <div
-                        class="group relative p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
+                        <!-- Image -->
+                        <img src="{{ asset($item->image) }}" class="w-[85%] h-[85%] object-contain mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity duration-300" alt="{{ $item->name }}">
 
-                        <!-- Badges -->
-                        <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                            @if ($item->badge)
-                                <span
-                                    class="{{ $item->badge_color ?? 'bg-emerald-500' }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">{{ $item->badge }}</span>
+                    </div>
+
+                    <!-- Content Area (Left Aligned matching image) -->
+                    <div class="flex flex-col items-start text-left px-1 flex-1">
+                        <!-- Title -->
+                        <h3 class="text-[14px] md:text-[15px] font-serif font-bold text-emerald-950 mb-1.5 leading-snug line-clamp-2 min-h-[40px]">
+                            <a href="{{ route('product.show', $item->id) }}" class="hover:text-amber-500 transition-colors">{{ $item->name }}</a>
+                        </h3>
+                        
+                        <!-- Ratings -->
+                        <div class="flex items-center gap-1 mb-1.5">
+                            @php
+                                $avgRating = $item->reviews_avg_rating ?: 0;
+                            @endphp
+                            <div class="flex items-center">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                @endfor
+                            </div>
+                            <span class="text-[11px] text-stone-400 font-medium">({{ $item->reviews_count ?: 0 }})</span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="flex items-baseline gap-2 mb-3 w-full">
+                            <span class="text-emerald-950 text-[17px] md:text-lg font-extrabold tracking-tight">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</span>
+                            @if ($item->old_price)
+                                <span class="text-[13px] text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->old_price, 2) }}</span>
                             @endif
                         </div>
 
-                        <!-- Hover Actions -->
-                        <div
-                            class="absolute top-4 right-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
-
-
-                            <a href="{{ route('product.show', $item->id) }}"
-                                class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:bg-amber-500 hover:text-white hover:border-amber-500 flex items-center justify-center transition shadow-sm"
-                                title="Quick View">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                            </a>
-                        </div>
-
-                        <!-- Image -->
-                        <div class="h-48 mb-4 overflow-hidden relative flex items-center justify-center">
-                            <img src="{{ asset($item->image) }}"
-                                class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500"
-                                alt="{{ $item->name }}">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="text-left">
-                            <h3
-                                class="font-bold text-emerald-950 text-sm mb-2 h-10 overflow-hidden line-clamp-2 leading-tight">
-                                <a href="{{ route('product.show', $item->id) }}" class="hover:text-amber-500 transition">{{ $item->name }}</a>
-                            </h3>
-
-                            <!-- Ratings -->
-                            <div class="flex items-center gap-0.5 mb-2">
-                                @php
-                                    $avgRating = $item->reviews_avg_rating ?: 0;
-                                    $reviewsCount = $item->reviews_count ?: 0;
-                                @endphp
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}"
-                                        viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                @endfor
-                                <span class="text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="mb-5 flex items-baseline gap-2">
-                                <span
-                                    class="text-lg font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</span>
-                                @if ($item->old_price)
-                                    <span
-                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->old_price, 2) }}</span>
-                                @endif
-                            </div>
-
-                            <!-- Add to Cart Button -->
-                            <form action="{{ route('cart.store') }}" method="POST" class="flex gap-2">
+                        <!-- Add to cart & Order Now Actions (Always Visible) -->
+                        <div class="w-full mt-auto pt-4 border-t border-stone-100">
+                            <form action="{{ route('cart.store') }}" method="POST" class="flex flex-col xl:flex-row gap-2 w-full">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $item->id }}">
                                 <input type="hidden" name="name" value="{{ $item->name }}">
                                 <input type="hidden" name="price" value="{{ $item->price }}">
                                 <input type="hidden" name="image" value="{{ $item->image }}">
                                 
-                                <button type="submit" name="action" value="add_to_cart"
-                                    class="flex-1 bg-stone-100 hover:bg-emerald-900 text-stone-800 hover:text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md truncate">
-                                    Add
+                                <button type="submit" name="action" value="add_to_cart" class="flex-1 border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white text-[10px] font-bold uppercase tracking-widest py-2.5 transition-colors whitespace-nowrap">
+                                    Add Cart
                                 </button>
-                                <button type="submit" name="action" value="buy_now"
-                                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-lg shadow-amber-500/20 truncate">
+                                <button type="submit" name="action" value="buy_now" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold uppercase tracking-widest py-2.5 transition-colors whitespace-nowrap">
                                     Order Now
                                 </button>
                             </form>
                         </div>
-
                     </div>
-                @endforeach
-            </div>
+
+                </div>
+            @endforeach
+        </div>
+        
+        <div class="mt-14 text-center">
+            <a href="{{ route('products.index') }}" class="inline-block border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white px-10 py-3.5 text-xs font-bold uppercase tracking-widest transition-colors duration-300">
+                View All Arrivals
+            </a>
         </div>
     </section>
 
