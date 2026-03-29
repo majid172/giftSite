@@ -1,76 +1,72 @@
 @extends('layouts.fullscreen')
-
 @section('content')
 
 @section('hero')
-    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans lg:min-h-[85vh] flex items-center pt-4 lg:pt-20 px-4 md:px-0">
-        <!-- Background Overlay (Desktop Only for Clip) -->
+    <section class="relative w-full bg-emerald-950 overflow-hidden font-sans min-h-[85vh] flex items-center pt-20">
+        <!-- Background Overlay -->
         <div class="absolute inset-0 bg-emerald-900/30"></div>
-        <div class="hidden lg:block absolute top-0 right-0 w-[60%] h-full bg-emerald-800/40 clip-diagonal"></div>
+        <div class="absolute top-0 right-0 w-[60%] h-full bg-emerald-800/40 clip-diagonal"></div>
 
-        <div class="container mx-auto px-0 sm:px-6 lg:px-8 relative z-10 w-full h-full">
-            <!-- Mobile App-like Banner Container -->
-            <div class="bg-emerald-900/40 lg:bg-transparent rounded-[2rem] lg:rounded-none overflow-hidden relative border border-white/5 lg:border-none shadow-2xl lg:shadow-none">
-                <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full">
+            <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
 
-                    <!-- Right Image (Shows First on Mobile) -->
-                    <div class="order-1 lg:order-2 relative w-full h-[300px] lg:h-[600px] flex items-center justify-center p-4 lg:p-0">
-                        
-                        <!-- Decorative background behind image (Desktop) -->
-                        <div class="hidden lg:block absolute inset-y-10 inset-x-0 bg-emerald-900/50 rounded-[3rem] -rotate-3 border border-emerald-800/50"></div>
-
-                        <div class="relative w-full lg:w-[85%] h-full lg:h-[90%] z-10 rounded-3xl lg:rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                            <img src="{{ get_setting('hero_image') ? asset(get_setting('hero_image')) : 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80' }}"
-                                class="w-full h-full object-cover object-center" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
-                            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent lg:hidden"></div>
-                        </div>
-
-                        <!-- Floating Badge (Simplified for mobile) -->
-                        <div class="absolute bottom-6 left-6 lg:bottom-10 lg:left-0 bg-white/95 backdrop-blur-sm p-3 lg:p-4 rounded-xl shadow-xl flex items-center gap-3 lg:gap-4 z-20">
-                            <div class="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-                                <svg class="w-4 h-4 lg:w-6 lg:h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                            </div>
-                            <div>
-                                <p class="text-emerald-950 font-bold text-xs lg:text-sm leading-tight">4.9/5 Rating</p>
-                                <p class="text-stone-500 text-[10px] lg:text-xs">Premium Quality</p>
-                            </div>
-                        </div>
+                <!-- Left Content -->
+                <div class="flex flex-col justify-center order-2 lg:order-1 lg:pr-10">
+                    
+                    <div class="inline-flex items-center gap-4 mb-6">
+                        <span class="flex h-px w-12 bg-amber-500"></span>
+                        <span class="text-amber-400 font-medium tracking-widest text-xs uppercase">Premium Gifting</span>
                     </div>
 
-                    <!-- Left Content -->
-                    <div class="flex flex-col justify-center order-2 lg:order-1 px-8 lg:px-0 pb-10 lg:pb-0 lg:pr-10">
-                        <h1 class="text-3xl md:text-5xl lg:text-[4rem] font-serif font-bold text-white leading-tight mb-4 lg:mb-6">
-                            The Art of <br>
-                            <span class="text-amber-300 italic">Thoughtful</span> Giving
-                        </h1>
+                    <h1 class="text-4xl md:text-5xl lg:text-[4rem] font-serif font-bold text-white leading-tight mb-6">
+                        The Art of <br>
+                        <span class="text-amber-300 italic">Thoughtful</span> Giving
+                    </h1>
 
-                        <p class="text-emerald-50/80 text-sm lg:text-xl mb-6 lg:mb-10 max-w-lg leading-relaxed font-light">
-                            Discover exclusive, beautifully curated collections that turn ordinary moments into unforgettable memories.
-                        </p>
+                    <p class="text-emerald-50/90 text-lg md:text-xl mb-10 max-w-lg leading-relaxed font-light">
+                        Discover exclusive, beautifully curated collections that turn ordinary moments into unforgettable memories. Experience the joy of giving.
+                    </p>
 
-                        <div class="flex gap-3 lg:gap-4 mb-2 lg:mb-10">
-                            <a href="{{ route('products.index') }}"
-                                class="inline-flex items-center justify-center px-6 lg:px-8 py-3 bg-amber-500 text-emerald-950 font-bold text-sm lg:text-base rounded shadow-lg hover:bg-amber-400 transition-colors">
-                                Shop Now
-                            </a>
-                            
-                            <a href="{{ route('about') }}"
-                                class="inline-flex items-center justify-center px-6 lg:px-8 py-3 bg-white/5 border border-white/20 text-white font-semibold rounded text-sm lg:text-base hover:bg-white/10 transition-colors">
-                                Our Story
-                            </a>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                        <a href="{{ route('products.index') }}"
+                            class="inline-flex items-center justify-center px-8 py-4 bg-amber-500 text-emerald-950 font-bold text-base rounded shadow-lg hover:bg-amber-400 transition-colors">
+                            Shop Collection
+                        </a>
+                        
+                        <a href="{{ route('about') }}"
+                            class="inline-flex items-center justify-center px-8 py-4 bg-white/5 border border-white/20 text-white font-semibold rounded hover:bg-white/10 transition-colors">
+                            Our Story
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Image -->
+                <div class="order-1 lg:order-2 relative w-full h-[400px] lg:h-[600px] flex items-center justify-center">
+                    
+                    <!-- Decorative background behind image -->
+                    <div class="absolute inset-y-10 inset-x-0 bg-emerald-900/50 rounded-[3rem] -rotate-3 border border-emerald-800/50"></div>
+
+                    <div class="relative w-[85%] h-[90%] z-10 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                        <img src="{{ get_setting('hero_image') ? asset(get_setting('hero_image')) : 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1920&q=80' }}"
+                            class="w-full h-full object-cover object-center" alt="{{ get_setting('site_name', config('app.name')) }} Packaging">
+                        <div class="absolute inset-0 bg-emerald-900/10 mix-blend-multiply"></div>
+                    </div>
+
+                    <!-- Floating Badge (Static) -->
+                    <div class="absolute bottom-10 left-0 bg-white p-4 rounded-xl shadow-xl flex items-center gap-4 z-20">
+                        <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-emerald-950 font-bold leading-tight">{{ $averageRating ?? 5.0 }}/5</p>
+                            <p class="text-stone-500 text-xs">{{ get_setting('hero_customer_text', 'Customer Reviews') }}</p>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </div>
-        
-        <style>
-            .clip-diagonal {
-                clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%);
-            }
-        </style>
-    </section>
         
         <style>
             .clip-diagonal {
@@ -85,29 +81,45 @@
         <div class="space-y-16">
 
             <!-- 1. Shop By Category -->
-            <section>
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950">Shop by Category</h2>
+            <section class="py-8">
+                <div class="flex items-center justify-between mb-6 px-4 md:px-0">
+                    <div class="flex flex-col">
+                        <h2 class="text-2xl md:text-3xl font-serif font-semibold text-emerald-950">Shop by Category</h2>
+                        <div class="h-1 w-12 bg-amber-400 mt-1 rounded-full"></div>
+                    </div>
                     <a href="{{ route('categories.index') }}"
-                        class="text-emerald-700 font-bold text-sm hover:text-emerald-900 transition flex items-center gap-1 group">
-                        View all <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
+                        class="text-emerald-700 font-bold text-xs hover:text-white hover:bg-emerald-700 transition flex items-center gap-1 group bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">
+                        View all <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </a>
                 </div>
-                <div class="flex overflow-x-auto lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-4 pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+                
+                <div class="flex overflow-x-auto gap-5 md:gap-8 pb-8 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-proximity">
                     @foreach($categories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="flex-shrink-0 w-[240px] md:w-auto group relative rounded-2xl overflow-hidden h-48 md:h-64 shadow-md">
-                        <img src="{{ asset('assets/images/'.$category->image) }}"
-                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="{{ $category->name }}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 md:bottom-6 md:left-6 text-white">
-                            <h3 class="text-lg md:text-xl font-serif font-bold">{{ $category->name }}</h3>
-                           <span class="inline-flex items-center text-amber-400 font-bold text-[10px] uppercase tracking-widest gap-2">
-                                Explore
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" 
+                       class="flex-shrink-0 flex flex-col items-center gap-3 group snap-start w-24 md:w-32">
+                        
+                        <!-- Icon Circle/Rounded Square (App Style) -->
+                        <div class="relative w-20 h-20 md:w-28 md:h-28 rounded-full md:rounded-[2rem] overflow-hidden shadow-lg group-hover:shadow-amber-500/20 transition-all duration-500 bg-white border-2 border-transparent group-hover:border-amber-400 p-0.5">
+                            <div class="w-full h-full rounded-full md:rounded-[1.8rem] overflow-hidden bg-stone-50">
+                                <img src="{{ asset($category->image) }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    alt="{{ $category->name }}">
+                            </div>
+                            
+                            <!-- Subtle Highlight -->
+                            <div class="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+                        </div>
+
+                        <!-- Label -->
+                        <div class="text-center">
+                            <span class="text-[11px] md:text-sm font-bold text-emerald-950 tracking-tight leading-tight block group-hover:text-amber-600 transition-colors">
+                                {{ $category->name }}
+                            </span>
+                            <span class="text-[9px] text-stone-400 font-medium uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                View
                             </span>
                         </div>
                     </a>
@@ -115,13 +127,23 @@
                 </div>
             </section>
 
+            <style>
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            </style>
+
+
             <!-- Bestselling Products Section -->
             <!-- Section Header -->
-            <div class="mb-10">
-                <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950 text-center lg:text-left">Bestselling
-                    Products</h2>
-            </div>
-
+             <div class="mb-12 text-center lg:text-left">
+            <h2 class="text-3xl md:text-4xl font-serif text-emerald-950 mb-3 tracking-tight">Bestselling Products</h2>
+            <div class="h-1 w-12 bg-amber-500 rounded-full mx-auto lg:mx-0"></div>
+        </div>
             <!-- Main Grid Container: items-stretch ensures equal height for both columns -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
@@ -182,15 +204,15 @@
 
                 <!-- Right Product Grid -->
                 <div class="lg:col-span-8">
-                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 h-full">
+                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 h-full">
                         @foreach ($bestSellingProducts as $product)
-                            <div class="bg-white border border-stone-200 rounded-2xl p-3 md:p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
+                            <div class="bg-white border border-stone-200 rounded-xl sm:rounded-2xl p-2.5 sm:p-5 hover:shadow-2xl transition-all duration-300 group flex flex-col">
 
                                 <!-- Product Image Container -->
-                                <div class="relative h-48 mb-6 flex items-center justify-center overflow-hidden">
+                                <div class="relative w-full aspect-[4/3] sm:h-48 mb-3 sm:mb-6 flex items-center justify-center overflow-hidden">
                                      @if ($product->old_price)
                                         <div class="absolute top-0 left-0 z-10">
-                                            <span class="bg-rose-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
+                                            <span class="bg-rose-500 text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-sm uppercase">{{ calculate_discount($product->price, $product->old_price) }}% OFF</span>
                                         </div>
                                     @endif
 
@@ -200,48 +222,46 @@
                                 </div>
 
                                 <!-- Product Info -->
-                                <div class="flex flex-col flex-grow">
-                                    <h4 class="text-sm font-bold text-emerald-950 mb-3 h-10 overflow-hidden leading-tight">
+                                <div class="flex flex-col flex-grow text-left">
+                                    <h4 class="text-[13px] sm:text-sm font-serif font-bold text-emerald-950 mb-1.5 sm:mb-3 leading-snug line-clamp-2 h-10 overflow-hidden">
                                         <a href="{{ route('product.show', $product->id) }}" class="hover:text-amber-500 transition">{{ $product->name }}</a>
                                     </h4>
 
                                     <!-- Star Rating (Dynamic) -->
-                                    <div class="flex items-center gap-0.5 mb-3">
+                                    <div class="flex items-center gap-0.5 mb-1.5 sm:mb-3">
                                         @php
                                             $avgRating = $product->reviews_avg_rating ?: 0;
                                             $reviewsCount = $product->reviews_count ?: 0;
                                         @endphp
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
+                                            <svg class="w-3 sm:w-3.5 h-3 sm:h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
                                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                             </svg>
                                         @endfor
-                                        <span class="text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
+                                        <span class="text-[10px] sm:text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
                                     </div>
 
                                     <!-- Price -->
-                                    <div class="flex items-baseline gap-2 mb-5">
-                                        <span class="text-xl font-bold text-emerald-950">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->price, 2) }}</span>
+                                    <div class="flex items-baseline gap-2 mb-3 sm:mb-5">
+                                        <span class="text-[15px] sm:text-xl font-bold text-emerald-950 tracking-tight">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->price, 2) }}</span>
                                         @if ($product->old_price)
-                                            <span class="text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->old_price, 2) }}</span>
+                                            <span class="text-[11px] sm:text-xs text-stone-400 line-through">{{ get_setting('currency_symbol', 'BDT') }}{{ number_format($product->old_price, 2) }}</span>
                                         @endif
                                     </div>
 
-                                    <!-- Button -->
-                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto flex gap-2">
+                                    <!-- Add to cart & Order Now Actions -->
+                                    <form action="{{ route('cart.store') }}" method="POST" class="mt-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100 flex flex-col xl:flex-row gap-1.5 sm:gap-2 w-full">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $product->id }}">
                                         <input type="hidden" name="name" value="{{ $product->name }}">
                                         <input type="hidden" name="price" value="{{ $product->price }}">
                                         <input type="hidden" name="image" value="{{ $product->image }}">
                                         
-                                        <button type="submit" name="action" value="add_to_cart"
-                                            class="flex-1 bg-stone-100 hover:bg-emerald-900 hover:text-white text-stone-700 font-bold text-[10px] uppercase py-3 rounded-full transition-all truncate">
+                                        <button type="submit" name="action" value="add_to_cart" class="flex-1 border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-widest py-2 sm:py-2.5 transition-colors whitespace-nowrap">
                                             Add
                                         </button>
-                                        <button type="submit" name="action" value="buy_now"
-                                            class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase py-3 rounded-full transition-all shadow-lg shadow-amber-500/20 truncate">
-                                            Order Now
+                                        <button type="submit" name="action" value="buy_now" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-widest py-2 sm:py-2.5 transition-colors whitespace-nowrap">
+                                            Order
                                         </button>
                                     </form>
                                 </div>
@@ -253,118 +273,101 @@
         </div>
     </section>
 
-        <!-- 3. Latest Products (Redesigned) -->
-    <section class="my-16">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950">Latest Arrivals</h2>
+    <!-- 3. Latest Products (Minimalist Professional) -->
+    <section class="my-20">
+        <div class="mb-12 text-center lg:text-left">
+            <h2 class="text-3xl md:text-4xl font-serif text-emerald-950 mb-3 uppercase tracking-tight">Latest Arrivals</h2>
+            <div class="h-1 w-12 bg-amber-500 rounded-full mx-auto lg:mx-0"></div>
         </div>
 
-        <div class="border border-stone-200 rounded-lg overflow-hidden">
-            <div
-                class="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-stone-200 bg-white">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-x-6 sm:gap-y-10">
+            @foreach ($latestProds as $item)
+                <div class="group flex flex-col relative w-full">
+                    
+                    <!-- Image Area -->
+                    <div class="relative w-full aspect-[4/3] bg-stone-50/80 flex items-center justify-center overflow-hidden mb-2 rounded-sm hover:-translate-y-1 transition-transform duration-300">
+                        <!-- Badge -->
+                        @if ($item->badge)
+                            <div class="absolute top-2 left-2 z-10">
+                                <span class="bg-emerald-950 text-white text-[9px] px-2 py-1 uppercase tracking-widest">{{ $item->badge }}</span>
+                            </div>
+                        @elseif($item->old_price)
+                            <div class="absolute top-2 left-2 z-10">
+                                <span class="bg-amber-500 text-white text-[9px] px-2 py-1 uppercase tracking-widest">Sale</span>
+                            </div>
+                        @endif
 
-                @foreach ($latestProds as $item)
-                    <div
-                        class="group relative p-3 md:p-6 hover:shadow-2xl transition-shadow duration-300 z-0 hover:z-10 bg-white">
+                        <!-- Image -->
+                        <img src="{{ asset($item->image) }}" class="w-[85%] h-[85%] object-contain mix-blend-multiply opacity-90 group-hover:opacity-100 transition-opacity duration-300" alt="{{ $item->name }}">
 
-                        <!-- Badges -->
-                        <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                            @if ($item->badge)
-                                <span
-                                    class="{{ $item->badge_color ?? 'bg-emerald-500' }} text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">{{ $item->badge }}</span>
+                    </div>
+
+                    <!-- Content Area (Left Aligned matching image) -->
+                    <div class="flex flex-col items-start text-left px-1 flex-1">
+                        <!-- Title -->
+                        <h3 class="text-[14px] md:text-[15px] font-serif font-bold text-emerald-950 mb-1.5 leading-snug line-clamp-2 min-h-[40px]">
+                            <a href="{{ route('product.show', $item->id) }}" class="hover:text-amber-500 transition-colors">{{ $item->name }}</a>
+                        </h3>
+                        
+                        <!-- Ratings -->
+                        <div class="flex items-center gap-1 mb-1.5">
+                            @php
+                                $avgRating = $item->reviews_avg_rating ?: 0;
+                            @endphp
+                            <div class="flex items-center">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                @endfor
+                            </div>
+                            <span class="text-[11px] text-stone-400 font-medium">({{ $item->reviews_count ?: 0 }})</span>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="flex items-baseline gap-2 mb-3 w-full">
+                            <span class="text-emerald-950 text-[17px] md:text-lg font-extrabold tracking-tight">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</span>
+                            @if ($item->old_price)
+                                <span class="text-[13px] text-stone-400 line-through">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->old_price, 2) }}</span>
                             @endif
                         </div>
 
-                        <!-- Hover Actions -->
-                        <div
-                            class="absolute top-4 right-4 z-20 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-2 group-hover:translate-x-0">
-
-
-                            <a href="{{ route('product.show', $item->id) }}"
-                                class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:bg-amber-500 hover:text-white hover:border-amber-500 flex items-center justify-center transition shadow-sm"
-                                title="Quick View">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                    </path>
-                                </svg>
-                            </a>
-                        </div>
-
-                        <!-- Image -->
-                        <div class="h-48 mb-4 overflow-hidden relative flex items-center justify-center">
-                            <img src="{{ asset($item->image) }}"
-                                class="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500"
-                                alt="{{ $item->name }}">
-                        </div>
-
-                        <!-- Content -->
-                        <div class="text-left">
-                            <h3
-                                class="font-bold text-emerald-950 text-sm mb-2 h-10 overflow-hidden line-clamp-2 leading-tight">
-                                <a href="{{ route('product.show', $item->id) }}" class="hover:text-amber-500 transition">{{ $item->name }}</a>
-                            </h3>
-
-                            <!-- Ratings -->
-                            <div class="flex items-center gap-0.5 mb-2">
-                                @php
-                                    $avgRating = $item->reviews_avg_rating ?: 0;
-                                    $reviewsCount = $item->reviews_count ?: 0;
-                                @endphp
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <svg class="w-3.5 h-3.5 {{ $i <= round($avgRating) ? 'text-amber-400 fill-current' : 'text-stone-300' }}"
-                                        viewBox="0 0 20 20">
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                @endfor
-                                <span class="text-xs text-stone-400 ml-1">({{ $reviewsCount }})</span>
-                            </div>
-
-                            <!-- Price -->
-                            <div class="mb-5 flex items-baseline gap-2">
-                                <span
-                                    class="text-lg font-bold text-emerald-950">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->price, 2) }}</span>
-                                @if ($item->old_price)
-                                    <span
-                                        class="text-sm text-stone-400 line-through decoration-stone-400 decoration-1">{{ get_setting('currency_symbol', '$') }}{{ number_format($item->old_price, 2) }}</span>
-                                @endif
-                            </div>
-
-                            <!-- Add to Cart Button -->
-                            <form action="{{ route('cart.store') }}" method="POST" class="flex gap-2">
+                        <!-- Add to cart & Order Now Actions (Always Visible) -->
+                        <div class="w-full mt-auto pt-4 border-t border-stone-100">
+                            <form action="{{ route('cart.store') }}" method="POST" class="flex flex-col xl:flex-row gap-2 w-full">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $item->id }}">
                                 <input type="hidden" name="name" value="{{ $item->name }}">
                                 <input type="hidden" name="price" value="{{ $item->price }}">
                                 <input type="hidden" name="image" value="{{ $item->image }}">
                                 
-                                <button type="submit" name="action" value="add_to_cart"
-                                    class="flex-1 bg-stone-100 hover:bg-emerald-900 text-stone-800 hover:text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md truncate">
-                                    Add
+                                <button type="submit" name="action" value="add_to_cart" class="flex-1 border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white text-[10px] font-bold uppercase tracking-widest py-2.5 transition-colors whitespace-nowrap">
+                                    Add Cart
                                 </button>
-                                <button type="submit" name="action" value="buy_now"
-                                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] uppercase tracking-wider py-3 rounded-full transition-all duration-300 shadow-lg shadow-amber-500/20 truncate">
+                                <button type="submit" name="action" value="buy_now" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-bold uppercase tracking-widest py-2.5 transition-colors whitespace-nowrap">
                                     Order Now
                                 </button>
                             </form>
                         </div>
-
                     </div>
-                @endforeach
-            </div>
+
+                </div>
+            @endforeach
+        </div>
+        
+        <div class="mt-14 text-center">
+            <a href="{{ route('products.index') }}" class="inline-block border border-emerald-950 text-emerald-950 hover:bg-emerald-950 hover:text-white px-10 py-3.5 text-xs font-bold uppercase tracking-widest transition-colors duration-300">
+                View All Arrivals
+            </a>
         </div>
     </section>
 
     @if($featuredProducts->count() > 0)
     <section class="py-16">
         <!-- Header Section -->
-        <div class="mb-8 text-center md:text-left">
-            <h2 class="text-3xl md:text-4xl font-serif font-bold text-emerald-950 uppercase tracking-tight">Featured
-                Products</h2>
-            <div class="h-1 w-20 bg-emerald-900 mt-2 mx-auto md:mx-0"></div>
+        <div class="mb-12 text-center lg:text-left">
+            <h2 class="text-3xl md:text-4xl font-serif text-emerald-950 mb-3 uppercase tracking-tight">Featured Products</h2>
+            <div class="h-1 w-12 bg-amber-500 rounded-full mx-auto lg:mx-0"></div>
         </div>
 
         <!-- Product Grid: Using thin borders to create the cell look from the image -->
@@ -442,8 +445,8 @@
     </section>
     @endif
 
-    <section class=" p-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+    <section class="py-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             <div class="flex items-center p-6 border border-gray-200 rounded-lg shadow-sm">
                 <div
